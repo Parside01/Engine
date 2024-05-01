@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "../include/Application.hpp"
 
 
 namespace Engine
@@ -10,6 +10,9 @@ namespace Engine
 
     }
     void Application::Run() {
+        while (true) {
+            /* code */
+        }
         
     }
 } // namespace Engine
