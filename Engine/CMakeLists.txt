@@ -1,32 +1,24 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.16)
+
 project(Engine)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
+set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(engine ${SOURCES})
+set(CORE_SOURCES)
+file(GLOB CORE_SOURCES "${ENGINE_SOURCE_DIR}/core/*.cpp")
 
-set_target_properties(Engine PROPERTIES
-    OUTPUT_NAME Engine
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib
-)
+set(CORE_HEADERS)
+file(GLOB CORE_HEADERS "${ENGINE_SOURCE_DIR}/core/*.h")
+
+set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
+
+add_library(Engine SHARED ${ENGINE_SOURCES})
 
 find_package(OpenGL REQUIRED)
-target_link_libraries(Engine PRIVATE OpenGL::GL)
 
-install(TARGETS Engine
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    ARCHIVE DESTINATION lib
-)
 
-install(DIRECTORY src/
-    DESTINATION include/Engine
-    FILES_MATCHING PATTERN "*.h"
-)
+add_executable(engine ${ENGINE_SOURCE_DIR}/main.cpp)
+target_link_libraries(engine ${OpenGL_LIBRARIES})
 
-set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install)
-
-# Install the library and header files
-install()
+install(TARGETS engine DESTINATION lib)

@@ -1,9 +1,8 @@
-#pragma once 
-
+#include "core/core.hpp"
 
 namespace Engine
 {
-    class Application
+    class ENGINE_API Application
     {
     public:
         Application();
