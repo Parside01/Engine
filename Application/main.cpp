@@ -2,14 +2,14 @@
 
 class Sandbox : public Engine::Application {
 public:
+    Sandbox() {
 
+    }
+    ~Sandbox() {
+
+    }
 };
 
-int main() {
-    Sandbox* box = new Sandbox();
-    Engine::Core *core = new Engine::Core();
-    box->Run();
-    delete box;
-    delete core;
-    return 0;
+Engine::Application* Engine::CreateApplication() {
+    return new Sandbox();
 }

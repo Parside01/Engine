@@ -7,22 +7,21 @@ set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR}/include)
 
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
-#file(GLOB CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
-message(STATUS ${CORE_SOURCES})
+message(STATUS All cpp files --- ${CORE_SOURCES})
 
 set(CORE_HEADERS)
 file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
-message(STATUS ${CORE_HEADERS})
+message(STATUS All hpp files --- ${CORE_HEADERS})
 
-set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
+set(ENGINE_SOURCES ${CORE_SOURCES})
 
 add_library(Engine SHARED ${ENGINE_SOURCES})
 
 find_package(OpenGL REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(fmt REQUIRED)
 
-message(STATUS ${ENGINE})
+add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
+target_link_libraries(engine ${OpenGL_LIBRARIES} Engine spdlog::spdlog fmt::fmt)
 
-add_executable(engine ${ENGINE_SOURCE_DIR}/main.cpp)
-target_link_libraries(Engine ${OpenGL_LIBRARIES})
-
-install(TARGETS Engine DESTINATION lib)
+install(TARGETS engine DESTINATION lib)

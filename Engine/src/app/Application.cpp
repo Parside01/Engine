@@ -1,5 +1,5 @@
 #include "../include/Application.hpp"
-
+#include <iostream>
 
 namespace Engine
 {
@@ -11,8 +11,13 @@ namespace Engine
     }
     void Application::Run() {
         while (true) {
-            /* code */
+        
         }
         
     }
+
+    Application* CreateApplication() {
+        return nullptr;
+    }
 } // namespace Engine
+

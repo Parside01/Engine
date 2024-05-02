@@ -1,3 +1,6 @@
-#include <include/Application.hpp>
-#include <include/core.hpp>
+#include "Application.hpp"
+#include "Core.hpp"
+#include "EntryPoint.hpp"
+#include "Log.hpp"
 
+#include <iostream>

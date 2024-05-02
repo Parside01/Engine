@@ -1,4 +1,7 @@
-#include "../include/core.hpp"
+#ifndef ENGINE_APPLICATION_HPP
+#define ENGINE_APPLICATION_HPP
+
+#include "../include/Core.hpp"
 
 namespace Engine
 {
@@ -10,4 +13,8 @@ namespace Engine
 
         void Run();
     };
+
+    Application* CreateApplication();
 } // namespace Engine
+
+#endif
