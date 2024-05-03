@@ -6,8 +6,6 @@ set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR}/include)
 
 
-
-
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 message(STATUS All cpp files --- ${CORE_SOURCES})
@@ -23,9 +21,10 @@ add_library(Engine SHARED ${ENGINE_SOURCES})
 find_package(OpenGL REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(fmt REQUIRED)
+find_package(glfw3 REQUIRED)
 
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
-target_link_libraries(engine ${OpenGL_LIBRARIES} Engine spdlog::spdlog fmt::fmt)
+target_link_libraries(engine ${OpenGL_LIBRARIES} Engine spdlog::spdlog fmt::fmt glfw)
 
 target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)
 message(STATUS attach ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)
