@@ -1,10 +1,10 @@
 #ifndef ENGINE_EVENT_HPP
 #define ENGINE_EVENT_HPP
 
+#include "engine_precompile_headers.hpp"
+
 #include "../include/Core.hpp"
 
-#include <string>
-#include <functional>
 
 namespace Engine
 {

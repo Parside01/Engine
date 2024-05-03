@@ -1,7 +1,7 @@
 #ifndef ENGINE_APPEVENT_HPP
 #define ENGINE_APPEVENT_HPP
 
-#include <sstream>
+#include "engine_precompile_headers.hpp"
 
 #include "../include/Core.hpp"
 #include "Event.hpp"

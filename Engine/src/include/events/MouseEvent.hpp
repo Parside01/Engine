@@ -2,7 +2,8 @@
 #define ENGINE_MOUSEEVENT_HPP
 
 #include "Event.hpp"
-#include <sstream>
+
+#include "engine_precompile_headers.hpp"
 
 namespace Engine
 {

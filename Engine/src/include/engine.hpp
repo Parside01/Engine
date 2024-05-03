@@ -3,4 +3,3 @@
 #include "EntryPoint.hpp"
 #include "Log.hpp"
 
-#include <iostream>
