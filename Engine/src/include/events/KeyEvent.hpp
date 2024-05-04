@@ -3,8 +3,6 @@
 
 #include "Event.hpp"
 
-#include "engine_precompile_headers.hpp"
-
 namespace Engine {
     
     class ENGINE_API KeyEvent : public Event {

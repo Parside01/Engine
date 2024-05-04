@@ -1,7 +1,7 @@
 #ifndef ENGINE_LOG_HPP 
 #define ENGINE_LOG_HPP
 
-#include "../include/Core.hpp"
+#include "../Core.hpp"
 
 #include "spdlog/spdlog.h"
 

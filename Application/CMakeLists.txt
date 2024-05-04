@@ -8,7 +8,7 @@ set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR})
 
 find_package(OpenGL REQUIRED)
 find_package(fmt REQUIRED)
-
+find_package(glfw3 REQUIRED)
 
 
 include_directories(${ENGINE_INCLUDE_DIR})
@@ -16,7 +16,7 @@ include_directories(${ENGINE_INCLUDE_DIR})
 # Добавляем исходные файлы приложения
 add_executable(Sandbox main.cpp)
 # Определяем зависимость от Engine
-target_link_libraries(Sandbox ${ENGINE_BUILD_DIR}/libEngine.so OpenGL::GL fmt::fmt)
+target_link_libraries(Sandbox ${ENGINE_BUILD_DIR}/libEngine.so OpenGL::GL fmt::fmt glfw)
 
 
 # target_link_libraries(Sandbox Engine)

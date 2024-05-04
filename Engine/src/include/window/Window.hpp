@@ -1,15 +1,14 @@
 #ifndef ENGINE_WINDOWN_HPP
 #define ENGINE_WINDOWN_HPP
 
-#include "engine_precompile_headers.hpp"
+#include "../engine_precompile_headers.hpp"
 
-#include "Core.hpp"
-#include "events/Event.hpp"
+#include "../Core.hpp"
+#include "../events/Event.hpp"
 
 namespace Engine
 {   
-    class WindowProrepty {
-    private:
+    struct WindowProrepty {
         std::string Title;
         uint32_t Width;
         uint32_t Height;
@@ -28,6 +27,9 @@ namespace Engine
 
         virtual uint32_t GetWidth() const = 0;
         virtual uint32_t GetHeight() const = 0;
+
+        virtual bool IsVsync() const = 0;
+        virtual void SetVsync(bool enabled) = 0;
 
         virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 

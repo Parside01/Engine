@@ -4,16 +4,15 @@
 namespace Engine
 {
     Application::Application() {
-
+        m_Window = std::unique_ptr<Window>(Window::Create());
     }
     Application::~Application() {
 
     }
     void Application::Run() {
-        while (true) {
-        
+        while (m_IsStart) {
+            m_Window->OnUpdate();
         }
-        
     }
 
     Application* CreateApplication() {

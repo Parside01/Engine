@@ -14,8 +14,6 @@
 
 #endif
 
-#define BIT(x) (1 << x)
-
 namespace Engine
 {
     class ENGINE_API Core

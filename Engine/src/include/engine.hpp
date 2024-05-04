@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "Core.hpp"
 #include "EntryPoint.hpp"
-#include "Log.hpp"
+#include "log/Log.hpp"
+#include "Utils.hpp"
 
