@@ -3,8 +3,6 @@
 
 #include "Event.hpp"
 
-#include "../include/Core.hpp"
-
 namespace Engine {
 
     class ENGINE_API WindowResizeEvent : public Event {

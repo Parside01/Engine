@@ -8,6 +8,10 @@
 #include "../Core.hpp"
 #include "../Utils.hpp"
 
+#include "../events/AppEvent.hpp"
+#include "../events/MouseEvent.hpp"
+#include "../events/KeyEvent.hpp"
+
 namespace Engine
 {
     class LinuxWindow : public Window {

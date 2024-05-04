@@ -3,6 +3,8 @@
 
 #include "../include/Core.hpp"
 #include "engine_precompile_headers.hpp"
+#include "../include/Utils.hpp"
+#include "../include/log/Log.hpp"
 #include "../include/window/Window.hpp"
 
 namespace Engine
@@ -14,6 +16,9 @@ namespace Engine
         virtual ~Application();
 
         void Run();
+
+        void OnEvent(Event& event);
+
     private:
         std::unique_ptr<Window> m_Window;
         bool m_IsStart = true;

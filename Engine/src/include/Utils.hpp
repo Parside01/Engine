@@ -1,6 +1,8 @@
 #ifndef ENGINE_BASE_HPP
 #define ENGINE_BASE_HPP
 
+    #include "engine_precompile_headers.hpp"
+
     #if defined(__linux__) 
         #include "signal.h"
         #define EG_DEBUG_BREAK() raise(SIGTRAP)
@@ -8,6 +10,8 @@
 
     #define BIT(x) (1 << x)
 
+    #define EG_BINDEVENT(fn) [this](auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
+    
     #define EG_EXPAND_MACRO(x) x
     #define EG_STRINGIFY_MACRO(x) #x
 
