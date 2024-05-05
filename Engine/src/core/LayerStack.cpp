@@ -1,4 +1,5 @@
 #include "../include/layer/LayerStack.hpp"
+#include "LayerStack.hpp"
 
 namespace Engine
 {
@@ -12,5 +13,16 @@ namespace Engine
         }
     }
 
+    void LayerStack::PushLayer(Layer *layer)
+    {
+    }
+
+    void LayerStack::PushOverlay(Layer *overlay)
+    {
+    }
+
+    void LayerStack::PopLayer(Layer layer)
+    {
+    }
 
 } // namespace Engine
