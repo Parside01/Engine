@@ -4,6 +4,8 @@
 #include "../include/Core.hpp"
 #include "engine_precompile_headers.hpp"
 #include "../include/Utils.hpp"
+#include "../include/layer/Layer.hpp"
+#include "../include/layer/LayerStack.hpp"
 #include "../include/log/Log.hpp"
 #include "../include/window/Window.hpp"
 
@@ -19,9 +21,16 @@ namespace Engine
 
         void OnEvent(Event& event);
 
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* layer);
+
     private:
+        void OnWindowClose(WindowCloseEvent& event);
+
         std::unique_ptr<Window> m_Window;
         bool m_IsStart = true;
+
+        LayerStack m_LayerStack;
     };
 
     Application* CreateApplication();
