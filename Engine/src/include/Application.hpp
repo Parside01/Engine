@@ -2,6 +2,9 @@
 #define ENGINE_APPLICATION_HPP
 
 #include "../include/Core.hpp"
+#include "../include/events/Event.hpp"
+#include "../include/events/AppEvent.hpp"
+
 #include "engine_precompile_headers.hpp"
 #include "../include/Utils.hpp"
 #include "../include/layer/Layer.hpp"
@@ -25,7 +28,7 @@ namespace Engine
         void PushOverlay(Layer* layer);
 
     private:
-        void OnWindowClose(WindowCloseEvent& event);
+        bool OnWindowClose(WindowCloseEvent& event);
 
         std::unique_ptr<Window> m_Window;
         bool m_IsStart = true;

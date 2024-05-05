@@ -41,6 +41,7 @@ namespace Engine
         virtual int GetCategoryFlags() const = 0;
         virtual std::string ToString() const { return GetName(); }
 
+        inline bool Handled() const { return m_Handled; }
         inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
 
     protected:

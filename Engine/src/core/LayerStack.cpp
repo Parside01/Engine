@@ -1,5 +1,4 @@
 #include "../include/layer/LayerStack.hpp"
-#include "LayerStack.hpp"
 
 namespace Engine
 {

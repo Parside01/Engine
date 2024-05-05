@@ -35,6 +35,7 @@ namespace Engine
         std::string ToString() const override {
             std::stringstream ss;
             ss << "MouseScrolledEvent --- xOffset: " << m_XOffset << " yOffset: " << m_YOffset;
+            return ss.str();
         }
 
         EVENT_CLASS_TYPE(MouseScrolled)

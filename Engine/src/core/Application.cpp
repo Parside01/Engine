@@ -1,5 +1,4 @@
 #include "../include/Application.hpp"
-#include "Application.hpp"
 
 namespace Engine
 {
@@ -9,20 +8,19 @@ namespace Engine
     }
 
     void Application::OnEvent(Event &event) {
-        EG_CORE_TRACE("{0}", event.ToString());
-
         EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<WindowCloseEvent>(EG_BINDFUNC(Application::OnWindowClose));
+        dispatcher.Dispatch<WindowCloseEvent>(EG_BINDEVENT(Application::OnWindowClose));
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
-            (*--it)->OnEvent();
-            if (event.Handled)
+            (*--it)->OnEvent(event);
+            if (event.Handled())
                 break;
         }
     }
 
-    void Application::OnWindowClose(WindowCloseEvent &event) {
+    bool Application::OnWindowClose(WindowCloseEvent &event) {
         m_IsStart = false;
+        return true;
     }
 
     void Application::PushLayer(Layer *layer)
@@ -48,6 +46,10 @@ namespace Engine
 
             m_Window->OnUpdate();
         }
+    }
+
+    Application* CreateApplication() {
+        return nullptr;
     }
 } // namespace Engine
 
