@@ -19,7 +19,7 @@ set(ENGINE_SOURCES ${CORE_SOURCES})
 add_library(Engine SHARED ${ENGINE_SOURCES})
 
 find_package(OpenGL REQUIRED)
-find_package(spdlog REQUIRED)
+find_package(ImGui REQUIRED)
 find_package(fmt REQUIRED)
 find_package(glfw3 REQUIRED)
 
