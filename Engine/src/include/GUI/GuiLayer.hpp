@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-    class GuiLayer : public Layer {
+    class ENGINE_API GuiLayer : public Layer {
     public:
 
         GuiLayer();
