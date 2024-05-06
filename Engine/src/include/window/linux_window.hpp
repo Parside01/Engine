@@ -24,11 +24,13 @@ namespace Engine
 
         inline uint32_t GetHeight() const override { return m_WindowData.Height; }
         inline uint32_t GetWidth() const override { return m_WindowData.Width; }
-        
+    
         void SetVsync(bool enabled) override;
         bool IsVsync() const override { return m_WindowData.Vsync; }
 
         inline void SetEventCallback(const EventCallbackFn& callback) override { m_WindowData.EventCallback = callback; }
+
+        inline void* GetNativeWindow() const override { return m_Window; }
     private:
 
         virtual void Init(const WindowProrepty& props);

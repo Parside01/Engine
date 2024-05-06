@@ -19,7 +19,14 @@ namespace Engine
     }
 
     void GuiLayer::OnAttach() {
+        IMGUI_CHECKVERSION();
         ImGui::CreateContext();
+
+        Application& app = Application::GetApplication();
+        GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 410");
         ImGui::StyleColorsDark();
 
         ImGuiIO& io = ImGui::GetIO();

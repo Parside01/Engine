@@ -35,6 +35,7 @@ namespace Engine
 
         static Window* Create(const WindowProrepty& props = WindowProrepty());
 
+        virtual void* GetNativeWindow() const = 0;
     };
 } // namespace Engine
 
