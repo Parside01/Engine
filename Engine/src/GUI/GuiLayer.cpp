@@ -1,7 +1,8 @@
 #include "../include/GUI/GuiLayer.hpp"
 #include "../include/engine_precompile_headers.hpp"
-#include "imgui/imgui.h"
-#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 
 namespace Engine
