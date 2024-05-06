@@ -5,5 +5,4 @@
 #include "Utils.hpp"
 #include "layer/Layer.hpp"
 #include "layer/LayerStack.hpp"
-#include "window/OpenGL/guiRender.hpp"
 #include "GUI/GuiLayer.hpp"
