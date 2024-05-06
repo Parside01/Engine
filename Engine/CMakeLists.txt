@@ -6,6 +6,12 @@ set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR}/include)
 set(ENGINE_THIRD_PARTY /home/kneepy/bin/c/Engine/third_party)
 
+# --- Все еще пытаюсь добавить imgui сюда.
+
+add_library(imgui ../)
+
+# --- Все еще пытаюсь добавить imgui сюда.
+
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
