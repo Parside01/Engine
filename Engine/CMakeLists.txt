@@ -4,7 +4,11 @@ project(Engine)
 
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR}/include)
-set(THIRD_PARTY_DIR /home/parside/projects/local/engine/third_party)
+message(STATUS ${CMAKE_PROJECT_D}/..)
+# ДА КАК ЭТО ФИКИСИТЬ?
+# /home/parside/projects/local/engine/third_party
+# /home/kneepy/bin/c/Engine/third_party
+set(THIRD_PARTY_DIR /home/kneepy/bin/c/Engine/third_party)
 set(INCLUDE_DIR usr/include)
 
 message(STATUS ${THIRD_PARTY_DIR})

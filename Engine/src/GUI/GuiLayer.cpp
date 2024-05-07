@@ -63,7 +63,6 @@ namespace Engine
 
     void GuiLayer::OnEvent(Event& event) {
         EventDispatcher disp(event);
-
         disp.Dispatch<MouseButtonPressedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonPressedEvent));
         disp.Dispatch<MouseButtonReleasedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonReleasedEvent));
         disp.Dispatch<MouseMovedEvent>(EG_BINDEVENT(GuiLayer::OnMouseMovedEvent));
@@ -79,7 +78,7 @@ namespace Engine
     bool GuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event) {
         ImGuiIO& io = ImGui::GetIO();
         io.MouseDown[event.GetMouseButton()] = true;
-            
+        
         return false;
     }
     bool GuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event) {
