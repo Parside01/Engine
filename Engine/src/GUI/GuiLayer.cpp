@@ -33,37 +33,11 @@ namespace Engine
         io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
         io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
-        // io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-        // io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-        // io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-        // io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-        // io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-        // io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-        // io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-        // io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-        // io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-        // io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-        // io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-        // io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-        // io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-        // io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-        // io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-        // io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-        // io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-        // io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-        // io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-        // io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-        // io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
-
         ImGui_ImplOpenGL3_Init("#version 410");
-
-
     }
     void GuiLayer::OnDetach() {
     }
     void GuiLayer::OnUpdate() {
-
-
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::GetApplication();
         io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
@@ -88,6 +62,79 @@ namespace Engine
     }
 
     void GuiLayer::OnEvent(Event& event) {
+        EventDispatcher disp(event);
 
+        disp.Dispatch<MouseButtonPressedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonPressedEvent));
+        disp.Dispatch<MouseButtonReleasedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonReleasedEvent));
+        disp.Dispatch<MouseMovedEvent>(EG_BINDEVENT(GuiLayer::OnMouseMovedEvent));
+        disp.Dispatch<MouseScrolledEvent>(EG_BINDEVENT(GuiLayer::OnMouseScrolledEvent));
+        
+        disp.Dispatch<WindowResizeEvent>(EG_BINDEVENT(GuiLayer::OnWindowResizeEvent));
+        
+        disp.Dispatch<KeyTypedEvent>(EG_BINDEVENT(GuiLayer::OnKeyTypedEvent));
+        disp.Dispatch<KeyPressedEvent>(EG_BINDEVENT(GuiLayer::OnKeyPressedEvent));
+        disp.Dispatch<KeyReleasedEvent>(EG_BINDEVENT(GuiLayer::OnKeyReleasedEvent));
+    }
+
+    bool GuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.MouseDown[event.GetMouseButton()] = true;
+            
+        return false;
+    }
+    bool GuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.MouseDown[event.GetMouseButton()] = false;
+            
+        return false;
+    }
+    bool GuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.MouseWheelH += event.GetXOffset();
+        io.MouseWheel += event.GetYOffset();
+
+        return false;
+    }
+    bool GuiLayer::OnMouseMovedEvent(MouseMovedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.MousePos = ImVec2(event.GetX(), event.GetY());
+
+        return false;
+    }
+
+    bool GuiLayer::OnKeyPressedEvent(KeyPressedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.KeysDown[event.GetKeyCode()] = true;
+
+        io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+        io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+        io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+        io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+        return false;
+    }
+    bool GuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.KeysDown[event.GetKeyCode()] = false;
+
+        return false;
+    }
+
+    bool GuiLayer::OnKeyTypedEvent(KeyTypedEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        int code = event.GetKeyCode();
+        if (code > 0 && code < 0x10000) 
+            io.AddInputCharacter((unsigned short)code);
+
+        return false;
+    }
+
+    bool GuiLayer::OnWindowResizeEvent(WindowResizeEvent& event) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize  = ImVec2(event.GetHeight(), event.GetWidth());
+        io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+
+
+        return false;
     }
 } // namespace Engine

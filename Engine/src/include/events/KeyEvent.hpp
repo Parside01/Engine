@@ -37,16 +37,29 @@ namespace Engine {
     };
 
 
-    class ENGINE_API KeyReleaseEvent : public KeyEvent {
+    class ENGINE_API KeyReleasedEvent : public KeyEvent {
     public: 
-        KeyReleaseEvent(int keyCode) : KeyEvent(keyCode) {}
+        KeyReleasedEvent(int keyCode) : KeyEvent(keyCode) {}
 
         std::string ToString() const override {
             std::stringstream ss;
-            ss << "KeyReleaseEvent --- keycode: " << m_KeyCode;
+            ss << "KeyReleasedEvent --- keycode: " << m_KeyCode;
             return ss.str();
         }
         EVENT_CLASS_TYPE(KeyReleased)
+    };
+
+    class ENGINE_API KeyTypedEvent : public KeyEvent {
+    public: 
+        KeyTypedEvent(int keyCode) : KeyEvent(keyCode) {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyTypedEvent --- keycode: " << m_KeyCode;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(KeyTyped)
     };
 }
 
