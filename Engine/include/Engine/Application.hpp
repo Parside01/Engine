@@ -13,6 +13,7 @@
 // #include "../include/window/Window.hpp"
 
 #include "Engine/Core.hpp"
+#include "Engine/GUI/GuiLayer.hpp"
 #include "Engine/events/Event.hpp"
 #include "Engine/events/AppEvent.hpp"
 #include "Engine/engine_precompile_headers.hpp"
@@ -45,6 +46,7 @@ namespace Engine
 
     private:
         std::unique_ptr<Window> m_Window;
+        GuiLayer* m_GuiLayer;
         bool m_IsStart = true;
         LayerStack m_LayerStack;
 

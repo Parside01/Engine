@@ -13,13 +13,17 @@ namespace Engine
         m_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create());
+        m_GuiLayer = new GuiLayer();
+
+        PushLayer(m_GuiLayer);
+
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
     }
 
     void Application::OnEvent(Event &event) {
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<WindowCloseEvent>(EG_BINDEVENT(Application::OnWindowClose));
-
+            
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
             (*--it)->OnEvent(event);
             if (event.Handled)
@@ -32,14 +36,12 @@ namespace Engine
         return true;
     }
 
-    void Application::PushLayer(Layer *layer)
-    {      
+    void Application::PushLayer(Layer *layer) {      
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
-    void Application::PushOverlay(Layer *layer)
-    {
+    void Application::PushOverlay(Layer *layer) {
         m_LayerStack.PushOverlay(layer);
         layer->OnAttach();
     }
@@ -51,10 +53,11 @@ namespace Engine
     void Application::Run() {
         while (m_IsStart) {
             
+            m_GuiLayer->Begin();
             for (Layer* l : m_LayerStack) {
-                l->OnUpdate();
+                l->OnImGuiRender();
             }
-            
+            m_GuiLayer->End();
             m_Window->OnUpdate();
         }
     }

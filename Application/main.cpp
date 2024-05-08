@@ -17,7 +17,6 @@ class Sandbox : public Engine::Application {
 public:
     Sandbox() {
         PushLayer(new TestLayer);
-        PushOverlay(new Engine::GuiLayer);
     }
     ~Sandbox() {
 

@@ -13,6 +13,10 @@ int main(int argc, char** argv) {
     EG_CORE_INFO("INIT LOGGER");
     
     auto app = Engine::CreateApplication();
+    EG_CORE_INFO("CREATE APPLICATION");
+    if (app == nullptr) {
+        EG_CORE_ERROR("Failed to create application!");
+    }
     app->Run();
     delete app;
 

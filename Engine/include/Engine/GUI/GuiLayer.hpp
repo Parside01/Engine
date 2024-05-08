@@ -10,7 +10,6 @@
 
 // #include "../Application.hpp"
 
-#include "Engine/Application.hpp"
 #include "Engine/layer/Layer.hpp"
 #include "Engine/events/Event.hpp"
 #include "Engine/events/KeyEvent.hpp"

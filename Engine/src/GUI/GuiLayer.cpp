@@ -2,6 +2,7 @@
 // #include "../include/engine_precompile_headers.hpp"
 
 #include "Engine/GUI/GuiLayer.hpp"
+#include "Engine/Application.hpp"
 #include "Engine/engine_precompile_headers.hpp"
 
 #include "imgui.h"
@@ -22,10 +23,9 @@ namespace Engine
     }
 
     void GuiLayer::OnAttach() {
-        IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-
-        ImGuiIO& io = ImGui::GetIO();
+        
+        ImGuiIO& io = ImGui::GetIO(); (void) io;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
         // Не работает в ветке master imgui.
@@ -33,16 +33,14 @@ namespace Engine
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         float fontSize = 18.f; 
-        io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono-Italic.ttf", fontSize);
-        io.FontDefault = io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono-Italic.ttf", fontSize);
-
+        io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono.ttf", fontSize);
+        io.FontDefault = io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono.ttf", fontSize);
 
         ImGui::StyleColorsDark();
 
         ImGuiStyle& style = ImGui::GetStyle();
-
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-            style.WindowRounding = 0.f;
+            style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f; 
         }
 
@@ -65,8 +63,7 @@ namespace Engine
         ImGui::ShowDemoWindow(&show);
     }
 
-    void GuiLayer::OnEvent(Event &event)
-    {
+    void GuiLayer::OnEvent(Event &event) {
         if (m_BlockEvents)
 		{   
 			ImGuiIO& io = ImGui::GetIO();
