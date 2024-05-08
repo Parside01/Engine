@@ -33,8 +33,8 @@ namespace Engine
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
         float fontSize = 18.f; 
-        io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono.ttf", fontSize);
-        io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono.ttf", fontSize);
+        io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono-Italic.ttf", fontSize);
+        io.FontDefault = io.Fonts->AddFontFromFileTTF("/home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono-Italic.ttf", fontSize);
 
 
         ImGui::StyleColorsDark();
@@ -60,7 +60,13 @@ namespace Engine
         ImGui::DestroyContext();
     }
 
-    void GuiLayer::OnEvent(Event& event) {
+    void GuiLayer::OnImGuiRender() {
+        static bool show = true;
+        ImGui::ShowDemoWindow(&show);
+    }
+
+    void GuiLayer::OnEvent(Event &event)
+    {
         if (m_BlockEvents)
 		{   
 			ImGuiIO& io = ImGui::GetIO();

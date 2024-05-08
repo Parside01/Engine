@@ -32,7 +32,6 @@ target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(imgui PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 
-target_link_libraries(Engine PUBLIC imgui)
 # --- Все еще пытаюсь добавить imgui сюда.
 
 set(CORE_SOURCES)
@@ -43,6 +42,7 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
+target_link_libraries(Engine PUBLIC imgui)
 
 
 
