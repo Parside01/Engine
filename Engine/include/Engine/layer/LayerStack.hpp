@@ -2,9 +2,13 @@
 #define ENGINE_LAYERSTACK_HPP
 
 
-#include "../Core.hpp"
-#include "../events/Event.hpp"
+// #include "../Core.hpp"
+// #include "../events/Event.hpp"
+
 #include "Layer.hpp"
+
+#include "Engine/Core.hpp"
+#include "Engine/events/Event.hpp"
 
 namespace Engine
 {

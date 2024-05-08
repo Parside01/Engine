@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.13)
 
 project(Sandbox)
 
+set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Engine)
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Engine/src)
 set(ENGINE_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Engine/build)
-set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR})
+set(ENGINE_INCLUDE_DIR ${ENGINE_DIR}/include)
 
 find_package(OpenGL REQUIRED)
 find_package(fmt REQUIRED)

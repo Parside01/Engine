@@ -1,10 +1,15 @@
 #ifndef ENGINE_WINDOWN_HPP
 #define ENGINE_WINDOWN_HPP
 
-#include "../engine_precompile_headers.hpp"
+// #include "../engine_precompile_headers.hpp"
 
-#include "../Core.hpp"
-#include "../events/Event.hpp"
+// #include "../Core.hpp"
+// #include "../events/Event.hpp"
+
+#include "Engine/Core.hpp"
+#include "Engine/engine_precompile_headers.hpp"
+
+#include "Engine/events/Event.hpp"
 
 namespace Engine
 {   

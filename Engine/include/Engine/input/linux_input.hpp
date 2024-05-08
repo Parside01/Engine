@@ -1,8 +1,11 @@
 #ifndef ENGINE_LINUX_INPUT_HPP
 #define ENGINE_LINUX_INPUT_HPP
 
-#include "../Input.hpp"
-#include "../Application.hpp"
+// #include "../Input.hpp"
+// #include "../Application.hpp"
+
+#include "Engine/input/Input.hpp"
+#include "Engine/Application.hpp"
 
 namespace Engine
 {

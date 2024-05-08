@@ -1,5 +1,8 @@
-#include "../include/window/linux_input.hpp"
-#include "../include/log/Log.hpp"
+// #include "../include/window/linux_input.hpp"
+// #include "../include/log/Log.hpp"
+
+#include "Engine/input/linux_input.hpp"
+#include "Engine/log/Log.hpp"
 
 #include "GLFW/glfw3.h"
 

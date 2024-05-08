@@ -4,13 +4,21 @@
 #include "GLFW/glfw3.h"
 
 #include "Window.hpp"
-#include "../engine_precompile_headers.hpp"
-#include "../Core.hpp"
-#include "../Utils.hpp"
+// #include "../engine_precompile_headers.hpp"
+// #include "../Core.hpp"
+// #include "../Utils.hpp"
 
-#include "../events/AppEvent.hpp"
-#include "../events/MouseEvent.hpp"
-#include "../events/KeyEvent.hpp"
+// #include "../events/AppEvent.hpp"
+// #include "../events/MouseEvent.hpp"
+// #include "../events/KeyEvent.hpp"
+
+#include "Engine/engine_precompile_headers.hpp"
+#include "Engine/Core.hpp"
+#include "Engine/Utils.hpp"
+
+#include "Engine/events/KeyEvent.hpp"
+#include "Engine/events/MouseEvent.hpp"
+#include "Engine/events/AppEvent.hpp"
 
 namespace Engine
 {

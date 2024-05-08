@@ -1,5 +1,8 @@
-#include "../include/window/linux_window.hpp"
-#include "../include/log/Log.hpp"
+// #include "../include/window/linux_window.hpp"
+// #include "../include/log/Log.hpp"
+
+#include "Engine/window/linux_window.hpp"
+#include "Engine/log/Log.hpp"
 
 namespace Engine {
     

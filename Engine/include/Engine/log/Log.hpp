@@ -1,7 +1,10 @@
 #ifndef ENGINE_LOG_HPP 
 #define ENGINE_LOG_HPP
 
-#include "../Core.hpp"
+// #include "../Core.hpp"
+
+#include "Engine/Core.hpp"
+#include "Engine/events/Event.hpp"
 
 #include "spdlog/spdlog.h"
 
@@ -20,6 +23,16 @@ namespace Engine
         static std::shared_ptr<spdlog::logger> s_ClientLogger;
     };
 } // namespace Engine
+
+
+// Типа логирование для разных типов движка. 
+template<>
+struct fmt::formatter<Engine::Event> : fmt::formatter<std::string> {
+    auto format(const Engine::Event& event, format_context &ctx) const -> decltype(ctx.out())
+    {
+        return format_to(ctx.out(), "{}", event.ToString());
+    }
+};
 
 
 // Core log macros

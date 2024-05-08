@@ -1,10 +1,15 @@
 #ifndef ENGINE_EVENT_HPP
 #define ENGINE_EVENT_HPP
 
-#include "../engine_precompile_headers.hpp"
+// #include "../engine_precompile_headers.hpp"
 
-#include "../Core.hpp"
-#include "../Utils.hpp"
+// #include "../Core.hpp"
+// #include "../Utils.hpp"
+
+#include "Engine/engine_precompile_headers.hpp"
+
+#include "Engine/Core.hpp"
+#include "Engine/Utils.hpp"
 
 namespace Engine
 {
@@ -66,10 +71,5 @@ namespace Engine
         Event& m_Event;
     };
 
-    inline std::ostream& operator<<(std::ostream& os, const Event& e) {
-		return os << e.ToString();
-	}
 } // namespace Engine
-
-
 #endif

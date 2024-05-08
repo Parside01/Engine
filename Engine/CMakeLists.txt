@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 project(Engine)
 
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(ENGINE_INCLUDE_DIR ${ENGINE_SOURCE_DIR}/include)
-message(STATUS ${CMAKE_PROJECT_D}/..)
+set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # ДА КАК ЭТО ФИКИСИТЬ?
 # /home/parside/projects/local/engine/third_party
 # /home/kneepy/bin/c/Engine/third_party
@@ -43,15 +43,16 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
 
-# --- Добавляем дириктории инклюдов.
+# --- Добавляем дириктории инклюдов для Engine.
 
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
+target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 
 target_link_libraries(Engine PUBLIC imgui)
 
-# --- Добавляем дириктории инклюдов.
+# --- Добавляем дириктории инклюдов для Engine.
 
 find_package(OpenGL REQUIRED)
 find_package(fmt REQUIRED)
@@ -61,7 +62,7 @@ find_package(spdlog REQUIRED)
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
 target_link_libraries(engine ${OpenGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw)
 
-target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)
+target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/Engine/engine_precompile_headers.hpp)
 message(STATUS attach ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)
 
 install(TARGETS engine DESTINATION lib)

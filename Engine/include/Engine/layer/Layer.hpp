@@ -1,8 +1,11 @@
 #ifndef ENGINE_LAYER_HPP
 #define ENGINE_LAYER_HPP
 
-#include "../Core.hpp"
-#include "../events/Event.hpp"
+// #include "../Core.hpp"
+// #include "../events/Event.hpp"
+
+#include "Engine/Core.hpp"
+#include "Engine/events/Event.hpp"
 
 namespace Engine
 {

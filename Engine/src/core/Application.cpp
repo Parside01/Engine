@@ -1,5 +1,8 @@
-#include "../include/Application.hpp"
-#include "../include/Input.hpp"
+// #include "../include/Application.hpp"
+// #include "../include/Input.hpp"
+
+#include "Engine/Application.hpp"
+#include "Engine/input/Input.hpp"
 
 namespace Engine
 {
@@ -51,9 +54,6 @@ namespace Engine
             for (Layer* l : m_LayerStack) {
                 l->OnUpdate();
             }
-            
-            auto [x, y] = Input::GetMousePosition();
-            EG_CORE_TRACE("{0} {1}", x, y);
             
             m_Window->OnUpdate();
         }

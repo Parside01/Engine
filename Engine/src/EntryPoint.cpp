@@ -1,6 +1,9 @@
-#include "include/engine.hpp"
+// #include "include/engine.hpp"
 
-#include "include/engine_precompile_headers.hpp"
+// #include "include/engine_precompile_headers.hpp"
+
+#include "Engine/engine.hpp"
+#include "Engine/engine_precompile_headers.hpp"
 
 int main(int argc, char** argv) {
     std::cout << "ENGINE START" << std::endl;

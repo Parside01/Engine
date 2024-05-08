@@ -1,5 +1,8 @@
-#include "../include/GUI/GuiLayer.hpp"
-#include "../include/engine_precompile_headers.hpp"
+// #include "../include/GUI/GuiLayer.hpp"
+// #include "../include/engine_precompile_headers.hpp"
+
+#include "Engine/GUI/GuiLayer.hpp"
+#include "Engine/engine_precompile_headers.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -63,6 +66,7 @@ namespace Engine
 
     void GuiLayer::OnEvent(Event& event) {
         EventDispatcher disp(event);
+
         disp.Dispatch<MouseButtonPressedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonPressedEvent));
         disp.Dispatch<MouseButtonReleasedEvent>(EG_BINDEVENT(GuiLayer::OnMouseButtonReleasedEvent));
         disp.Dispatch<MouseMovedEvent>(EG_BINDEVENT(GuiLayer::OnMouseMovedEvent));
