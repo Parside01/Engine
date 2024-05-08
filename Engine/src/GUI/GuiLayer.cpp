@@ -32,6 +32,26 @@ namespace Engine
         // Без них нельзя закреплять вкладки и тд.
         // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+        float fontSize = 18.f; 
+        io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono.ttf", fontSize);
+        io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono.ttf", fontSize);
+
+
+        ImGui::StyleColorsDark();
+
+        ImGuiStyle& style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+
+        }
+
+        SetDarkTheme();
+
+        Application& app = Application::GetApplication();
+        GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 410");
     }
     void GuiLayer::OnDetach() {
         ImGui_ImplOpenGL3_Shutdown();
