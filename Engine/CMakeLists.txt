@@ -32,6 +32,7 @@ target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(imgui PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 
+target_link_libraries(Engine PUBLIC imgui)
 # --- Все еще пытаюсь добавить imgui сюда.
 
 set(CORE_SOURCES)
@@ -43,6 +44,8 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
 
+
+
 # --- Добавляем дириктории инклюдов для Engine.
 
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui)
@@ -50,17 +53,19 @@ target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 
-target_link_libraries(Engine PUBLIC imgui)
 
 # --- Добавляем дириктории инклюдов для Engine.
+
+
 
 find_package(OpenGL REQUIRED)
 find_package(fmt REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(glm REQUIRED)
 
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
-target_link_libraries(engine ${OpenGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw)
+target_link_libraries(engine ${OpenGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm)
 
 target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/Engine/engine_precompile_headers.hpp)
 message(STATUS attach ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)

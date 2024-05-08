@@ -25,26 +25,20 @@ namespace Engine
         GuiLayer();
         ~GuiLayer();
 
-        void OnAttach();
-        void OnDetach();
-        void OnUpdate();
-        void OnEvent(Event& event);
-    
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        virtual void OnImGuiRender() override;
+        virtual void OnEvent(Event& event);
+
+        void Begin();
+        void End();
+
+        void BlockEvents(bool block) { m_BlockEvents = block; }
+        void SetDarkTheme();
+
+        uint32_t GetActiveWidgetID() const;
     private:
-
-        bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);
-        bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event);
-        bool OnMouseScrolledEvent(MouseScrolledEvent& event);
-        bool OnMouseMovedEvent(MouseMovedEvent& event);
-
-        bool OnKeyPressedEvent(KeyPressedEvent& event);
-        bool OnKeyReleasedEvent(KeyReleasedEvent& event);
-        bool OnKeyTypedEvent(KeyTypedEvent& event);
-
-        bool OnWindowResizeEvent(WindowResizeEvent& event);
-    
-    private:
-        float m_Time = 0.0f; 
+        bool m_BlockEvents = true; 
     };
 } // namespace Engine
 

@@ -24,22 +24,21 @@ namespace Engine
     void GuiLayer::OnAttach() {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
+
         ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
-        Application& app = Application::GetApplication();
-        GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
-
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
-
-        ImGui::StyleColorsDark();
-
-        io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-        io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-
-        ImGui_ImplOpenGL3_Init("#version 410");
+        // Переключить на другую ветку.
+        // Без них нельзя закреплять вкладки и тд.
+        // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     }
     void GuiLayer::OnDetach() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
     }
+
     void GuiLayer::OnUpdate() {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::GetApplication();
@@ -63,6 +62,8 @@ namespace Engine
 
         ImGui::EndFrame();
     }
+
+
 
     void GuiLayer::OnEvent(Event& event) {
         EventDispatcher disp(event);
