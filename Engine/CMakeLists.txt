@@ -6,9 +6,9 @@ set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # ДА КАК ЭТО ФИКИСИТЬ?
-# /home/parside/projects/local/engine/third_party
+# /home/parside/projects/local/Engine/third_party
 # /home/kneepy/bin/c/Engine/third_party
-set(THIRD_PARTY_DIR /home/kneepy/bin/c/Engine/third_party)
+set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 set(INCLUDE_DIR usr/include)
 
 message(STATUS ${THIRD_PARTY_DIR})
