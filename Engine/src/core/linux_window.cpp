@@ -26,7 +26,7 @@ namespace Engine {
 
     void LinuxWindow::OnUpdate() {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
     }
 
     void LinuxWindow::SetVsync(bool enabled) {
@@ -45,6 +45,7 @@ namespace Engine {
 
         EG_CORE_INFO("Create window --- {0} ({1} : {2})", props.Title, props.Width, props.Height);
 
+
         if (!s_GLFWInit) {
             int succ = glfwInit();
             
@@ -54,8 +55,9 @@ namespace Engine {
         }
 
         m_Window = glfwCreateWindow(int(m_WindowData.Width), int(m_WindowData.Height), m_WindowData.Title.c_str(), nullptr, nullptr);
+        m_Context = new OpenGLContext(m_Window);
 
-        glfwMakeContextCurrent(m_Window);
+        m_Context->Init();
         glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
         // Set event callbacks.

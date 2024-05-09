@@ -20,6 +20,8 @@
 #include "Engine/events/MouseEvent.hpp"
 #include "Engine/events/AppEvent.hpp"
 
+#include "Engine/Render/OpenGL/RenderContext_OpenGL.hpp"
+
 namespace Engine
 {
     class LinuxWindow : public Window {
@@ -47,7 +49,7 @@ namespace Engine
     private:
 
         GLFWwindow* m_Window;
-
+        RenderContext* m_Context;
         struct WindowData {
             std::string Title;
             uint32_t Width;
