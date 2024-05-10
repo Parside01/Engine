@@ -45,6 +45,9 @@ namespace Engine
         bool OnWindowClose(WindowCloseEvent& event);
 
     private:
+
+        uint32_t m_VertexBuffer, m_IndexBuffer, m_VertexArray;
+
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;
         bool m_IsStart = true;
