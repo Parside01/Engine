@@ -4,6 +4,9 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <filesystem>
+#include <climits>
+#include <libgen.h>
 
 #include <string_view>
 #include <string>

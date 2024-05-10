@@ -8,6 +8,14 @@
         #define EG_DEBUG_BREAK() raise(SIGTRAP)
     #endif
 
+
+    // Надо будет перенести в другое место, а то не смотрится вообще.
+    #define EG_GET_ABSOLUTE_PATH(relPath) ({ \
+        char absolutePath[PATH_MAX]; \
+        realpath(relPath, absolutePath); \
+        (const char*)absolutePath; \
+    })
+
     #define BIT(x) (1 << x)
 
     #define EG_BINDEVENT(fn) [this](auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
@@ -25,4 +33,10 @@
 	#define EG_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_, __VA_ARGS__) )
 	#define EG_CORE_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
 
+    namespace Utils
+    {
+        const char* GetAbsolutePath(const char* relPath);
+        std::string GetAbsolutePath(const std::string& path);
+    } // namespace Utils
+    
 #endif

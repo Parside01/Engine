@@ -1,8 +1,6 @@
 #ifndef ENGINE_LINUX_WINDOW_HPP
 #define ENGINE_LINUX_WINDOW_HPP
 
-#include "GLFW/glfw3.h"
-
 #include "Window.hpp"
 // #include "../engine_precompile_headers.hpp"
 // #include "../Core.hpp"

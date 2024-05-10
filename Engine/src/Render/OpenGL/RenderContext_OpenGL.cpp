@@ -11,13 +11,12 @@ namespace Engine
     void OpenGLContext::Init() {
         glfwMakeContextCurrent(m_WindowHandle);
 
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VERSION --- {0}", glGetString(GL_VERSION));
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VENDOR --- {0}", glGetString(GL_VENDOR));
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL RENDERER --- {0}", glGetString(GL_RENDER));
     }
 
     void OpenGLContext::SwapBuffers() {
-            glBegin(GL_TRIANGLES);
-
-            glEnd();
-
         glfwSwapBuffers(m_WindowHandle);
     }
 } // namespace Engine

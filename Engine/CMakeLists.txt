@@ -4,10 +4,6 @@ project(Engine)
 
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# ДА КАК ЭТО ФИКИСИТЬ?
-# /home/parside/projects/local/Engine/third_party
-# /home/kneepy/bin/c/Engine/third_party
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 set(INCLUDE_DIR usr/include)
 
@@ -32,6 +28,19 @@ target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(imgui PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 
+
+# --- Ищем нужные пакетики. 
+
+find_package(OpenGL REQUIRED)
+find_package(fmt REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(glm REQUIRED)
+find_package(GLEW REQUIRED)
+
+# --- Ищем нужные пакетики. 
+
+
 # --- Все еще пытаюсь добавить imgui сюда.
 
 set(CORE_SOURCES)
@@ -42,7 +51,7 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
-target_link_libraries(Engine PUBLIC imgui)
+target_link_libraries(Engine PUBLIC imgui ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 
 
 
@@ -53,19 +62,13 @@ target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 
-
 # --- Добавляем дириктории инклюдов для Engine.
 
 
 
-find_package(OpenGL REQUIRED)
-find_package(fmt REQUIRED)
-find_package(glfw3 REQUIRED)
-find_package(spdlog REQUIRED)
-find_package(glm REQUIRED)
-
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
-target_link_libraries(engine ${OpenGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm)
+target_link_libraries(engine ${OPENGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm)
+link_directories(${OPENGL_gl_LIBRARY})
 
 target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/Engine/engine_precompile_headers.hpp)
 message(STATUS attach ${ENGINE_INCLUDE_DIR}/engine_precompile_headers.hpp)

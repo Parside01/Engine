@@ -32,11 +32,10 @@ namespace Engine
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+ 
         float fontSize = 18.f; 
-        // /home/kneepy/bin/c/Engine/Engine/assets/fonts/JetBrainsMono.ttf
-        // /home/parside/projects/local/Engine/Engine/assets/fonts/JetBrainsMono.ttf
-        io.Fonts->AddFontFromFileTTF("/home/parside/projects/local/Engine/Engine/assets/fonts/JetBrainsMono.ttf", fontSize);
-        io.FontDefault = io.Fonts->AddFontFromFileTTF("/home/parside/projects/local/Engine/Engine/assets/fonts/JetBrainsMono.ttf", fontSize);
+        io.Fonts->AddFontFromFileTTF(Utils::GetAbsolutePath("../../Engine/assets/fonts/JetBrainsMono.ttf"), fontSize);
+        io.FontDefault = io.Fonts->AddFontFromFileTTF(Utils::GetAbsolutePath("../../Engine/assets/fonts/JetBrainsMono.ttf"), fontSize);
 
         ImGui::StyleColorsDark();
 

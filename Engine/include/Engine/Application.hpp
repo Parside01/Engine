@@ -1,17 +1,6 @@
 #ifndef ENGINE_APPLICATION_HPP
 #define ENGINE_APPLICATION_HPP
 
-// #include "../include/Core.hpp"
-// #include "../include/events/Event.hpp"
-// #include "../include/events/AppEvent.hpp"
-
-// #include "engine_precompile_headers.hpp"
-// #include "../include/Utils.hpp"
-// #include "../include/layer/Layer.hpp"
-// #include "../include/layer/LayerStack.hpp"
-// #include "../include/log/Log.hpp"
-// #include "../include/window/Window.hpp"
-
 #include "Engine/Core.hpp"
 #include "Engine/GUI/GuiLayer.hpp"
 #include "Engine/events/Event.hpp"
@@ -22,6 +11,9 @@
 #include "Engine/layer/LayerStack.hpp"
 #include "Engine/log/Log.hpp"
 #include "Engine/window/Window.hpp"
+
+#include "Engine/Render/OpenGL/Shader.hpp"
+
 
 namespace Engine
 {
@@ -46,7 +38,9 @@ namespace Engine
 
     private:
 
-        uint32_t m_VertexBuffer, m_IndexBuffer, m_VertexArray;
+        uint32_t m_VertexBuffer, m_IndexBuffer;
+        uint32_t m_VertexArray;
+        Shader* m_Shader;
 
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;

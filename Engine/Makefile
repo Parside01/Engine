@@ -1,7 +1,6 @@
 build:
-	mkdir -p build
-	cd build && cmake ../
-	cd build && make -j$(npoc)
+	mkdir -p build 
+	cd build && cmake .. && make -j$(nproc)
 
 clean:
 	rm -rf build
