@@ -13,6 +13,7 @@
 #include "Engine/window/Window.hpp"
 
 #include "Engine/Render/OpenGL/Shader.hpp"
+#include "Engine/Render/Buffers.hpp"
 
 
 namespace Engine
@@ -38,9 +39,10 @@ namespace Engine
 
     private:
 
-        uint32_t m_VertexBuffer, m_IndexBuffer;
         uint32_t m_VertexArray;
-        Shader* m_Shader;
+        std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<VertexBuffer> m_VertexBuffer;
+        std::unique_ptr<IndexBuffer> m_IndexBuffer;
 
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;

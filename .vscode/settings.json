@@ -69,6 +69,7 @@
         "complex": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "codecvt": "cpp"
     }
 }
