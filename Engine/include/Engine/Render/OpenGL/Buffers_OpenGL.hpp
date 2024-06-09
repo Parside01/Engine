@@ -12,9 +12,13 @@ namespace Engine
 
         virtual void Bind() const override;
         virtual void Unbind() const override;
+
+        virtual void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
+        [[nodiscard]] virtual const BufferLayout& GetLayout() const override { return m_Layout; }
     
     private:
         uint32_t m_RendererID;
+        BufferLayout m_Layout;
     };
 
     class OpenGLIndexBuffer : public IndexBuffer {
@@ -25,7 +29,7 @@ namespace Engine
         virtual void Bind() const override;
         virtual void Unbind() const override;
 
-        uint32_t GetCount() const override { return m_Count; }
+        [[nodiscard]] uint32_t GetCount() const override { return m_Count; }
 
     private:
         uint32_t m_Count;

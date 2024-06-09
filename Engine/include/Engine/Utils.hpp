@@ -4,7 +4,7 @@
     #include "Engine/engine_precompile_headers.hpp"
 
     #if defined(__linux__) 
-        #include "signal.h"
+        #include "csignal"
         #define EG_DEBUG_BREAK() raise(SIGTRAP)
     #endif
 

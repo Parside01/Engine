@@ -11,9 +11,9 @@ namespace Engine
     void OpenGLContext::Init() {
         glfwMakeContextCurrent(m_WindowHandle);
 
-        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VERSION --- {0}", glGetString(GL_VERSION));
-        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VENDOR --- {0}", glGetString(GL_VENDOR));
-        EG_CORE_INFO("OpenGLContext::Init -> OpenGL RENDERER --- {0}", glGetString(GL_RENDER));
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VERSION --- {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL VENDOR --- {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+        EG_CORE_INFO("OpenGLContext::Init -> OpenGL RENDERER --- {0}", reinterpret_cast<const char*>(glGetString(GL_RENDER)));
     }
 
     void OpenGLContext::SwapBuffers() {

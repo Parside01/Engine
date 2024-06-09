@@ -33,8 +33,18 @@ namespace Engine
         glewInit();
 
         m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        BufferLayout layout = {
+            {"a_Position", ShaderDataType::Float3},
+            {"a_Normal", ShaderDataType::Float3},
+            {"a_Color", ShaderDataType::Float4},
+        };
+
+        uint32_t index{0};
+        for (const auto& i : layout)
+        {
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        }
 
         uint32_t indices[3] = { 0, 1, 2 };
         m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
