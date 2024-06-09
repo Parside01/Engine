@@ -29,10 +29,10 @@ namespace Engine
             case ShaderDataType::Int3:   return 4 * 3;
             case ShaderDataType::Int4:   return 4 * 4;
             case ShaderDataType::Bool:   return 4;
-            default: return 0;
+            default:
+                EG_CORE_ASSERT(false, "Unknow ShaderDataType");
+                return 0;
         }
-        EG_CORE_ASSERT(false, "Unknow ShaderDataType");
-        return 0;
     }
     struct BufferElement {
         std::string Name;
@@ -40,22 +40,48 @@ namespace Engine
         uint32_t Size;
         uint32_t Count;
         ShaderDataType Type;
+        bool Normalized;
 
-        BufferElement(std::string name, const ShaderDataType type)
-        : Name(std::move(name)), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Count(0)
+
+        BufferElement(std::string name, const ShaderDataType type, const bool normalized = false)
+        : Name(std::move(name)), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Count(0), Normalized(normalized)
+        {}
+
+        BufferElement() = default;
+
+        [[nodiscard]] uint32_t GetComponentCount() const
         {
-
+            switch (Type)
+            {
+                case ShaderDataType::Float2: return 2;
+                case ShaderDataType::Float3: return 3;
+                case ShaderDataType::Float4: return 4;
+                case ShaderDataType::Int:    return 3;
+                case ShaderDataType::Int2:   return 2;
+                case ShaderDataType::Int3:   return 3;
+                case ShaderDataType::Int4:   return 4;
+                case ShaderDataType::Mat3:   return 9;
+                case ShaderDataType::Mat4:   return 16;
+                case ShaderDataType::Bool:   return 1;
+                default:
+                    EG_CORE_ASSERT(false, "Unknow ShaderDataType");
+                    return 0;
+            }
         }
     };
     class BufferLayout {
     public:
+
+        BufferLayout() = default;
+
         BufferLayout(const std::initializer_list<BufferElement>& element)
-            : m_Elements(element)
+            : m_Elements(element), m_Stride(0)
         {
             CalculateOffsetAndStride();
         }
 
         [[nodiscard]] inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
+        [[nodiscard]] inline uint32_t GetStride() const { return m_Stride; }
 
         std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
         std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
@@ -97,7 +123,7 @@ namespace Engine
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
-        virtual uint32_t GetCount() const = 0;
+        [[nodiscard]] virtual uint32_t GetCount() const = 0;
 
         static IndexBuffer* Create(uint32_t* indexes, size_t count);
     };

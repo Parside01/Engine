@@ -38,7 +38,7 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
 
-# --- Ищем нужные пакетики. 
+# --- Ищем нужные пакетики.
 
 
 # --- Все еще пытаюсь добавить imgui сюда.

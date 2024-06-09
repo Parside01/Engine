@@ -12,6 +12,26 @@ namespace Engine
 {
     Application* Application::m_Instance = nullptr; 
 
+    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
+    {
+        switch (type)
+        {
+            case ShaderDataType::Float2: return GL_FLOAT;
+            case ShaderDataType::Float3: return GL_FLOAT;
+            case ShaderDataType::Float4: return GL_FLOAT;
+            case ShaderDataType::Int:    return GL_INT;
+            case ShaderDataType::Int2:   return GL_INT;
+            case ShaderDataType::Int3:   return GL_INT;
+            case ShaderDataType::Int4:   return GL_INT;
+            case ShaderDataType::Mat3:   return GL_FLOAT;
+            case ShaderDataType::Mat4:   return GL_FLOAT;
+            case ShaderDataType::Bool:   return GL_BOOL;
+            default: return 0;
+        }
+        EG_CORE_ASSERT(false, "Unknow ShaderDataType");
+        return 0;
+    }
+
     Application::Application() {
         EG_ASSERT(!m_Instance, "Application is exist");
         m_Instance = this;
@@ -23,10 +43,10 @@ namespace Engine
 
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
 
-        float vertices[3 * 3] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
+        float vertices[3 * 7] = {
+            -0.5f, -0.5f, 0.0f, 1.f, 0.f, 1.f, 1.f,
+             0.5f, -0.5f, 0.0f, 1.f, 0.f, 1.f, 1.f,
+             0.0f,  0.5f, 0.0f, 1.f, 0.f, 1.f, 1.f,
         };
 
         glewExperimental = GL_TRUE;
@@ -42,8 +62,15 @@ namespace Engine
         uint32_t index{0};
         for (const auto& i : layout)
         {
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+            glEnableVertexAttribArray(index);
+            glVertexAttribPointer(
+                index,
+                i.GetComponentCount(),
+                ShaderDataTypeToOpenGLBaseType(i.Type),
+                i.Normalized ? GL_TRUE : GL_FALSE,
+                layout.GetStride(),
+                reinterpret_cast<const void*>(i.Offset));
+            ++index;
         }
 
         uint32_t indices[3] = { 0, 1, 2 };
@@ -52,20 +79,24 @@ namespace Engine
 
         std::string vertexSrc = R"(
             #version 330 core
-            layout(location = 0) in vec3 position;
-            out vec3 v_position;
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec4 a_Color;
+            out vec3 v_Position;
+            out vec4 v_Color;
             void main() {
-                v_position = position;
-                gl_Position = vec4(position, 1.0);
+                v_Position = a_Position;
+                gl_Position = vec4(a_Position, 1.0);
             }
         )";
 
         std::string fragmentSrc = R"(
             #version 330 core
             layout(location = 0) out vec4 color;
-            in vec3 v_position;
+            in vec3 v_Position;
+            in vec4 v_Color;
             void main() {
-                color = vec4(v_position * 0.5 + 0.2, 0.0);
+                color = vec4(v_Position, 0.0);
+                color = v_Color;
             }
         )";
 
