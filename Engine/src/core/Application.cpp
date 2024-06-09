@@ -64,7 +64,7 @@ namespace Engine
         }
 
         uint32_t index{0};
-        BufferLayout layout = m_VertexBuffer->GetLayout();
+        const BufferLayout& layout = m_VertexBuffer->GetLayout();
         for (const auto& i : layout)
         {
             glEnableVertexAttribArray(index);
