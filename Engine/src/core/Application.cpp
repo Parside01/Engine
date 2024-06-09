@@ -53,13 +53,18 @@ namespace Engine
         glewInit();
 
         m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-        BufferLayout layout = {
-            {"a_Position", ShaderDataType::Float3},
-            {"a_Normal", ShaderDataType::Float3},
-            {"a_Color", ShaderDataType::Float4},
-        };
+
+        {
+            BufferLayout layout = {
+                {"a_Position", ShaderDataType::Float3},
+                {"a_Normal", ShaderDataType::Float3},
+                {"a_Color", ShaderDataType::Float4},
+            };
+            m_VertexBuffer->SetLayout(layout);
+        }
 
         uint32_t index{0};
+        BufferLayout layout = m_VertexBuffer->GetLayout();
         for (const auto& i : layout)
         {
             glEnableVertexAttribArray(index);
@@ -85,6 +90,7 @@ namespace Engine
             out vec4 v_Color;
             void main() {
                 v_Position = a_Position;
+                v_Color = a_Color;
                 gl_Position = vec4(a_Position, 1.0);
             }
         )";
