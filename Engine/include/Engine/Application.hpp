@@ -14,6 +14,7 @@
 
 #include "Engine/Render/OpenGL/Shader.hpp"
 #include "Engine/Render/Buffers.hpp"
+#include "Engine/Render/VertexArray.hpp"
 
 
 namespace Engine
@@ -39,10 +40,10 @@ namespace Engine
 
     private:
 
-        uint32_t m_VertexArray;
-        std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
-        std::unique_ptr<IndexBuffer> m_IndexBuffer;
+        std::shared_ptr<VertexArray> m_VertexArray;
+        std::shared_ptr<Shader> m_Shader;
+        std::shared_ptr<VertexBuffer> m_VertexBuffer;
+        std::shared_ptr<IndexBuffer> m_IndexBuffer;
 
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;

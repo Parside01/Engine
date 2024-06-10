@@ -12,36 +12,20 @@ namespace Engine
 {
     Application* Application::m_Instance = nullptr; 
 
-    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-    {
-        switch (type)
-        {
-            case ShaderDataType::Float2: return GL_FLOAT;
-            case ShaderDataType::Float3: return GL_FLOAT;
-            case ShaderDataType::Float4: return GL_FLOAT;
-            case ShaderDataType::Int:    return GL_INT;
-            case ShaderDataType::Int2:   return GL_INT;
-            case ShaderDataType::Int3:   return GL_INT;
-            case ShaderDataType::Int4:   return GL_INT;
-            case ShaderDataType::Mat3:   return GL_FLOAT;
-            case ShaderDataType::Mat4:   return GL_FLOAT;
-            case ShaderDataType::Bool:   return GL_BOOL;
-            default: return 0;
-        }
-        EG_CORE_ASSERT(false, "Unknow ShaderDataType");
-        return 0;
-    }
-
     Application::Application() {
         EG_ASSERT(!m_Instance, "Application is exist");
         m_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create());
-        m_GuiLayer = new GuiLayer();
-
-        PushLayer(m_GuiLayer);
-
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
+
+        glewExperimental = GL_TRUE;
+        glewInit();
+        
+        m_GuiLayer = new GuiLayer();
+        PushOverlay(m_GuiLayer);
+
+        m_VertexArray.reset(VertexArray::Create());
 
         float vertices[3 * 7] = {
             -0.5f, -0.5f, 0.0f, 1.f, 0.f, 1.f, 1.f,
@@ -49,8 +33,6 @@ namespace Engine
              0.0f,  0.5f, 0.0f, 1.f, 0.f, 1.f, 1.f,
         };
 
-        glewExperimental = GL_TRUE;
-        glewInit();
 
         m_VertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
@@ -63,20 +45,7 @@ namespace Engine
             m_VertexBuffer->SetLayout(layout);
         }
 
-        uint32_t index{0};
-        const BufferLayout& layout = m_VertexBuffer->GetLayout();
-        for (const auto& i : layout)
-        {
-            glEnableVertexAttribArray(index);
-            glVertexAttribPointer(
-                index,
-                i.GetComponentCount(),
-                ShaderDataTypeToOpenGLBaseType(i.Type),
-                i.Normalized ? GL_TRUE : GL_FALSE,
-                layout.GetStride(),
-                reinterpret_cast<const void*>(i.Offset));
-            ++index;
-        }
+        m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
         uint32_t indices[3] = { 0, 1, 2 };
         m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
@@ -91,7 +60,7 @@ namespace Engine
             void main() {
                 v_Position = a_Position;
                 v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
+                gl_Position = vec4(a_Position * 0.5, 1.0);
             }
         )";
 
@@ -143,8 +112,8 @@ namespace Engine
         while (m_IsStart) {
             
             m_Shader->Bind();
+            m_VertexArray->Bind();
 
-            glBindVertexArray(m_VertexArray);
             glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
             m_GuiLayer->Begin();
