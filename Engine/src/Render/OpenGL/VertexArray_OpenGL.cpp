@@ -43,6 +43,8 @@ namespace Engine
         glBindVertexArray(m_RendererID);
         vertexBuffer->Bind();
 
+        EG_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
+
         uint32_t index{0};
         const BufferLayout& layout = vertexBuffer->GetLayout();
         for (const auto& i : layout)

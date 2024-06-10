@@ -39,18 +39,19 @@ namespace Engine
         bool OnWindowClose(WindowCloseEvent& event);
 
     private:
-
-        std::shared_ptr<VertexArray> m_VertexArray;
-        std::shared_ptr<Shader> m_Shader;
-        std::shared_ptr<VertexBuffer> m_VertexBuffer;
-        std::shared_ptr<IndexBuffer> m_IndexBuffer;
-
+        static Application* m_Instance;
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;
         bool m_IsStart = true;
         LayerStack m_LayerStack;
 
-        static Application* m_Instance;
+
+
+        std::shared_ptr<VertexArray> m_VertexArray;
+        std::shared_ptr<Shader> m_Shader;
+
+        std::shared_ptr<VertexArray> m_SquareVA;
+        std::shared_ptr<Shader> blue_m_Shader;
     };
 
     Application* CreateApplication();
