@@ -1,17 +1,19 @@
 #ifndef ENGINE_RENDERER_HPP
 #define ENGINE_RENDERER_HPP
 
+#include "Engine/Render/RendererAPI.hpp"
+
 namespace Engine
 {
-    enum class RendererAPI {
-        None = 0, OpenGL = 1
-    };
-
     class Renderer {
     public:
-        inline static RendererAPI GetAPI() { return s_RendererAPI; }
-    private:
-        static RendererAPI s_RendererAPI;
+
+        static void BeginScene(); 
+        static void EndScene();
+
+        static void Submit(const std::shared_ptr<VertexArray>& VertexArray);
+
+        inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
     };
 } // namespace Engine
 

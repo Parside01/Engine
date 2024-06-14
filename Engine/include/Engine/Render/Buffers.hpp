@@ -4,7 +4,6 @@
 #include "Engine/engine_precompile_headers.hpp"
 #include "Engine/Utils.hpp"
 #include "Engine/log/Log.hpp"
-#include "Engine/Render/Renderer.hpp"
 
 
 namespace Engine
@@ -132,3 +131,4 @@ namespace Engine
 
 
 #endif
+

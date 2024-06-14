@@ -3,10 +3,13 @@
 
 #include "Engine/Application.hpp"
 #include "Engine/input/Input.hpp"
+#include "Engine/Render/RenderCommand.hpp"
+#include "Engine/Render/Renderer.hpp"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/glut.h>
+
 
 namespace Engine
 {
@@ -163,22 +166,25 @@ namespace Engine
 
     void Application::Run() {
         while (m_IsStart) {
+            RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+            RenderCommand::Clear();
             
-            blue_m_Shader->Bind();
-            m_SquareVA->Bind();
-            glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+            Renderer::BeginScene();
+            {
+                blue_m_Shader->Bind();
+                Renderer::Submit(m_SquareVA);
 
-
-            m_Shader->Bind();
-            m_VertexArray->Bind();
-
-            glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+                m_Shader->Bind();
+                Renderer::Submit(m_VertexArray);
+            }
+            Renderer::EndScene();
 
             m_GuiLayer->Begin();
             for (Layer* l : m_LayerStack) {
                 l->OnImGuiRender();
             }
             m_GuiLayer->End();
+            
             m_Window->OnUpdate();
         }
     }

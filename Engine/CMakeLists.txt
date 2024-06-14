@@ -38,16 +38,18 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
 
-# --- Ищем нужные пакетики.
+# --- Ищем нужные пакетики. 
 
 
 # --- Все еще пытаюсь добавить imgui сюда.
 
-set(CORE_SOURCES)
-file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
-
 set(CORE_HEADERS)
 file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
+message(STATUS ${CORE_HEADERS})
+
+set(CORE_SOURCES)
+file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
+message(STATUS ${CORE_SOURCES})
 
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
