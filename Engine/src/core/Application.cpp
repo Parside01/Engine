@@ -6,6 +6,7 @@
 #include "Engine/Render/RenderCommand.hpp"
 #include "Engine/Render/Renderer.hpp"
 
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -15,7 +16,8 @@ namespace Engine
 {
     Application* Application::m_Instance = nullptr; 
 
-    Application::Application() {
+    Application::Application()
+        : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
         EG_ASSERT(!m_Instance, "Application is exist");
         m_Instance = this;
 
@@ -85,12 +87,15 @@ namespace Engine
             #version 330 core
             layout(location = 0) in vec3 a_Position;
             layout(location = 1) in vec4 a_Color;
+
+            uniform mat4 u_ViewProjection;
+
             out vec3 v_Position;
             out vec4 v_Color;
             void main() {
                 v_Position = a_Position;
                 v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
             }
         )";
 
@@ -112,11 +117,13 @@ namespace Engine
         std::string blue_vertexSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
+            uniform mat4 u_ViewProjection;
+
             out vec3 v_Position;
-        
+
             void main() {
                 v_Position = a_Position;
-                gl_Position = vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
             }
         )";
 
@@ -163,19 +170,18 @@ namespace Engine
     Application::~Application() {
         delete m_GuiLayer;
     }
-
+    float val{0.f}, inc{0.05f};
     void Application::Run() {
         while (m_IsStart) {
             RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
             RenderCommand::Clear();
-            
-            Renderer::BeginScene();
-            {
-                blue_m_Shader->Bind();
-                Renderer::Submit(m_SquareVA);
 
-                m_Shader->Bind();
-                Renderer::Submit(m_VertexArray);
+            m_Camera.SetPosition({0.0f, 0.f, 0.0f});
+            val += inc;
+            Renderer::BeginScene(m_Camera);
+            {
+                Renderer::Submit(m_SquareVA, blue_m_Shader);
+                Renderer::Submit(m_VertexArray, m_Shader);
             }
             Renderer::EndScene();
 

@@ -4,9 +4,11 @@
 
 namespace Engine
 {
-    void Renderer::BeginScene() 
-    {
+    Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
 
+    void Renderer::BeginScene(OrthCamera& camera)
+    {
+        m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
     }
 
 
@@ -16,8 +18,10 @@ namespace Engine
     }
 
 
-    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray) 
+    void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader)
     {
+        shader->Bind();
+        shader->SetUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
         vertexArray->Bind();
         RenderCommand::DrawIndexed(vertexArray);
     }

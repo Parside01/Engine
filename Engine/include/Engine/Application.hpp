@@ -16,6 +16,8 @@
 #include "Engine/Render/Buffers.hpp"
 #include "Engine/Render/VertexArray.hpp"
 
+#include "Engine/Render/OrthCamera.hpp"
+
 
 namespace Engine
 {
@@ -52,6 +54,8 @@ namespace Engine
 
         std::shared_ptr<VertexArray> m_SquareVA;
         std::shared_ptr<Shader> blue_m_Shader;
+
+        OrthCamera m_Camera;
     };
 
     Application* CreateApplication();
