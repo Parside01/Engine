@@ -17,6 +17,7 @@
 #include "Engine/Render/VertexArray.hpp"
 
 #include "Engine/Render/OrthCamera.hpp"
+#include "Engine/Timestep.hpp"
 
 
 namespace Engine
@@ -38,15 +39,19 @@ namespace Engine
         inline Window& GetWindow() const { return *m_Window; }
 
     private:
+
         bool OnWindowClose(WindowCloseEvent& event);
 
     private:
-        static Application* m_Instance;
+
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;
         bool m_IsStart = true;
         LayerStack m_LayerStack;
-
+        Timestep m_Timestep; 
+        float m_LastFrameTime{0.0f};
+    private:
+        static Application* m_Instance;
     };
 
     Application* CreateApplication();

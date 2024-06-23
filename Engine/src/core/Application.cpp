@@ -11,6 +11,8 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
+#include <GLFW/glfw3.h>
+
 
 namespace Engine
 {
@@ -22,6 +24,7 @@ namespace Engine
 
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
+        m_Window->SetVsync(true);
 
         glewExperimental = GL_TRUE;
         glewInit();
@@ -62,14 +65,19 @@ namespace Engine
     float val{0.f}, inc{0.05f};
     void Application::Run() {
         while (m_IsStart) {
+            
+            float time = (float)glfwGetTime();
+            Timestep timestep = time - m_LastFrameTime;
+            m_LastFrameTime = time; 
+
             for (Layer* l : m_LayerStack) {
-                l->OnUpdate();
+                l->OnUpdate(timestep);
             }
-            m_GuiLayer->Begin();
-            for (Layer* l : m_LayerStack) {
-                l->OnImGuiRender();
-            }
-            m_GuiLayer->End();
+            // m_GuiLayer->Begin();
+            // for (Layer* l : m_LayerStack) {
+            //     l->OnImGuiRender();
+            // }
+            // m_GuiLayer->End();
             
             m_Window->OnUpdate();
         }

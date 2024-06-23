@@ -30,7 +30,6 @@ namespace Engine {
     }
 
     void LinuxWindow::SetVsync(bool enabled) {
-        
         if (enabled) 
             glfwSwapInterval(1);
         else 

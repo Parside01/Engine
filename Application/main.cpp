@@ -64,13 +64,14 @@ public:
             layout(location = 1) in vec4 a_Color;
 
             uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
 
             out vec3 v_Position;
             out vec4 v_Color;
             void main() {
                 v_Position = a_Position;
                 v_Color = a_Color;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
 
@@ -92,13 +93,15 @@ public:
         std::string blue_vertexSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
+
             uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
 
             out vec3 v_Position;
 
             void main() {
                 v_Position = a_Position;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
 
@@ -115,16 +118,16 @@ public:
 
         //// TESTING ////
     }
-    void OnUpdate() override {
+    void OnUpdate(Engine::Timestep tick) override {
         if (Engine::Input::IsKeyPressed(EG_KEY_LEFT))
-            m_CameraPosition.x += m_CameraSpeed;
+            m_CameraPosition.x += m_CameraSpeed * tick;
         else if (Engine::Input::IsKeyPressed(EG_KEY_RIGHT))
-            m_CameraPosition.x -= m_CameraSpeed;
+            m_CameraPosition.x -= m_CameraSpeed * tick;
 
         if (Engine::Input::IsKeyPressed(EG_KEY_UP))
-            m_CameraPosition.y -= m_CameraSpeed;
+            m_CameraPosition.y -= m_CameraSpeed * tick;
         else if (Engine::Input::IsKeyPressed(EG_KEY_DOWN))
-            m_CameraPosition.y += m_CameraSpeed;
+            m_CameraPosition.y += m_CameraSpeed * tick;
 
         Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         Engine::RenderCommand::Clear();
@@ -163,7 +166,7 @@ private:
 
     Engine::OrthCamera m_Camera;
     glm::vec3 m_CameraPosition;
-    float m_CameraSpeed{0.02f};
+    float m_CameraSpeed{1.f};
 };
 
 class Sandbox : public Engine::Application {

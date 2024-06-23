@@ -7,6 +7,9 @@
 #include "Engine/Core.hpp"
 #include "Engine/events/Event.hpp"
 
+#include "Engine/Timestep.hpp"
+
+
 namespace Engine
 {
     
@@ -17,7 +20,7 @@ namespace Engine
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep tick) {}
         virtual void OnImGuiRender() {}
         virtual void OnEvent(Event& event) {}
 
