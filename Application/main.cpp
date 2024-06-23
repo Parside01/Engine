@@ -1,9 +1,11 @@
 #include "Engine/engine.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class TestLayer : public Engine::Layer {
 public:
     TestLayer()
-        : Layer("Test"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.f)
+        : Layer("Test"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.f), m_SquarePosition(0.f)
     {
         m_VertexArray.reset(Engine::VertexArray::Create());
 
@@ -128,6 +130,7 @@ public:
             m_CameraPosition.y -= m_CameraSpeed * tick;
         else if (Engine::Input::IsKeyPressed(EG_KEY_DOWN))
             m_CameraPosition.y += m_CameraSpeed * tick;
+        
 
         Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         Engine::RenderCommand::Clear();
@@ -136,7 +139,9 @@ public:
 
         Engine::Renderer::BeginScene(m_Camera);
         {
-            Engine::Renderer::Submit(m_SquareVA, blue_m_Shader);
+            glm::mat4 transform = glm::translate(glm::mat4(1.f), m_SquarePosition);
+
+            Engine::Renderer::Submit(m_SquareVA, blue_m_Shader, transform);
             Engine::Renderer::Submit(m_VertexArray, m_Shader);
         }
         Engine::Renderer::EndScene();
@@ -167,6 +172,9 @@ private:
     Engine::OrthCamera m_Camera;
     glm::vec3 m_CameraPosition;
     float m_CameraSpeed{1.f};
+
+    glm::vec3 m_SquarePosition;
+    float m_SquareSpeed{5.f};
 };
 
 class Sandbox : public Engine::Application {
