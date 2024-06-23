@@ -16,8 +16,7 @@ namespace Engine
 {
     Application* Application::m_Instance = nullptr; 
 
-    Application::Application()
-        : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
+    Application::Application() {
         EG_ASSERT(!m_Instance, "Application is exist");
         m_Instance = this;
 
@@ -28,117 +27,7 @@ namespace Engine
         glewInit();
 
         m_GuiLayer = new GuiLayer();
-        PushOverlay(m_GuiLayer);
-
-        m_VertexArray.reset(VertexArray::Create());
-
-        float vertices[3 * 7] = {
-            -0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.f,
-             0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.f,
-             0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.f,
-        };
-
-        std::shared_ptr<VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-
-        {
-            BufferLayout layout = {
-                {"a_Position", ShaderDataType::Float3},
-                {"a_Color", ShaderDataType::Float4},
-            };
-            vertexBuffer->SetLayout(layout);
-        }
-
-        m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-        uint32_t indices[3] = { 0, 1, 2 };
-        std::shared_ptr<IndexBuffer> indexBuffer;
-        indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-        m_VertexArray->SetIndexBuffer(indexBuffer);
-
-        //// TESTING ////
-
-        m_SquareVA.reset(VertexArray::Create());
-
-        float blue_vertices[3 * 4] = {
-            -0.75f, -0.75f, 0.70f, 
-             0.75f, -0.75f, 0.70f, 
-             0.75f,  0.75f, 0.70f, 
-            -0.75f,  0.75f, 0.70f, 
-        };
-
-        std::shared_ptr<VertexBuffer> squareVB; 
-        squareVB.reset(VertexBuffer::Create(blue_vertices, sizeof(blue_vertices)));
-        {
-            squareVB->SetLayout({
-                {"a_Position", ShaderDataType::Float3},
-            });
-        }
-        m_SquareVA->AddVertexBuffer(squareVB);
-
-        uint32_t blue_indices[6] = { 0, 1, 2, 2, 3, 0 };
-        std::shared_ptr<IndexBuffer> squareIB; 
-        squareIB.reset(IndexBuffer::Create(blue_indices, sizeof(blue_indices) / sizeof(uint32_t)));
-        m_SquareVA->SetIndexBuffer(squareIB);
-
-        //// TESTING ////
-
-        std::string vertexSrc = R"(
-            #version 330 core
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
-
-            uniform mat4 u_ViewProjection;
-
-            out vec3 v_Position;
-            out vec4 v_Color;
-            void main() {
-                v_Position = a_Position;
-                v_Color = a_Color;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-            }
-        )";
-
-        std::string fragmentSrc = R"(
-            #version 330 core
-            layout(location = 0) out vec4 color;
-            in vec3 v_Position;
-            in vec4 v_Color;
-            void main() {
-                color = vec4(v_Position * 0.5 + 0.5, 1.0);
-                color = v_Color;
-            }
-        )";
-
-        m_Shader = std::make_unique<Shader>(vertexSrc, fragmentSrc);
-
-
-        //// TESTING ////
-        std::string blue_vertexSrc = R"(
-            #version 330 core
-            layout(location = 0) in vec3 a_Position;
-            uniform mat4 u_ViewProjection;
-
-            out vec3 v_Position;
-
-            void main() {
-                v_Position = a_Position;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-            }
-        )";
-
-        std::string blue_fragmentSrc = R"(
-            #version 330 core
-            layout(location = 0) out vec4 color;
-            in vec3 v_Position;
-            void main() {
-                color = vec4(0.2, 0.3, 0.8, 0.2);
-            }
-        )";
-
-        blue_m_Shader.reset(new Shader(blue_vertexSrc, blue_fragmentSrc));
-
-        //// TESTING ////
+        PushOverlay(m_GuiLayer); 
     }
 
     void Application::OnEvent(Event &event) {
@@ -173,18 +62,9 @@ namespace Engine
     float val{0.f}, inc{0.05f};
     void Application::Run() {
         while (m_IsStart) {
-            RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-            RenderCommand::Clear();
-
-            m_Camera.SetPosition({0.0f, 0.f, 0.0f});
-            val += inc;
-            Renderer::BeginScene(m_Camera);
-            {
-                Renderer::Submit(m_SquareVA, blue_m_Shader);
-                Renderer::Submit(m_VertexArray, m_Shader);
+            for (Layer* l : m_LayerStack) {
+                l->OnUpdate();
             }
-            Renderer::EndScene();
-
             m_GuiLayer->Begin();
             for (Layer* l : m_LayerStack) {
                 l->OnImGuiRender();

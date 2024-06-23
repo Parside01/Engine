@@ -8,6 +8,12 @@
 #include "layer/Layer.hpp"
 #include "layer/LayerStack.hpp"
 
-#include "input/Input.hpp"
-#include "input/KeyCodes.hpp"
-#include "input/MouseCodes.hpp"
+#include "Engine/input/Input.hpp"
+#include "Engine/input/KeyCodes.hpp"
+#include "Engine/input/MouseCodes.hpp"
+
+#include "Engine/Render/Renderer.hpp"
+#include "Engine/Render/RenderCommand.hpp"
+#include "Engine/Render/Buffers.hpp"
+#include "Engine/Render/OpenGL/Shader.hpp"
+#include "Engine/Render/OrthCamera.hpp"

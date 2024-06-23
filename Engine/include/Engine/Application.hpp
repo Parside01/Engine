@@ -47,15 +47,6 @@ namespace Engine
         bool m_IsStart = true;
         LayerStack m_LayerStack;
 
-
-
-        std::shared_ptr<VertexArray> m_VertexArray;
-        std::shared_ptr<Shader> m_Shader;
-
-        std::shared_ptr<VertexArray> m_SquareVA;
-        std::shared_ptr<Shader> blue_m_Shader;
-
-        OrthCamera m_Camera;
     };
 
     Application* CreateApplication();
