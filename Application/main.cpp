@@ -1,6 +1,14 @@
+
+// ImGui
+#include "imgui/imgui.h"
+
 #include "Engine/engine.hpp"
 
+#include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 class TestLayer : public Engine::Layer {
 public:
@@ -59,18 +67,21 @@ public:
         std::string fragmentSrc = R"(
             #version 330 core
             layout(location = 0) out vec4 color;
+
+            uniform vec3 u_Color;
+
             void main() {
-                color = vec4(1.0, 0.5, 0.2, 1.0);
+                color = vec4(u_Color, 1.0f);
             }
         )";
 
-        m_Shader = std::make_unique<Engine::Shader>(vertexSrc, fragmentSrc);
+        m_Shader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
     }
     void OnUpdate(Engine::Timestep tick) override {
         if (Engine::Input::IsKeyPressed(EG_KEY_W))
-            m_CubeRotation.x += m_CubeRotationSpeed * tick;
-        else if (Engine::Input::IsKeyPressed(EG_KEY_S))
             m_CubeRotation.x -= m_CubeRotationSpeed * tick;
+        else if (Engine::Input::IsKeyPressed(EG_KEY_S))
+            m_CubeRotation.x += m_CubeRotationSpeed * tick;
 
         if (Engine::Input::IsKeyPressed(EG_KEY_A))
             m_CubeRotation.y -= m_CubeRotationSpeed * tick;
@@ -93,20 +104,27 @@ public:
 
         m_Camera.SetPosition(m_CameraPosition);
 
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->Bind();
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
+
         Engine::Renderer::BeginScene(m_Camera);
         {
             glm::mat4 transfrom = glm::translate(glm::mat4(1.f), m_CubePosition);
-            transfrom = glm::rotate(transfrom, glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
-            transfrom = glm::rotate(transfrom, glm::radians(m_CubeRotation.y), glm::vec3(0.f, 1.f, 0.f));
+            transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
+            transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.y), glm::vec3(0.f, 1.f, 0.f));
             Engine::Renderer::Submit(m_VertexArray, m_Shader, transfrom);
         }
         Engine::Renderer::EndScene();
-
+ 
     }
 
     virtual void OnImGuiRender() override
     {
+        ImGui::Begin("Color settings");
 
+        ImGui::ColorEdit3("Cube Facets Color", glm::value_ptr(m_CubeFacetsColor));
+
+        ImGui::End();
     }
 
     void OnEvent(Engine::Event& event) override {
@@ -129,6 +147,7 @@ private:
     glm::vec3 m_CubePosition;
     glm::vec2 m_CubeRotation;
     float m_CubeRotationSpeed{20.f};
+    glm::vec3 m_CubeFacetsColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public Engine::Application {

@@ -12,7 +12,6 @@
 #include "Engine/log/Log.hpp"
 #include "Engine/window/Window.hpp"
 
-#include "Engine/Render/OpenGL/Shader.hpp"
 #include "Engine/Render/Buffers.hpp"
 #include "Engine/Render/VertexArray.hpp"
 

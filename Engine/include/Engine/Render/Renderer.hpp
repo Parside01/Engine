@@ -3,7 +3,7 @@
 
 #include "Engine/Render/OrthCamera.hpp"
 #include "Engine/Render/RendererAPI.hpp"
-#include "Engine/Render/OpenGL/Shader.hpp"
+#include "Engine/Render/Shader.hpp"
 
 namespace Engine
 {

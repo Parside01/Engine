@@ -1,6 +1,3 @@
-// #include "../include/GUI/GuiLayer.hpp"
-// #include "../include/engine_precompile_headers.hpp"
-
 #include "Engine/GUI/GuiLayer.hpp"
 #include "Engine/Application.hpp"
 #include "Engine/engine_precompile_headers.hpp"

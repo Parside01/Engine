@@ -1,6 +1,3 @@
-// #include "../include/Application.hpp"
-// #include "../include/Input.hpp"
-
 #include "Engine/Application.hpp"
 #include "Engine/input/Input.hpp"
 #include "Engine/Render/RenderCommand.hpp"
@@ -73,11 +70,11 @@ namespace Engine
             for (Layer* l : m_LayerStack) {
                 l->OnUpdate(timestep);
             }
-            // m_GuiLayer->Begin();
-            // for (Layer* l : m_LayerStack) {
-            //     l->OnImGuiRender();
-            // }
-            // m_GuiLayer->End();
+            m_GuiLayer->Begin();
+            for (Layer* l : m_LayerStack) {
+                l->OnImGuiRender();
+            }
+            m_GuiLayer->End();
             
             m_Window->OnUpdate();
         }
