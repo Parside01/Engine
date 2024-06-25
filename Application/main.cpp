@@ -28,7 +28,7 @@ public:
             -0.5f,  0.5f,  0.5f,
         };
 
-        std::shared_ptr<Engine::VertexBuffer> vertexBuffer;
+        Engine::Ref<Engine::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(Engine::VertexBuffer::Create(vertices, sizeof(vertices)));
 
         {
@@ -48,7 +48,7 @@ public:
             2, 6, 7, 7, 3, 2,
             3, 7, 4, 4, 0, 3,
         };
-        std::shared_ptr<Engine::IndexBuffer> indexBuffer;
+        Engine::Ref<Engine::IndexBuffer> indexBuffer;
         indexBuffer.reset(Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
@@ -103,7 +103,7 @@ public:
         Engine::RenderCommand::Clear();
 
         m_Camera.SetPosition(m_CameraPosition);
-
+        
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->Bind();
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
 
@@ -137,9 +137,9 @@ public:
     }
 
 private:
-    std::shared_ptr<Engine::VertexArray> m_VertexArray;
-    std::shared_ptr<Engine::Shader> m_Shader;
-
+    Engine::Ref<Engine::VertexArray> m_VertexArray;
+    Engine::Ref<Engine::Shader> m_Shader;
+    
     Engine::OrthCamera m_Camera;
     glm::vec3 m_CameraPosition;
     float m_CameraSpeed{2.f};
