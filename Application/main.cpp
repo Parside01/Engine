@@ -1,9 +1,7 @@
 
 // ImGui
 #include "imgui/imgui.h"
-
 #include "Engine/engine.hpp"
-
 #include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,15 +15,15 @@ public:
     {
         m_VertexArray.reset(Engine::VertexArray::Create());
 
-        float vertices[3 * 8] = {
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
+        float vertices[3 * 8 + 2 * 8] = {
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+             0.5f, -0.5f, -0.5f, 1.0f, 0.f,
+             0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+             0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
         };
 
         Engine::Ref<Engine::VertexBuffer> vertexBuffer;
@@ -34,6 +32,7 @@ public:
         {
             Engine::BufferLayout layout = {
                 {"a_Position", Engine::ShaderDataType::Float3},
+                {"a_TexCoord", Engine::ShaderDataType::Float2},
             };
             vertexBuffer->SetLayout(layout);
         }
@@ -52,7 +51,8 @@ public:
         indexBuffer.reset(Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
-        std::string vertexSrc = R"(
+        // Main cube shader //
+        const std::string vertexSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
 
@@ -64,7 +64,7 @@ public:
             }
         )";
 
-        std::string fragmentSrc = R"(
+        const std::string fragmentSrc = R"(
             #version 330 core
             layout(location = 0) out vec4 color;
 
@@ -75,7 +75,46 @@ public:
             }
         )";
 
-        m_Shader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
+        m_CubeShader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
+        // Main cube shader //
+
+        // Texture cube shader //
+        const std::string cubeTexVert = R"(
+            #version 330 core
+
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec2 a_TexCoord;
+
+            uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
+
+            out vec2 v_TexCoord;
+
+            void main() {
+                v_TexCoord = a_TexCoord;
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0f);
+            }
+        )";
+        const std::string cubeTexFrag = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+            in vec2 v_TexCoord;
+            uniform sampler2D u_Texture;
+            void main() {
+                color = texture(u_Texture, v_TexCoord);
+            }
+        )";
+
+        m_CubeTextureShader.reset(Engine::Shader::Create(cubeTexVert, cubeTexFrag));
+        m_CubeTexture = Engine::Texture2D::Create("assets/textures/Chess.jpg");
+
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeTextureShader)->Bind();
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeTextureShader)->SetUniformInt("u_Texture", 0);
+
+        // Texture cube shader //
+
     }
     void OnUpdate(Engine::Timestep tick) override {
         if (Engine::Input::IsKeyPressed(EG_KEY_W))
@@ -104,18 +143,21 @@ public:
 
         m_Camera.SetPosition(m_CameraPosition);
         
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->Bind();
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->Bind();
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
 
         Engine::Renderer::BeginScene(m_Camera);
         {
             glm::mat4 transfrom = glm::translate(glm::mat4(1.f), m_CubePosition);
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.y), glm::vec3(0.f, 1.f, 0.f));
-            Engine::Renderer::Submit(m_VertexArray, m_Shader, transfrom);
+            Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
+
+            m_CubeTexture->Bind();
+            Engine::Renderer::Submit(m_VertexArray, m_CubeTextureShader, transfrom);
+
         }
         Engine::Renderer::EndScene();
- 
     }
 
     virtual void OnImGuiRender() override
@@ -138,12 +180,15 @@ public:
 
 private:
     Engine::Ref<Engine::VertexArray> m_VertexArray;
-    Engine::Ref<Engine::Shader> m_Shader;
-    
+    Engine::Ref<Engine::Shader> m_CubeShader;
+
+    Engine::Ref<Engine::Shader> m_CubeTextureShader;
+
     Engine::OrthCamera m_Camera;
     glm::vec3 m_CameraPosition;
     float m_CameraSpeed{2.f};
 
+    Engine::Ref<Engine::Texture2D> m_CubeTexture;
     glm::vec3 m_CubePosition;
     glm::vec2 m_CubeRotation;
     float m_CubeRotationSpeed{20.f};

@@ -114,4 +114,9 @@ namespace Engine
         int location = glGetUniformLocation(m_RendererID, name.c_str());
         glUniform3f(location, vec.x, vec.y, vec.z);
     }
+
+    void OpenGLShader::SetUniformInt(const std::string &name, int value) {
+        int location = glGetUniformLocation(m_RendererID, name.c_str());
+        glUniform1i(location, value);
+    }
 } // namespace Engine

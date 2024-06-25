@@ -6,6 +6,7 @@
 #include <memory>
 #include <filesystem>
 #include <climits>
+#include <cstdint>
 #include <libgen.h>
 
 #include <string_view>

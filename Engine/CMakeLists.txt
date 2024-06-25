@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Engine)
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
@@ -9,16 +11,14 @@ set(INCLUDE_DIR usr/include)
 
 message(STATUS ${THIRD_PARTY_DIR})
 
-# --- Все еще пытаюсь добавить imgui сюда.
-
 add_library(imgui 
             ${THIRD_PARTY_DIR}/imgui/imgui.cpp 
             ${THIRD_PARTY_DIR}/imgui/imgui_draw.cpp 
             ${THIRD_PARTY_DIR}/imgui/imgui_tables.cpp 
             ${THIRD_PARTY_DIR}/imgui/imgui_widgets.cpp
             ${THIRD_PARTY_DIR}/imgui/imgui_demo.cpp
-            
-            ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_glfw.cpp 
+
+            ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_glfw.cpp
             ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_opengl3.cpp
 )
 
@@ -28,8 +28,14 @@ target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(imgui PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 
+add_library(stb_image
+            ${THIRD_PARTY_DIR}/stb_image/stb_image.hpp
+            ${THIRD_PARTY_DIR}/stb_image/stb_image.cpp
+)
 
-# --- Ищем нужные пакетики. 
+target_include_directories(stb_image PUBLIC ${ENGINE_INCLUDE_DIR})
+
+# --- Ищем нужные пакетики.
 
 find_package(OpenGL REQUIRED)
 find_package(fmt REQUIRED)
@@ -38,7 +44,7 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
 
-# --- Ищем нужные пакетики. 
+# --- Ищем нужные пакетики.
 
 
 # --- Все еще пытаюсь добавить imgui сюда.
@@ -51,7 +57,7 @@ file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
-target_link_libraries(Engine PUBLIC imgui ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(Engine PUBLIC imgui stb_image ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 
 
 
@@ -61,6 +67,7 @@ target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
+target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/stb_image)
 
 # --- Добавляем дириктории инклюдов для Engine.
 

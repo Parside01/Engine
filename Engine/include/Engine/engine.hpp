@@ -18,5 +18,6 @@
 #include "Engine/Render/Buffers.hpp"
 #include "Engine/Render/Shader.hpp"
 #include "Engine/Render/OrthCamera.hpp"
+#include "Engine/Render/Texture.hpp"
 
 #include "Engine/Timestep.hpp"
