@@ -17,7 +17,7 @@ public:
 
         float vertices[3 * 8 + 2 * 8] = {
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-             0.5f, -0.5f, -0.5f, 1.0f, 0.f,
+             0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
              0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
             -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
             -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
@@ -55,34 +55,6 @@ public:
         const std::string vertexSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            void main() {
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-            }
-        )";
-
-        const std::string fragmentSrc = R"(
-            #version 330 core
-            layout(location = 0) out vec4 color;
-
-            uniform vec3 u_Color;
-
-            void main() {
-                color = vec4(u_Color, 1.0f);
-            }
-        )";
-
-        m_CubeShader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
-        // Main cube shader //
-
-        // Texture cube shader //
-        const std::string cubeTexVert = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 a_Position;
             layout(location = 1) in vec2 a_TexCoord;
 
             uniform mat4 u_ViewProjection;
@@ -92,30 +64,30 @@ public:
 
             void main() {
                 v_TexCoord = a_TexCoord;
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0f);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
-        const std::string cubeTexFrag = R"(
-            #version 330 core
 
+        const std::string fragmentSrc = R"(
+            #version 330 core
             layout(location = 0) out vec4 color;
 
+            uniform vec3 u_Color;
             in vec2 v_TexCoord;
             uniform sampler2D u_Texture;
+
             void main() {
                 color = texture(u_Texture, v_TexCoord);
             }
         )";
 
-        m_CubeTextureShader.reset(Engine::Shader::Create(cubeTexVert, cubeTexFrag));
-        m_CubeTexture = Engine::Texture2D::Create("assets/textures/Chess.jpg");
+        m_CubeShader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
+        // Main cube shader //
 
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeTextureShader)->Bind();
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeTextureShader)->SetUniformInt("u_Texture", 0);
-
-        // Texture cube shader //
-
+        m_CubeTexture = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->SetUniformInt("u_Texture", 0);
     }
+
     void OnUpdate(Engine::Timestep tick) override {
         if (Engine::Input::IsKeyPressed(EG_KEY_W))
             m_CubeRotation.x -= m_CubeRotationSpeed * tick;
@@ -154,8 +126,7 @@ public:
             Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
 
             m_CubeTexture->Bind();
-            Engine::Renderer::Submit(m_VertexArray, m_CubeTextureShader, transfrom);
-
+            Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
         }
         Engine::Renderer::EndScene();
     }
@@ -181,8 +152,6 @@ public:
 private:
     Engine::Ref<Engine::VertexArray> m_VertexArray;
     Engine::Ref<Engine::Shader> m_CubeShader;
-
-    Engine::Ref<Engine::Shader> m_CubeTextureShader;
 
     Engine::OrthCamera m_Camera;
     glm::vec3 m_CameraPosition;

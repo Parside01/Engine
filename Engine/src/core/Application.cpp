@@ -23,8 +23,7 @@ namespace Engine
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
         m_Window->SetVsync(true);
 
-        glewExperimental = GL_TRUE;
-        glewInit();
+        Renderer::Init();
 
         m_GuiLayer = new GuiLayer();
         PushOverlay(m_GuiLayer); 
