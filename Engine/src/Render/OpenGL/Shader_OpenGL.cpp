@@ -9,83 +9,120 @@
 
 namespace Engine
 {
-    
-    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+    static GLenum GetShaderType(const std::string& type) {
+        if (type == "Vertex" || type == "vertex") return GL_VERTEX_SHADER;
+        if (type == "Fragment" || type == "fragment") return GL_FRAGMENT_SHADER;
+        EG_CORE_ERROR("Неподдерживаемый тип шейдера --- {0}", type);
+        return 0;
+    }
 
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    OpenGLShader::OpenGLShader(const std::string& path) {
+        std::string source = ReadFromFile(path);
+        std::unordered_map<GLenum, std::string> shaderSources = ProcessSource(source);
+        CompileShader(shaderSources);
+    }
 
-        const GLchar *source = (const GLchar *)vertexSrc.c_str();
-        glShaderSource(vertexShader, 1, &source, 0);
+    void OpenGLShader::CompileShader(const std::unordered_map<GLenum, std::string>& shaders) {
+        GLint program = glCreateProgram();
+        std::vector<GLenum> shadersID(shaders.size());
+        for (const auto& item : shaders) {
+            GLenum type = item.first;
+            const std::string source = item.second;
 
-        glCompileShader(vertexShader);
+            GLuint shader = glCreateShader(type);
 
-        GLint isCompiled = 0;
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-        if(isCompiled == GL_FALSE)
-        {
-            GLint maxLength = 0;
-            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+            const GLchar *sourceCh = source.c_str();
+            glShaderSource(shader, 1, &sourceCh, 0);
 
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-            
-            glDeleteShader(vertexShader);
+            glCompileShader(shader);
 
-            EG_CORE_ERROR("Error compile vertex shader: {0}", infoLog.data());
-            return;
+            GLint isCompiled = 0;
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+            if(isCompiled == GL_FALSE)
+            {
+                GLint maxLength = 0;
+                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+                std::vector<GLchar> infoLog(maxLength);
+                glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+
+                glDeleteShader(shader);
+
+                EG_CORE_ERROR("Error compile shader: {0}", infoLog.data());
+                break;
+            }
+
+            glAttachShader(program, shader);
+            shadersID.push_back(shader);
         }
-
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-        source = (const GLchar *)fragmentSrc.c_str();
-        glShaderSource(fragmentShader, 1, &source, 0);
-
-        glCompileShader(fragmentShader);
-
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-        if (isCompiled == GL_FALSE)
-        {
-            GLint maxLength = 0;
-            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-
-            glDeleteShader(fragmentShader);
-    
-            glDeleteShader(vertexShader);
-
-            EG_CORE_ERROR("Error compile fragment shader: {0}", infoLog.data());
-            return;
-        }
-
-        m_RendererID = glCreateProgram();
-
-        glAttachShader(m_RendererID, vertexShader);
-        glAttachShader(m_RendererID, fragmentShader);
-
-        glLinkProgram(m_RendererID);
-
+        glLinkProgram(program);
         GLint isLinked = 0;
-        glGetProgramiv(m_RendererID, GL_LINK_STATUS, (int*)&isLinked);
+        glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
         if (isLinked == GL_FALSE)
         {
             GLint maxLength = 0;
-            glGetProgramiv(m_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
+            glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 
             std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(m_RendererID, maxLength, &maxLength, &infoLog[0]);
-            
-            glDeleteProgram(m_RendererID);
-            glDeleteShader(vertexShader);
-            glDeleteShader(fragmentShader);
+            glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+
+            glDeleteProgram(program);
+
+            for (const auto& id : shadersID)
+                glDeleteShader(id);
 
             EG_CORE_ERROR("Error link shader: {0}", infoLog.data());
+            EG_CORE_ASSERT(false, "Ошибка компановки шейдера");
             return;
         }
+        for (const auto& id : shadersID)
+            glDetachShader(m_RendererID, id);
+        m_RendererID = program;
+    }
 
-        glDetachShader(m_RendererID, vertexShader);
-        glDetachShader(m_RendererID, fragmentShader);
+    std::unordered_map<GLenum, std::string> OpenGLShader::ProcessSource(const std::string &source) {
+        std::unordered_map<GLenum, std::string> shaderSources;
+        const char* typeToken = "#type";
+        size_t typeTokenLength = strlen(typeToken);
+        size_t pos = source.find(typeToken, 0);
+        while (pos != std::string::npos)
+        {
+            size_t eol = source.find_first_of("\r\n", pos);
+            EG_CORE_ASSERT(eol != std::string::npos, "Синтаксическая ошибка в файле");
+            size_t begin = pos + typeTokenLength + 1;
+            std::string type = source.substr(begin, eol - begin);
+            EG_CORE_ASSERT(GetShaderType(type), "Неподдерживаемый тип шейдера");
+
+            size_t nextLinePos = source.find_first_not_of("\r\n", eol);
+            EG_CORE_ASSERT(nextLinePos != std::string::npos, "Синтаксическая ошибка в файле");
+            pos = source.find(typeToken, nextLinePos);
+
+            shaderSources[GetShaderType(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
+        }
+
+        return shaderSources;
+    }
+
+
+    std::string OpenGLShader::ReadFromFile(const std::string& path) {
+        std::ifstream file(path);
+        std::string result;
+
+        if (!file) EG_CORE_ERROR("Не удалось открыть файл с шейдером по маршруту {0}", path);
+
+        file.seekg(0, std::ios::end);
+        result.resize(file.tellg());
+        file.seekg(0, std::ios::beg);
+        file.read(&result[0], result.size());
+        file.close();
+        return result;
+    }
+
+    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+        std::unordered_map<GLenum, std::string> source;
+        source[GL_VERTEX_SHADER] = vertexSrc;
+        source[GL_FRAGMENT_SHADER] = fragmentSrc;
+        CompileShader(source);
     }
 
     OpenGLShader::~OpenGLShader() {

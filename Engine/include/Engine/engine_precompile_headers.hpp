@@ -8,6 +8,7 @@
 #include <climits>
 #include <cstdint>
 #include <libgen.h>
+#include <fstream>
 
 #include <string_view>
 #include <string>

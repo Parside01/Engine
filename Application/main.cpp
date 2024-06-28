@@ -1,5 +1,3 @@
-
-// ImGui
 #include "imgui/imgui.h"
 #include "Engine/engine.hpp"
 #include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
@@ -81,7 +79,7 @@ public:
             }
         )";
 
-        m_CubeShader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
+        m_CubeShader.reset(Engine::Shader::Create("assets/shaders/cube.glsl"));
         // Main cube shader //
 
         m_CubeTexture = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
