@@ -79,7 +79,7 @@ public:
             }
         )";
 
-        m_CubeShader.reset(Engine::Shader::Create("assets/shaders/cube.glsl"));
+        m_CubeShader = Engine::Shader::Create("assets/shaders/cube.glsl");
         // Main cube shader //
 
         m_CubeTexture = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
@@ -148,6 +148,7 @@ public:
     }
 
 private:
+    Engine::ShaderLibrary m_ShaderLibrary;
     Engine::Ref<Engine::VertexArray> m_VertexArray;
     Engine::Ref<Engine::Shader> m_CubeShader;
 

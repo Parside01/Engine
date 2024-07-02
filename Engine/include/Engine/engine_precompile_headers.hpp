@@ -1,6 +1,8 @@
 #ifndef ENGINE_PRECOMPILE_HEADERS_HPP
 #define ENGINE_PRECOMPILE_HEADERS_HPP
 
+#include "Engine/Core.hpp"
+
 #include <iostream>
 #include <sstream>
 #include <memory>

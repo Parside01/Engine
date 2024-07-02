@@ -12,9 +12,11 @@ namespace Engine
 {
     class OpenGLShader : public Shader {
     public: 
-        OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
-        OpenGLShader(const std::string& path);
+        OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+        explicit OpenGLShader(const std::string& path);
         virtual ~OpenGLShader();
+
+        [[nodiscard]] virtual const std::string& GetName() const override { return m_Name; };
 
         virtual void Bind() const override;
         virtual void Unbind() const override; 
@@ -31,6 +33,7 @@ namespace Engine
         void CompileShader(const std::unordered_map<GLenum, std::string>& shaders);
 
     private:
+        std::string m_Name;
         uint32_t m_RendererID;
     };
 } // namespace Engine

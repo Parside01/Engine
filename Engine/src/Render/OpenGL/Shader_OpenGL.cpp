@@ -17,14 +17,22 @@ namespace Engine
     }
 
     OpenGLShader::OpenGLShader(const std::string& path) {
-        std::string source = ReadFromFile(path);
-        std::unordered_map<GLenum, std::string> shaderSources = ProcessSource(source);
+        const std::string source = ReadFromFile(path);
+        const std::unordered_map<GLenum, std::string> shaderSources = ProcessSource(source);
         CompileShader(shaderSources);
+
+        auto lastSlash = path.find_last_of("/\\");
+        lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+        auto lastDot = path.rfind('.');
+        auto count = lastDot == std::string::npos ? path.size() - lastSlash : lastDot - lastSlash;
+        m_Name = path.substr(lastSlash, count);
     }
 
     void OpenGLShader::CompileShader(const std::unordered_map<GLenum, std::string>& shaders) {
         GLint program = glCreateProgram();
-        std::vector<GLenum> shadersID(shaders.size());
+        EG_CORE_ASSERT(shaders.size() <= 2, "Пока поддерживается только 2 шейдера");
+        std::array<GLenum, 2> shadersID;
+        size_t shadersIndex{0};
         for (const auto& item : shaders) {
             GLenum type = item.first;
             const std::string source = item.second;
@@ -53,7 +61,7 @@ namespace Engine
             }
 
             glAttachShader(program, shader);
-            shadersID.push_back(shader);
+            shadersID[shadersIndex++] = shader;
         }
         glLinkProgram(program);
         GLint isLinked = 0;
@@ -105,7 +113,7 @@ namespace Engine
 
 
     std::string OpenGLShader::ReadFromFile(const std::string& path) {
-        std::ifstream file(path);
+        std::ifstream file(path, std::ios::in | std::ios::binary);
         std::string result;
 
         if (!file) EG_CORE_ERROR("Не удалось открыть файл с шейдером по маршруту {0}", path);
@@ -118,7 +126,9 @@ namespace Engine
         return result;
     }
 
-    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+        : m_Name(name)
+    {
         std::unordered_map<GLenum, std::string> source;
         source[GL_VERTEX_SHADER] = vertexSrc;
         source[GL_FRAGMENT_SHADER] = fragmentSrc;
