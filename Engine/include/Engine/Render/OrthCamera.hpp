@@ -10,6 +10,8 @@ namespace Engine
     public:
 
         OrthCamera(float left, float right, float bottom, float top);
+        void SetProjection(float left, float right, float bottom, float top);
+
         ~OrthCamera() = default;
 
         [[nodiscard]] const glm::vec3& GetPosition() const { return m_Position; }

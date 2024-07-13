@@ -57,8 +57,6 @@ namespace Engine
     }
 
     void GuiLayer::OnImGuiRender() {
-        static bool show = false;
-        ImGui::ShowDemoWindow(&show);
     }
 
     void GuiLayer::OnEvent(Event &event) {

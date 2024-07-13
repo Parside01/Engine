@@ -21,8 +21,7 @@
 
 namespace Engine
 {
-    class ENGINE_API Application
-    {
+    class ENGINE_API Application {
     public:
         Application();
         virtual ~Application();
@@ -40,12 +39,14 @@ namespace Engine
     private:
 
         bool OnWindowClose(WindowCloseEvent& event);
+        bool OnWindowResize(WindowResizeEvent& event);
 
     private:
 
         std::unique_ptr<Window> m_Window;
         GuiLayer* m_GuiLayer;
-        bool m_IsStart = true;
+        bool m_IsStart{true};
+        bool m_Collapsed{false};
         LayerStack m_LayerStack;
         Timestep m_Timestep; 
         float m_LastFrameTime{0.0f};

@@ -32,7 +32,7 @@ namespace Engine
     void Application::OnEvent(Event &event) {
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<WindowCloseEvent>(EG_BINDEVENT(Application::OnWindowClose));
-            
+        dispatcher.Dispatch<WindowResizeEvent>(EG_BINDEVENT(Application::OnWindowResize));
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
             (*--it)->OnEvent(event);
             if (event.Handled)
@@ -44,6 +44,17 @@ namespace Engine
         m_IsStart = false;
         return true;
     }
+
+    bool Application::OnWindowResize(WindowResizeEvent &event) {
+        if (event.GetHeight() == 0 || event.GetWidth() == 0) {
+            m_Collapsed = true;
+            return false;
+        }
+        m_Collapsed = false;
+        Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+        return false;
+    }
+
 
     void Application::PushLayer(Layer *layer) {      
         m_LayerStack.PushLayer(layer);
@@ -58,23 +69,25 @@ namespace Engine
     Application::~Application() {
         delete m_GuiLayer;
     }
-    float val{0.f}, inc{0.05f};
+
     void Application::Run() {
         while (m_IsStart) {
-            
-            float time = (float)glfwGetTime();
+            float time = static_cast<float>(glfwGetTime());
             Timestep timestep = time - m_LastFrameTime;
-            m_LastFrameTime = time; 
+            m_LastFrameTime = time;
 
-            for (Layer* l : m_LayerStack) {
-                l->OnUpdate(timestep);
+            if (!m_Collapsed) {
+                for (Layer* l : m_LayerStack) {
+                    l->OnUpdate(timestep);
+                }
             }
+
             m_GuiLayer->Begin();
             for (Layer* l : m_LayerStack) {
                 l->OnImGuiRender();
             }
             m_GuiLayer->End();
-            
+
             m_Window->OnUpdate();
         }
     }

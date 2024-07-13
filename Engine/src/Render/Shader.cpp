@@ -20,7 +20,7 @@ namespace Engine
         auto& name = shader->GetName();
         Add(name, shader);
     }
-    
+
     void ShaderLibrary::Add(const std::string &name, const Ref<Shader> &shader) {
         if (IsExist(name)) EG_CORE_ERROR("Шейдер {0} не найден", name);
         m_Shaders[name] = shader;
