@@ -14,6 +14,13 @@ namespace Engine {
 
         void OnUpdate(Timestep tick);
         void OnEvent(Event& event);
+
+        OrthCamera& GetCamera() { return m_Camera; }
+        const OrthCamera& GetCamera() const { return m_Camera; }
+
+        void SetZoomLevel(float level) { m_ZoomLevel = level; }
+        float GetZoomLevel() const { return m_ZoomLevel; }
+
     private:
 
         bool OnMouseScrolled(MouseScrolledEvent& event);
@@ -26,8 +33,8 @@ namespace Engine {
         float m_ZoomLevel{1.0f};
 
         float m_CameraRotation{0.f};
-        float m_CameraRotationSpeed{1.f};
-        float m_CameraTranslationSpeed{1.f};
+        float m_CameraRotationSpeed{180.f};
+        float m_CameraTranslationSpeed{5.f};
         glm::vec3 m_CameraPosition{0.f, 0.f, 0.f};
 
         OrthCamera m_Camera;

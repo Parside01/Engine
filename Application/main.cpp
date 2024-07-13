@@ -9,7 +9,7 @@
 class TestLayer : public Engine::Layer {
 public:
     TestLayer()
-        : Layer("Test"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.f), m_CubePosition(0.f)
+        : Layer("Test"), m_CameraController(1280.f / 720.f) 
     {
         m_VertexArray.reset(Engine::VertexArray::Create());
 
@@ -49,35 +49,6 @@ public:
         indexBuffer.reset(Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
-        // Main cube shader //
-        const std::string vertexSrc = R"(
-            #version 330 core
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec2 a_TexCoord;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            out vec2 v_TexCoord;
-
-            void main() {
-                v_TexCoord = a_TexCoord;
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-            }
-        )";
-
-        const std::string fragmentSrc = R"(
-            #version 330 core
-            layout(location = 0) out vec4 color;
-
-            uniform vec3 u_Color;
-            in vec2 v_TexCoord;
-            uniform sampler2D u_Texture;
-
-            void main() {
-                color = texture(u_Texture, v_TexCoord);
-            }
-        )";
 
         m_CubeShader = Engine::Shader::Create("assets/shaders/cube.glsl");
         // Main cube shader //
@@ -87,6 +58,8 @@ public:
     }
 
     void OnUpdate(Engine::Timestep tick) override {
+        m_CameraController.OnUpdate(tick);
+
         if (Engine::Input::IsKeyPressed(EG_KEY_W))
             m_CubeRotation.x -= m_CubeRotationSpeed * tick;
         else if (Engine::Input::IsKeyPressed(EG_KEY_S))
@@ -97,26 +70,15 @@ public:
         else if (Engine::Input::IsKeyPressed(EG_KEY_D))
             m_CubeRotation.y += m_CubeRotationSpeed * tick;
 
-        if (Engine::Input::IsKeyPressed(EG_KEY_RIGHT))
-            m_CameraPosition.x += m_CameraSpeed * tick;
-        else if (Engine::Input::IsKeyPressed(EG_KEY_LEFT))
-            m_CameraPosition.x -= m_CameraSpeed * tick;
-
-        if (Engine::Input::IsKeyPressed(EG_KEY_UP))
-            m_CameraPosition.y += m_CameraSpeed * tick;
-        else if (Engine::Input::IsKeyPressed(EG_KEY_DOWN))
-            m_CameraPosition.y -= m_CameraSpeed * tick;
-
 
         Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         Engine::RenderCommand::Clear();
 
-        m_Camera.SetPosition(m_CameraPosition);
         
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->Bind();
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
 
-        Engine::Renderer::BeginScene(m_Camera);
+        Engine::Renderer::BeginScene(m_CameraController.GetCamera());
         {
             glm::mat4 transfrom = glm::translate(glm::mat4(1.f), m_CubePosition);
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
@@ -139,8 +101,7 @@ public:
     }
 
     void OnEvent(Engine::Event& event) override {
-        Engine::EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<Engine::KeyPressedEvent>(EG_BINDEVENT(TestLayer::OnKeyPressed));
+        m_CameraController.OnEvent(event);
     }
 
     bool OnKeyPressed(Engine::KeyPressedEvent& event) {
@@ -152,15 +113,15 @@ private:
     Engine::Ref<Engine::VertexArray> m_VertexArray;
     Engine::Ref<Engine::Shader> m_CubeShader;
 
-    Engine::OrthCamera m_Camera;
-    glm::vec3 m_CameraPosition;
-    float m_CameraSpeed{2.f};
 
     Engine::Ref<Engine::Texture2D> m_CubeTexture;
     glm::vec3 m_CubePosition;
     glm::vec2 m_CubeRotation;
     float m_CubeRotationSpeed{20.f};
     glm::vec3 m_CubeFacetsColor = { 0.2f, 0.3f, 0.8f };
+
+
+    Engine::OrthCameraController m_CameraController;
 };
 
 class Sandbox : public Engine::Application {
