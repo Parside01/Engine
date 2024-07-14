@@ -16,13 +16,13 @@ namespace Engine
     class ENGINE_API Layer {
     public:
         Layer(const std::string& name = "BaseLayer") : m_LayerName(name) {}
-        virtual ~Layer() {}
+        virtual ~Layer() = default;
 
-        virtual void OnAttach() {}
-        virtual void OnDetach() {}
-        virtual void OnUpdate(Timestep tick) {}
-        virtual void OnImGuiRender() {}
-        virtual void OnEvent(Event& event) {}
+        virtual void OnAttach() {};
+        virtual void OnDetach() {};
+        virtual void OnUpdate(Timestep tick) {};
+        virtual void OnImGuiRender() {};
+        virtual void OnEvent(Event& event) {};
 
         inline const std::string& GetName() const { return m_LayerName; }
     private:

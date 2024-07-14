@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-    VertexBuffer* VertexBuffer::Create(float* vertices, size_t size) {
+    Ref<VertexBuffer> VertexBuffer::Create(float* vertices, size_t size) {
         switch (Renderer::GetAPI())
         {
             case RendererAPI::API::None: {
@@ -14,14 +14,14 @@ namespace Engine
                 return nullptr;
             }
             case RendererAPI::API::OpenGL: {
-                return new OpenGLVertexBuffer(vertices, size);
+                return std::make_shared<OpenGLVertexBuffer>(vertices, size);
             }
         }
         EG_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
     }
 
-    IndexBuffer* IndexBuffer::Create(uint32_t* indexes, size_t size) {
+    Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indexes, size_t size) {
         switch (Renderer::GetAPI())
         {
             case RendererAPI::API::None: {
@@ -29,7 +29,7 @@ namespace Engine
                 return nullptr;
             }
             case RendererAPI::API::OpenGL: {
-                return new OpenGLIndexBuffer(indexes, size);
+                return std::make_shared<OpenGLIndexBuffer>(indexes, size);
             }
         }
         EG_CORE_ASSERT(false, "Unknown RendererAPI");

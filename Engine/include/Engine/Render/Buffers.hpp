@@ -5,7 +5,6 @@
 #include "Engine/Utils.hpp"
 #include "Engine/log/Log.hpp"
 
-
 namespace Engine
 {
     enum class ShaderDataType : uint8_t
@@ -113,7 +112,7 @@ namespace Engine
         virtual void SetLayout(const BufferLayout& layout) = 0;
         [[nodiscard]] virtual const BufferLayout& GetLayout() const = 0;
 
-        static VertexBuffer* Create(float* vertices, size_t count);
+        static Ref<VertexBuffer> Create(float* vertices, size_t size);
     };
 
     class IndexBuffer {
@@ -125,7 +124,7 @@ namespace Engine
 
         [[nodiscard]] virtual uint32_t GetCount() const = 0;
 
-        static IndexBuffer* Create(uint32_t* indexes, size_t count);
+        static Ref<IndexBuffer> Create(uint32_t* indexes, size_t count);
     };
 } // namespace Engine
 

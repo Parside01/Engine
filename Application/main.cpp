@@ -2,6 +2,8 @@
 #include "Engine/engine.hpp"
 #include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
 
+#include "Layer2D.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -11,7 +13,7 @@ public:
     TestLayer()
         : Layer("Test"), m_CameraController(1280.f / 720.f) 
     {
-        m_VertexArray.reset(Engine::VertexArray::Create());
+        m_VertexArray = Engine::VertexArray::Create();
 
         float vertices[3 * 8 + 2 * 8] = {
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -25,7 +27,7 @@ public:
         };
 
         Engine::Ref<Engine::VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(Engine::VertexBuffer::Create(vertices, sizeof(vertices)));
+        vertexBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
 
         {
             Engine::BufferLayout layout = {
@@ -46,7 +48,7 @@ public:
             3, 7, 4, 4, 0, 3,
         };
         Engine::Ref<Engine::IndexBuffer> indexBuffer;
-        indexBuffer.reset(Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+        indexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
 
@@ -84,7 +86,6 @@ public:
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.y), glm::vec3(0.f, 1.f, 0.f));
             Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
-
             m_CubeTexture->Bind();
             Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
         }
@@ -127,7 +128,8 @@ private:
 class Sandbox : public Engine::Application {
 public:
     Sandbox() {
-        PushLayer(new TestLayer);
+        // PushLayer(new TestLayer());
+        PushLayer(new Layer2D());
     }
     ~Sandbox() {
 
