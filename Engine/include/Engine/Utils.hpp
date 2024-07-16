@@ -2,6 +2,7 @@
 #define ENGINE_BASE_HPP
 
     #include "Engine/engine_precompile_headers.hpp"
+    #include <glm/glm.hpp>
 
     #if defined(__linux__) 
         #include "csignal"
@@ -37,6 +38,7 @@
     {
         const char* GetAbsolutePath(const char* relPath);
         std::string GetAbsolutePath(const std::string& path);
+        uint32_t GetColor(const glm::vec4& color);
     } // namespace Utils
     
 #endif

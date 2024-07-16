@@ -1,8 +1,8 @@
 #type Vertex
 #version 330 core
 
-layout(location = 0) a_Position;
-layout(location = 1) a_TexCoord;
+layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec2 a_TexCoord;
 
 uniform mat4 u_ViewProjection; 
 uniform mat4 u_Transform; 
@@ -18,10 +18,12 @@ void main() {
 #version 330 core
 
 layout(location = 0) out vec4 color;
-int vec2 v_TexCoord;
 
+in vec2 v_TexCoord;
+
+uniform vec4 u_Color; 
 uniform sampler2D u_Texture; 
 
 void main() {
-    color = texture(u_Texture, v_TexCoord);
+    color = texture(u_Texture, v_TexCoord) * u_Color;
 }
