@@ -21,6 +21,13 @@ namespace Engine
         virtual void Bind() const override;
         virtual void Unbind() const override; 
 
+        virtual void SetMat4(const std::string& name, const glm::mat4& mat) override;
+        virtual void SetFloat3(const std::string& name, const glm::vec3& vec) override;
+        virtual void SetFloat4(const std::string& name, const glm::vec4& vec) override;
+        virtual void SetInt(const std::string& name, int value) override; 
+
+    public: 
+
         void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
         void SetUniformFloat4(const std::string& name, const glm::vec4& vec); 
         void SetUniformFloat3(const std::string& name, const glm::vec3& vec);

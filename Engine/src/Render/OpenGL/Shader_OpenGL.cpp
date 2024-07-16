@@ -147,7 +147,24 @@ namespace Engine
         glUseProgram(0);
     }
 
-    void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix) {
+    void OpenGLShader::SetMat4(const std::string& name, const glm::mat4 &mat) {
+        SetUniformMat4(name, mat);
+    }
+
+    void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& vec) {
+        SetUniformFloat4(name, vec);
+    }
+
+    void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vec) {
+        SetUniformFloat3(name, vec);
+    }
+
+    void OpenGLShader::SetInt(const std::string& name, int value) {
+        SetUniformInt(name, value);
+    }
+
+    void OpenGLShader::SetUniformMat4(const std::string &name, const glm::mat4 &matrix)
+    {
         int location = glGetUniformLocation(m_RendererID, name.c_str());
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
