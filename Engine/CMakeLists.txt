@@ -55,7 +55,9 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
-set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
+set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
+        include/Engine/Render/Renderer2D.hpp
+        src/Render/Renderer2D.cpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_link_libraries(Engine PUBLIC imgui stb_image ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 

@@ -80,7 +80,7 @@ public:
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->Bind();
         std::dynamic_pointer_cast<Engine::OpenGLShader>(m_CubeShader)->SetUniformFloat3("u_Color", m_CubeFacetsColor);
 
-        Engine::Renderer::BeginScene(m_CameraController.GetCamera());
+        Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
         {
             glm::mat4 transfrom = glm::translate(glm::mat4(1.f), m_CubePosition);
             transfrom = glm::rotate(transfrom, -glm::radians(m_CubeRotation.x), glm::vec3(1.f, 0.f, 0.f));
@@ -89,7 +89,7 @@ public:
             m_CubeTexture->Bind();
             Engine::Renderer::Submit(m_VertexArray, m_CubeShader, transfrom);
         }
-        Engine::Renderer::EndScene();
+        Engine::Renderer2D::EndScene();
     }
 
     virtual void OnImGuiRender() override

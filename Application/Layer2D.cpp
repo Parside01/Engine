@@ -6,26 +6,7 @@
 #include <imgui/imgui.h>
 
 void Layer2D::OnAttach() {
-    m_VertexArray = Engine::VertexArray::Create();
-    float vertices[4 * 3] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f,
-    };
 
-    Engine::Ref<Engine::VertexBuffer> VB = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
-    VB->SetLayout({
-        { "a_Position", Engine::ShaderDataType::Float3 },
-    });
-    m_VertexArray->AddVertexBuffer(VB);
-
-    uint32_t indeces[6] = {0, 1, 2, 2, 3, 0};
-    Engine::Ref<Engine::IndexBuffer> IB;
-    IB = Engine::IndexBuffer::Create(indeces, sizeof(indeces) / sizeof(uint32_t));
-    m_VertexArray->SetIndexBuffer(IB);
-
-    m_ColorShader = Engine::Shader::Create("assets/shaders/Layer2D.glsl");
 }
 
 void Layer2D::OnDetach() {
@@ -41,13 +22,14 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     Engine::RenderCommand::Clear();
 
-    Engine::Renderer::BeginScene(m_CameraController.GetCamera());
+    Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
     {
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_ColorShader)->Bind();
-        std::dynamic_pointer_cast<Engine::OpenGLShader>(m_ColorShader)->SetUniformFloat4("u_Color", m_Color);
-        Engine::Renderer::Submit(m_VertexArray, m_ColorShader, glm::scale(glm::mat4(1.f), glm::vec3(1.5f)));
+        glm::vec2 pos{0.f, 0.f};
+        glm::vec2 size{1.f, 1.f};
+        glm::vec4 color{0.8f, 0.2f, 0.3f, 1.0f};
+        Engine::Renderer2D::DrawQuad(pos, size, color);
     }
-    Engine::Renderer::EndScene();
+    Engine::Renderer2D::EndScene();
 }
 
 void Layer2D::OnImGuiRender() {

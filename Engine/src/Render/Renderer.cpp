@@ -1,7 +1,9 @@
+
 #include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
 #include "Engine/Render/Renderer.hpp"
 #include "Engine/Render/RenderCommand.hpp"
 #include "Engine/engine_precompile_headers.hpp"
+#include "Engine/Render/Renderer2D.hpp"
 
 namespace Engine
 {
@@ -9,6 +11,7 @@ namespace Engine
 
     void Renderer::Init() {
         RenderCommand::Init();
+        Renderer2D::Init();
     }
 
     void Renderer::BeginScene(OrthCamera& camera)
