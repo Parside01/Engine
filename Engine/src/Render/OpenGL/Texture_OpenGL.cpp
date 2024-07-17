@@ -13,8 +13,7 @@ namespace Engine {
         m_InternalFormat = GL_RGBA8;
         m_DataFormat = GL_RGBA;
         uint32_t textureData = Utils::GetColor(color);
-
-        std::cout << textureData << " " << 0xffffffff << std::endl;
+        
         glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
         
         glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);

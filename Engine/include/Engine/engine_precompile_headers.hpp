@@ -12,6 +12,8 @@
 #include <libgen.h>
 #include <fstream>
 
+#include <chrono>
+
 #include <string_view>
 #include <string>
 #include <vector>
