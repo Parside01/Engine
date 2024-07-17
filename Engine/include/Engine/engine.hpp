@@ -25,5 +25,9 @@
 #include "Engine/Render/OrthCamera.hpp"
 #include "Engine/Render/OrthCameraController.hpp"
 
+#include "Engine/engine_precompile_headers.hpp"
+
 #include "Engine/Timestep.hpp"
 #include "Engine/Timer.hpp"
+
+#include "Engine/benchmark/Benchmark.hpp"

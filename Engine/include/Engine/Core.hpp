@@ -16,6 +16,8 @@
 
 #endif
 
+#define ENGINE_PROFILING
+
 namespace Engine
 {
 	template<typename T>

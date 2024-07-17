@@ -3,6 +3,7 @@
 
 #include "Engine/Core.hpp"
 
+
 #include <iostream>
 #include <sstream>
 #include <memory>
@@ -25,5 +26,12 @@
 #include <algorithm>
 #include <functional>
 #include <utility>
+
+#include <cstdint>
+
+#include "Engine/benchmark/Profiler.hpp"
+#include "Engine/benchmark/ProfilingTimer.hpp"
+
+#include <thread>
 
 #endif 

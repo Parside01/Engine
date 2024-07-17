@@ -6,20 +6,16 @@
 #include "Engine/engine_precompile_headers.hpp"
 
 int main(int argc, char** argv) {
-    std::cout << "ENGINE START" << std::endl;
-
     Engine::Log::Init();
-
-    EG_CORE_INFO("INIT LOGGER");
-    
     auto app = Engine::CreateApplication();
-    EG_CORE_INFO("CREATE APPLICATION");
     if (app == nullptr) {
         EG_CORE_ERROR("Failed to create application!");
     }
+
+    EG_PROFILE_BEGIN_SESSION("Engine", "Runtime_profile.json");
     app->Run();
+    EG_PROFILE_END_SESSION();
     delete app;
 
-    std::cout << "ENGINE STOP" << std::endl;
     return 0;
 }

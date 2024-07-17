@@ -48,6 +48,7 @@ namespace Engine {
         if (!s_GLFWInit) {
             int succ = glfwInit();
             
+            
             EG_CORE_ASSERT(succ, "Failed init GLFW!");
 
             s_GLFWInit = true;

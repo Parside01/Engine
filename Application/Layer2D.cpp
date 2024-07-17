@@ -4,12 +4,13 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <imgui/imgui.h>
 
+
 void Layer2D::OnAttach() {
     m_Texture2D = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
-
 }
 
 void Layer2D::OnDetach() {
+    
 }
 
 void Layer2D::OnEvent(Engine::Event &event) {
@@ -17,6 +18,8 @@ void Layer2D::OnEvent(Engine::Event &event) {
 }
 
 void Layer2D::OnUpdate(Engine::Timestep tick) {
+    EG_PROFILE_FUNC();
+
     m_CameraController.OnUpdate(tick);
 
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
