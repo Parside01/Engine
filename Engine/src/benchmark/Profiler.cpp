@@ -39,12 +39,12 @@ namespace Engine
             m_OutStream << std::setprecision(3) << std::fixed;
             m_OutStream << "{"; 
             m_OutStream << "\"cat\":\"function\",";
-            m_OutStream << "\"dur\":" << res.Duration << ',';
+            m_OutStream << "\"dur\":" << res.Duration.count() << ',';
             m_OutStream << "\"name\":\"" << name << "\","; 
             m_OutStream << "\"ph\":\"X\","; 
             m_OutStream << "\"pid\":0,"; 
             m_OutStream << "\"tid\":" << res.ThreadID << ','; 
-            m_OutStream << "\"ts\":" << res.Start;
+            m_OutStream << "\"ts\":" << res.Start.count();
             m_OutStream << "}";
 
             m_OutStream.flush();

@@ -7,6 +7,7 @@
 
 int main(int argc, char** argv) {
     Engine::Log::Init();
+    
     auto app = Engine::CreateApplication();
     if (app == nullptr) {
         EG_CORE_ERROR("Failed to create application!");

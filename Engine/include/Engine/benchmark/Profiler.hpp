@@ -2,6 +2,7 @@
 #define ENGINE_PROFILING_HPP
 
 #include "Engine/engine_precompile_headers.hpp"
+#include <thread>
 
 namespace Engine
 {
@@ -9,9 +10,9 @@ namespace Engine
     {
         struct ProfilingResult {
             const char* Name; 
-            int64_t Duration;
-            int64_t Start;
-            uint32_t ThreadID;
+            std::chrono::microseconds Duration;
+            std::chrono::duration<double, std::micro> Start;
+            std::thread::id ThreadID;
         };
 
         struct ProfilingSession {

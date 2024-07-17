@@ -15,9 +15,8 @@ namespace Engine
             uint32_t start = std::chrono::time_point_cast<std::chrono::milliseconds>(m_StartTime).time_since_epoch().count();
             uint32_t end = std::chrono::time_point_cast<std::chrono::milliseconds>(endTime).time_since_epoch().count();
 
-            uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
             auto duration = std::chrono::time_point_cast<std::chrono::microseconds>(endTime).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTime).time_since_epoch();
-            Profiler::Get().WriteProfile({m_Name, duration.count(), m_StartTime.time_since_epoch().count(), threadID});
+            Profiler::Get().WriteProfile({ m_Name, duration, m_StartTime.time_since_epoch(), std::this_thread::get_id() });
 
             m_Stopped = true;
         }
