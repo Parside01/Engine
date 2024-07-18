@@ -25,6 +25,7 @@ namespace Engine {
     }
 
     void LinuxWindow::OnUpdate() {
+        EG_PROFILE_FUNC();
         glfwPollEvents();
         m_Context->SwapBuffers();
     }

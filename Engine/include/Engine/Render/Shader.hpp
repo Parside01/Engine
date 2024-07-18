@@ -16,6 +16,7 @@ namespace Engine
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
+        virtual void SetFloat(const std::string& name, float value) = 0;
         virtual void SetMat4(const std::string& name, const glm::mat4& mat) = 0;
         virtual void SetFloat3(const std::string& name, const glm::vec3& vec) = 0;
         virtual void SetFloat4(const std::string& name, const glm::vec4& vec) = 0;

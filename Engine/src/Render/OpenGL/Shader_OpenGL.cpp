@@ -163,6 +163,15 @@ namespace Engine
         SetUniformInt(name, value);
     }
 
+    void OpenGLShader::SetFloat(const std::string& name, float value) {
+        SetUniformFloat(name, value);
+    }
+
+    void OpenGLShader::SetUniformFloat(const std::string &name, float value) {
+        int location = glGetUniformLocation(m_RendererID, name.c_str());
+        glUniform1f(location, value);
+    }
+
     void OpenGLShader::SetUniformMat4(const std::string &name, const glm::mat4 &matrix)
     {
         int location = glGetUniformLocation(m_RendererID, name.c_str());

@@ -16,7 +16,7 @@
 
 #endif
 
-#define ENGINE_PROFILING
+// #define ENGINE_PROFILING
 
 namespace Engine
 {

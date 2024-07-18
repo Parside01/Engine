@@ -6,6 +6,8 @@
 #include "Engine/Core.hpp"
 #include "Engine/events/Event.hpp"
 
+#include "Engine/benchmark/Benchmark.hpp"
+
 #include "spdlog/spdlog.h"
 
 namespace Engine

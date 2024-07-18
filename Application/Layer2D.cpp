@@ -25,7 +25,7 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         EG_PROFILE_SCOPE("m_CameraController.OnUpdate");
         m_CameraController.OnUpdate(tick);
     }
-
+    
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     Engine::RenderCommand::Clear();
 
@@ -36,7 +36,6 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         glm::vec2 size{1.f, 1.f};
         glm::vec4 color{0.8f, 0.2f, 0.3f, 1.0f};
         Engine::Renderer2D::DrawQuad(pos, size, color);
-        Engine::Renderer2D::DrawQuad({0.5f, 0.5f}, {0.5f, 0.5f}, m_Texture2D);
     }
     Engine::Renderer2D::EndScene();
 }

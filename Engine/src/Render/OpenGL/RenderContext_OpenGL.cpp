@@ -17,6 +17,7 @@ namespace Engine
     }
 
     void OpenGLContext::SwapBuffers() {
+        EG_PROFILE_FUNC();
         glfwSwapBuffers(m_WindowHandle);
     }
 } // namespace Engine
