@@ -20,6 +20,8 @@ namespace Engine {
         static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale = 1.0f);
         static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale = 1.0f);
 
+    private:
+        static void FlushAndReset();
     };
 }
 

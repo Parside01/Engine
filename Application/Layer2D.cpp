@@ -35,7 +35,8 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         glm::vec2 pos{0.f, 0.f};
         glm::vec2 size{1.f, 1.f};
         glm::vec4 color{0.8f, 0.2f, 0.3f, 1.0f};
-        Engine::Renderer2D::DrawQuad(pos, size, color);
+        // Engine::Renderer2D::DrawQuad(pos, size, color);
+        Engine::Renderer2D::DrawQuad(pos, size, m_Texture2D, 10.0f);
     }
     Engine::Renderer2D::EndScene();
 }

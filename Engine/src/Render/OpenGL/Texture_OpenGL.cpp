@@ -61,9 +61,12 @@ namespace Engine {
 
         stbi_image_free(data);
     }
+    bool OpenGLTexture2D::operator==(const Texture &other) const {
+        return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
+    }
 
     void OpenGLTexture2D::Bind(uint32_t slot) const {
-        glBindTextureUnit(0, m_RendererID);
+        glBindTextureUnit(slot, m_RendererID);
     }
 
     OpenGLTexture2D::~OpenGLTexture2D() {
