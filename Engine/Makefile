@@ -1,7 +1,7 @@
 .PHONY: build
 build:
 	mkdir -p build
-	cd build && cmake .. && make -j 4
+	cd build && cmake .. && make -j$(nproc)
 
 clean:
 	rm -rf build
