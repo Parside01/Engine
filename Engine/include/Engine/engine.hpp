@@ -16,6 +16,7 @@
 #include "Engine/Render/Renderer.hpp"
 #include "Engine/Render/Renderer2D.hpp"
 #include "Engine/Render/RenderCommand.hpp"
+#include "Engine/Render/FrameBuffer.hpp"
 
 #include "Engine/Render/Buffers.hpp"
 #include "Engine/Render/Shader.hpp"

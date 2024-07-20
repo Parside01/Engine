@@ -6,7 +6,14 @@
 
 
 void Layer2D::OnAttach() {
+    EG_PROFILE_FUNC();
     m_Texture2D = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
+
+    Engine::FrameBufferData data;
+    data.Width = 1280;
+    data.Height = 720;
+
+    m_Framebuffer = Engine::FrameBuffer::Create(data);
 }
 
 void Layer2D::OnDetach() {
@@ -20,6 +27,8 @@ void Layer2D::OnEvent(Engine::Event &event) {
 
 void Layer2D::OnUpdate(Engine::Timestep tick) {
     EG_PROFILE_FUNC();
+
+    m_Framebuffer->Bind();
 
     {
         EG_PROFILE_SCOPE("m_CameraController.OnUpdate");
@@ -37,6 +46,7 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         Engine::Renderer2D::DrawQuad(pos, size, color);
     }
     Engine::Renderer2D::EndScene();
+    m_Framebuffer->Unbind();
 }
 
 void Layer2D::OnImGuiRender() {
@@ -91,12 +101,6 @@ void Layer2D::OnImGuiRender() {
     {
         if (ImGui::BeginMenu("Options"))
         {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
             if (ImGui::MenuItem("Flag: NoDockingOverCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingOverCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingOverCentralNode; }
             if (ImGui::MenuItem("Flag: NoDockingSplit",         "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingSplit) != 0))             { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingSplit; }
             if (ImGui::MenuItem("Flag: NoUndocking",            "", (dockspace_flags & ImGuiDockNodeFlags_NoUndocking) != 0))                { dockspace_flags ^= ImGuiDockNodeFlags_NoUndocking; }
@@ -111,6 +115,11 @@ void Layer2D::OnImGuiRender() {
         }
         ImGui::EndMenuBar();
     }
+
+    ImGui::Begin("Screen");
+    uint32_t textureID = m_Framebuffer->GetColorAttachment();
+    ImGui::Image(reinterpret_cast<void *>(textureID), ImVec2(320.0f, 180.0f));
+    ImGui::End();
 
     ImGui::End();
 }

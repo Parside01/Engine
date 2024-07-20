@@ -61,7 +61,6 @@ public:
 
     void OnUpdate(Engine::Timestep tick) override {
         m_CameraController.OnUpdate(tick);
-
         if (Engine::Input::IsKeyPressed(EG_KEY_W))
             m_CubeRotation.x -= m_CubeRotationSpeed * tick;
         else if (Engine::Input::IsKeyPressed(EG_KEY_S))
