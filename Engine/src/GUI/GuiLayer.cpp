@@ -60,12 +60,7 @@ namespace Engine
     }
 
     void GuiLayer::OnEvent(Event &event) {
-        if (m_BlockEvents)
-		{   
-			ImGuiIO& io = ImGui::GetIO();
-			event.Handled |= event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-			event.Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-		}
+        
     }
 
    void GuiLayer::Begin() {
@@ -78,7 +73,7 @@ namespace Engine
         ImGuiIO& io = ImGui::GetIO();
 
         Application& app = Application::GetApplication();
-        io.DisplaySize = ImVec2((float)app.GetWindow().GetHeight(), float(app.GetWindow().GetWidth()));
+        io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetHeight()), static_cast<float>(app.GetWindow().GetWidth()));
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

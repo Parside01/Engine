@@ -18,6 +18,8 @@
 #include "Engine/Render/RenderCommand.hpp"
 #include "Engine/Render/FrameBuffer.hpp"
 
+#include "Engine/Scene/Scene.hpp"
+
 #include "Engine/Render/Buffers.hpp"
 #include "Engine/Render/Shader.hpp"
 

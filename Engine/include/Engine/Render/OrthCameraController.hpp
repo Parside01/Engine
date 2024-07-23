@@ -15,6 +15,8 @@ namespace Engine {
         void OnUpdate(Timestep tick);
         void OnEvent(Event& event);
 
+        void OnResize(float width, float height);
+
         OrthCamera& GetCamera() { return m_Camera; }
         const OrthCamera& GetCamera() const { return m_Camera; }
 

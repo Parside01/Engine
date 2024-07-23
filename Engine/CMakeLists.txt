@@ -35,6 +35,9 @@ add_library(stb_image
 
 target_include_directories(stb_image PUBLIC ${ENGINE_INCLUDE_DIR})
 
+
+add_library(entt ${THIRD_PARTY_DIR}/entt/entt.hpp ${THIRD_PARTY_DIR}/entt/entt.cpp)
+
 # --- Ищем нужные пакетики.
 
 find_package(OpenGL REQUIRED)
@@ -59,7 +62,7 @@ set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
         include/Engine/Render/Renderer2D.hpp
         src/Render/Renderer2D.cpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
-target_link_libraries(Engine PUBLIC imgui stb_image ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 
 
 
@@ -70,6 +73,7 @@ target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/stb_image)
+target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/entt)
 
 # --- Добавляем дириктории инклюдов для Engine.
 

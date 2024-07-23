@@ -34,6 +34,11 @@ namespace Engine {
         d.Dispatch<WindowResizeEvent>(EG_BINDEVENT(OrthCameraController::OnWindowResize));
     }
 
+    void OrthCameraController::OnResize(float width, float height) {
+        m_AspectRatio = width / height;
+        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+    }
+
     bool OrthCameraController::OnMouseScrolled(MouseScrolledEvent &event) {
         m_ZoomLevel -= event.GetYOffset();
         m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
@@ -42,8 +47,7 @@ namespace Engine {
     }
 
     bool OrthCameraController::OnWindowResize(WindowResizeEvent &event) {
-        m_AspectRatio = static_cast<float>(event.GetWidth()) / static_cast<float>(event.GetHeight());
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        OnResize(static_cast<float>(event.GetWidth()), static_cast<float>(event.GetHeight()));
         return false;
     }
 }
