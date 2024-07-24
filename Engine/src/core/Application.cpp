@@ -23,6 +23,11 @@ namespace Engine
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
         m_Window->SetVsync(true);
 
+        FrameBufferData data;
+        data.Height = m_Window->GetHeight();
+        data.Width = m_Window->GetWidth();
+        m_FrameBuffer = FrameBuffer::Create(data);
+
         Renderer::Init();
 
         m_GuiLayer = new GuiLayer();

@@ -34,3 +34,5 @@
 #include "Engine/Timer.hpp"
 
 #include "Engine/benchmark/Benchmark.hpp"
+
+#include "Engine/Scene/Entity.hpp"

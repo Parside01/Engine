@@ -3,12 +3,17 @@
 
 #include "entt.hpp"
 
+
 namespace Engine {
+    class Entity;
 
     class Scene {
+        friend class Entity;
     public:
         Scene();
         virtual ~Scene();
+
+        Entity CreateEntity();
 
         void OnUpdate(float tick);
     private:

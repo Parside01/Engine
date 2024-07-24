@@ -96,7 +96,7 @@ public:
         ImGui::Begin("Color settings");
 
         ImGui::ColorEdit3("Cube Facets Color", glm::value_ptr(m_CubeFacetsColor));
-
+        
         ImGui::End();
     }
 

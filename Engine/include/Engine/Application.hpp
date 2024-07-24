@@ -5,17 +5,11 @@
 #include "Engine/GUI/GuiLayer.hpp"
 #include "Engine/events/Event.hpp"
 #include "Engine/events/AppEvent.hpp"
-#include "Engine/engine_precompile_headers.hpp"
-#include "Engine/Utils.hpp"
+#include "Engine/Render/FrameBuffer.hpp"
 #include "Engine/layer/Layer.hpp"
 #include "Engine/layer/LayerStack.hpp"
 #include "Engine/log/Log.hpp"
 #include "Engine/window/Window.hpp"
-
-#include "Engine/Render/Buffers.hpp"
-#include "Engine/Render/VertexArray.hpp"
-
-#include "Engine/Render/OrthCamera.hpp"
 #include "Engine/Timestep.hpp"
 
 
@@ -43,7 +37,9 @@ namespace Engine
 
     private:
 
-        std::unique_ptr<Window> m_Window;
+        Scope<Window> m_Window;
+        Ref<FrameBuffer> m_FrameBuffer;
+
         GuiLayer* m_GuiLayer;
         bool m_IsStart{true};
         bool m_Collapsed{false};
