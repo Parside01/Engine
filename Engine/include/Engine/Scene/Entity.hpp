@@ -9,7 +9,7 @@ namespace Engine {
 
     class Entity {
     public:
-
+        Entity() {};
         Entity(entt::entity handle, Scene* scene);
 
         template<class T, class ... Args>

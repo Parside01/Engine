@@ -36,3 +36,7 @@
 #include "Engine/benchmark/Benchmark.hpp"
 
 #include "Engine/Scene/Entity.hpp"
+
+#include "Engine/Scene/TransfromComponent.hpp"
+#include "Engine/Scene/BaseComponents.hpp"
+#include "Engine/Scene/CameraComponent.hpp"

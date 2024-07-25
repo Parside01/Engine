@@ -4,7 +4,10 @@
 #include "Engine/log/Log.hpp"
 
 namespace Engine {
-    OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferData &initData) : m_Data(initData), m_RendererID(0)
+
+    static const uint32_t MaxSize{8192};
+
+    OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferData &initData) : m_Data(initData)
     {
         Invalidate();
     }
@@ -36,16 +39,16 @@ namespace Engine {
         glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
         glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_Data.Width, m_Data.Height);
-        // glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_Data.Width, m_Data.Height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 
         EG_CORE_ASSERT((glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Не получилось создать FrameBuffer")
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
     }
 
     void OpenGLFrameBuffer::SetSize(uint32_t width, uint32_t height) {
+        if (width == 0 || height == 0 || width > MaxSize || height > MaxSize) return;
+
         m_Data.Height = height;
         m_Data.Width = width;
 

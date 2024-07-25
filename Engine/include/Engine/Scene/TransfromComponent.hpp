@@ -2,6 +2,8 @@
 #define ENGINE_TRANSFROM_HPP
 
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Engine {
     struct Position {

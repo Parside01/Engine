@@ -13,7 +13,10 @@ void Layer2D::OnAttach() {
     data.Height = 720;
     data.Width = 1280;
     m_Framebuffer = Engine::FrameBuffer::Create(data);
-    m_ViewportSize = {1280, 720};
+
+    m_ESquere = m_MainScene.CreateEntity("Square Entity");
+    m_ESquere.AddComponent<Engine::CameraComponent>();
+    m_ESquere.AddComponent<Engine::TransformComponent>();
 }
 
 void Layer2D::OnDetach() {

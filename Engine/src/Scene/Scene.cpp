@@ -17,15 +17,16 @@ namespace Engine {
         Entity entity(m_Registry.create(), this);
         auto& tag = entity.AddComponent<TagComponent>();
         tag.Tag = name;
+        entity.AddComponent<TransformComponent>();
         return entity;
     }
 
     void Scene::OnUpdate(float tick) {
         EG_PROFILE_FUNC();
 
-        auto group = m_Registry.view<TransformComponent, CameraComponent>();
+        const auto group = m_Registry.view<TransformComponent, CameraComponent>();
         glm::mat4* cameraTranform = nullptr;
-        for (auto entity : group) {
+        for (const auto entity : group) {
             auto [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
             cameraTranform = &transform.Transform;
         }

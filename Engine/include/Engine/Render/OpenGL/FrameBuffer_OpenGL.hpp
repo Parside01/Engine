@@ -20,9 +20,9 @@ namespace Engine {
         virtual const FrameBufferData &GetBufferData() const override { return m_Data; }
     private:
         FrameBufferData m_Data;
-        uint32_t m_RendererID;
-        uint32_t m_ColorAttachment;
-        uint32_t m_DepthAttachment;
+        uint32_t m_RendererID = 0;
+        uint32_t m_ColorAttachment = 0;
+        uint32_t m_DepthAttachment = 0;
     };
 
 }
