@@ -27,10 +27,9 @@ namespace Engine {
         const auto group = m_Registry.view<TransformComponent, CameraComponent>();
         glm::mat4* cameraTranform = nullptr;
         for (const auto entity : group) {
-            auto [transform, camera] = group.get<TransformComponent, CameraComponent>(entity);
-            cameraTranform = &transform.Transform;
-        }
+            auto [transformComponent, cameraComponent] = group.get<TransformComponent, CameraComponent>(entity);
 
+        }
     }
 
     void Scene::OnViewportResize(uint32_t width, uint32_t height) {
