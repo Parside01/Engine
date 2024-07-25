@@ -17,16 +17,18 @@ namespace Engine
 
     Application::Application() {
         EG_ASSERT(!m_Instance, "Application is exist");
+
         m_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
         m_Window->SetVsync(true);
 
-        FrameBufferData data;
-        data.Height = m_Window->GetHeight();
-        data.Width = m_Window->GetWidth();
-        m_FrameBuffer = FrameBuffer::Create(data);
+        // FrameBufferData data;
+        // data.Height = m_Window->GetHeight();
+        // data.Width = m_Window->GetWidth();
+        // m_FrameBuffer = FrameBuffer::Create(data);
+        //
 
         Renderer::Init();
 
@@ -56,7 +58,11 @@ namespace Engine
             return false;
         }
         m_Collapsed = false;
+
+        m_Window->SetHeight(event.GetHeight());
+        m_Window->SetWidth(event.GetWidth());
         Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+
         return false;
     }
 

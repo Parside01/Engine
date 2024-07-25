@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "CanvaLayer.hpp"
+
 
 class TestLayer : public Engine::Layer {
 public:
@@ -128,7 +130,8 @@ class Sandbox : public Engine::Application {
 public:
     Sandbox() {
         // PushLayer(new TestLayer());
-        PushLayer(new Layer2D());
+        // PushLayer(new Layer2D());
+        PushLayer(new CanvaLayer());
     }
     ~Sandbox() {
 

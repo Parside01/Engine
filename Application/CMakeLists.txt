@@ -13,7 +13,10 @@ find_package(glfw3 REQUIRED)
 
 add_library(lib
         Layer2D.cpp
-        Layer2D.hpp)
+        Layer2D.hpp
+        CanvaLayer.hpp
+        CanvaLyaer.cpp
+        CanvaLyaer.cpp)
 
 include_directories(${ENGINE_INCLUDE_DIR})
 include_directories(${ENGINE_DIR}/third_party)

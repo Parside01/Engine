@@ -11,14 +11,14 @@ namespace Engine {
 
     void OrthCameraController::OnUpdate(Timestep tick) {
         if (Engine::Input::IsKeyPressed(EG_KEY_RIGHT))
-            m_CameraPosition.x += m_CameraTranslationSpeed * tick;
-        else if (Engine::Input::IsKeyPressed(EG_KEY_LEFT))
             m_CameraPosition.x -= m_CameraTranslationSpeed * tick;
+        else if (Engine::Input::IsKeyPressed(EG_KEY_LEFT))
+            m_CameraPosition.x += m_CameraTranslationSpeed * tick;
 
         if (Engine::Input::IsKeyPressed(EG_KEY_UP))
-            m_CameraPosition.y += m_CameraTranslationSpeed * tick;
-        else if (Engine::Input::IsKeyPressed(EG_KEY_DOWN))
             m_CameraPosition.y -= m_CameraTranslationSpeed * tick;
+        else if (Engine::Input::IsKeyPressed(EG_KEY_DOWN))
+            m_CameraPosition.y += m_CameraTranslationSpeed * tick;
 
         if (m_ItRotate) {
             m_Camera.SetRotation(m_CameraRotation);
@@ -40,7 +40,7 @@ namespace Engine {
     }
 
     bool OrthCameraController::OnMouseScrolled(MouseScrolledEvent &event) {
-        m_ZoomLevel -= event.GetYOffset();
+        m_ZoomLevel -= event.GetYOffset() * 0.25;
         m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
         return false;

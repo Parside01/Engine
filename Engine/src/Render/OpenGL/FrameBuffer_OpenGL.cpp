@@ -21,7 +21,6 @@ namespace Engine {
             glDeleteTextures(1, &m_ColorAttachment);
             glDeleteTextures(1, &m_DepthAttachment);
         }
-
         glCreateFramebuffers(1, &m_RendererID);
         glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 

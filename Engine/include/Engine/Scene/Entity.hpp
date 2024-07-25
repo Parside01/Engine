@@ -26,7 +26,7 @@ namespace Engine {
 
         operator bool() const;
     private:
-        entt::entity m_EntityHandle{ entt::null };
+        entt::entity m_EntityHandle{entt::null};
         Scene* m_Scene{nullptr};
     };
 

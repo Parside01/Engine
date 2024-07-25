@@ -32,7 +32,10 @@ namespace Engine
 
         inline uint32_t GetHeight() const override { return m_WindowData.Height; }
         inline uint32_t GetWidth() const override { return m_WindowData.Width; }
-    
+
+        inline void SetWidth(uint32_t width) override { m_WindowData.Width = width; }
+        inline void SetHeight(uint32_t height) override { m_WindowData.Height = height; }
+
         void SetVsync(bool enabled) override;
         bool IsVsync() const override { return m_WindowData.Vsync; }
 

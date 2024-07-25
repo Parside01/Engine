@@ -1,4 +1,3 @@
-#include "Engine/engine_precompile_headers.hpp"
 #include "Engine/Render/OrthCamera.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
