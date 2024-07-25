@@ -12,10 +12,12 @@ namespace Engine {
 
     class FrameBuffer {
     public:
+        virtual ~FrameBuffer() = default;
+
         virtual void Bind() = 0;
         virtual void Unbind() = 0;
 
-        virtual void SetSize(uint32_t width, uint32_t height) = 0;
+        virtual void SetSize(uint32_t width, uint32_t height) = 0; // TODO: Сделать так чтобы при изменении размеров viewport не проиходило мерцание.
         virtual uint32_t GetColorAttachment() const = 0;
 
         virtual const FrameBufferData& GetBufferData() const = 0;

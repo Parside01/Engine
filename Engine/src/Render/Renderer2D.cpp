@@ -8,6 +8,9 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Engine/events/AppEvent.hpp"
+#include "Engine/events/AppEvent.hpp"
+
 namespace Engine {
 
     struct QuadVertex {
@@ -99,6 +102,18 @@ namespace Engine {
     void Renderer2D::Shutdown() {
         EG_PROFILE_FUNC();
         delete s_Data;
+    }
+
+    void Renderer2D::BeginScene(const Camera &camera, const glm::mat4& transform) {
+        EG_PROFILE_FUNC();
+
+        glm::mat4 viewProjection = camera.GetProjection() * glm::inverse(transform);
+
+        s_Data->QuadShader->Bind();
+        s_Data->QuadShader->SetMat4("u_ViewProjection", viewProjection);
+
+        s_Data->QuadIndexCount = 0;
+        s_Data->QuadVertexBufferPtr = s_Data->QuadVertexBufferBase;
     }
 
     void Renderer2D::BeginScene(const OrthCamera &camera) {

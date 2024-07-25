@@ -1,8 +1,9 @@
 #ifndef ENGINE_TRANSFROM_HPP
 #define ENGINE_TRANSFROM_HPP
 
-namespace Engine {
+#include <glm/glm.hpp>
 
+namespace Engine {
     struct Position {
         float x;
         float y;
@@ -23,6 +24,15 @@ namespace Engine {
         float sx;
         float sy;
         float sz;
+    };
+
+    struct TransformComponent {
+        glm::mat4 Transform;
+
+        TransformComponent() = default;
+        TransformComponent(const TransformComponent& transformComponent) = default;
+
+        explicit TransformComponent(const glm::mat4& transformMatrix) : Transform(transformMatrix) {}
     };
 }
 

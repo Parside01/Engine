@@ -15,6 +15,10 @@ public:
     virtual void OnImGuiRender() override;
 
 private:
+    glm::vec2 m_ViewportSize;
+
+    bool m_ViewportFocused{false}, m_ViewportHovered{false};
+
     Engine::OrthCameraController m_CameraController;
     Engine::Ref<Engine::FrameBuffer> m_Framebuffer;
     Engine::Ref<Engine::Texture2D> m_Texture2D; 

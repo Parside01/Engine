@@ -37,7 +37,7 @@ namespace Engine
 
         uint32_t GetActiveWidgetID() const;
     private:
-        bool m_BlockEvents = true; 
+        bool m_BlockEvents{true};
     };
 } // namespace Engine
 

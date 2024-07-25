@@ -4,7 +4,7 @@
 #include "Engine/log/Log.hpp"
 
 namespace Engine {
-    OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferData &initData) : m_Data(initData)
+    OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferData &initData) : m_Data(initData), m_RendererID(0)
     {
         Invalidate();
     }
@@ -21,6 +21,7 @@ namespace Engine {
             glDeleteTextures(1, &m_ColorAttachment);
             glDeleteTextures(1, &m_DepthAttachment);
         }
+
         glCreateFramebuffers(1, &m_RendererID);
         glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
@@ -41,11 +42,13 @@ namespace Engine {
         EG_CORE_ASSERT((glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE), "Не получилось создать FrameBuffer")
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     }
 
     void OpenGLFrameBuffer::SetSize(uint32_t width, uint32_t height) {
         m_Data.Height = height;
         m_Data.Width = width;
+
         Invalidate();
     }
 

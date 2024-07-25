@@ -29,7 +29,7 @@ namespace Engine
 
         inline static Application& GetApplication() { return *m_Instance; }
         inline Window& GetWindow() const { return *m_Window; }
-
+        inline GuiLayer& GetGuiLayer() const { return *m_GuiLayer; }
     private:
 
         bool OnWindowClose(WindowCloseEvent& event);
@@ -38,7 +38,6 @@ namespace Engine
     private:
 
         Scope<Window> m_Window;
-        Ref<FrameBuffer> m_FrameBuffer;
 
         GuiLayer* m_GuiLayer;
         bool m_IsStart{true};

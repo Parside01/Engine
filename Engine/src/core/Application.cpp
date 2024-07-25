@@ -3,13 +3,11 @@
 #include "Engine/Render/RenderCommand.hpp"
 #include "Engine/Render/Renderer.hpp"
 
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/glut.h>
 
 #include <GLFW/glfw3.h>
-
 
 namespace Engine
 {
@@ -24,16 +22,10 @@ namespace Engine
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
         m_Window->SetVsync(true);
 
-        // FrameBufferData data;
-        // data.Height = m_Window->GetHeight();
-        // data.Width = m_Window->GetWidth();
-        // m_FrameBuffer = FrameBuffer::Create(data);
-        //
-
         Renderer::Init();
 
         m_GuiLayer = new GuiLayer();
-        PushOverlay(m_GuiLayer); 
+        PushOverlay(m_GuiLayer);
     }
 
     void Application::OnEvent(Event &event) {

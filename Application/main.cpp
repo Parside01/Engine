@@ -130,8 +130,8 @@ class Sandbox : public Engine::Application {
 public:
     Sandbox() {
         // PushLayer(new TestLayer());
-        // PushLayer(new Layer2D());
-        PushLayer(new CanvaLayer());
+        PushLayer(new Layer2D());
+        // PushLayer(new CanvaLayer());
     }
     ~Sandbox() {
 
