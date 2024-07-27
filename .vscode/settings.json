@@ -73,5 +73,6 @@
         "fstream": "cpp",
         "cfenv": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }

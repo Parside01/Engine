@@ -49,6 +49,11 @@ namespace Engine
 
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 410");
+
+        style.WindowRounding = 9.f; 
+        style.FrameRounding = 4.f;
+        style.IndentSpacing = 5.f;
+        // style.ItemSpacing = {10.f, 10.f};
     }
     void GuiLayer::OnDetach() {
         ImGui_ImplOpenGL3_Shutdown();

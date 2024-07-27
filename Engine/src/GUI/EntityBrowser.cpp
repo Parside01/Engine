@@ -9,6 +9,7 @@
 #include "Engine/Scene/RenderableComponents.hpp"
 
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace Engine
 {
@@ -29,6 +30,8 @@ namespace Engine
         if (m_SelectedEntity) {
             DrawComponents(m_SelectedEntity); 
         }
+
+
         ImGui::End();
     }
 
@@ -53,6 +56,46 @@ namespace Engine
         if (entity.HasComponent<SpriteComponent>())    DrawSpriteComponent(entity); 
     }
 
+    void EntityBrowser::DrawDragVec3(const std::string& label, glm::vec3& value, float defaultValue, float columnWidth) {
+        ImGui::PushID(label.c_str());
+        ImGui::Spacing();
+
+        ImGui::Columns(2);
+        ImGui::SetColumnWidth(0, columnWidth);
+        ImGui::Text("%s", label.c_str());
+        ImGui::NextColumn();
+
+        ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{0, 3});
+
+        float lineHeight = ImGui::GetTextLineHeightWithSpacing();
+        ImVec2 buttonSize = {lineHeight + 5.0f, lineHeight + 5.0f};
+
+        auto drawVec3Line = [&](const std::string& axis, float& value, const ImVec4& color) {
+            ImGui::PushStyleColor(ImGuiCol_Button, color);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{color.x + 0.1f, color.y + 0.1f, color.z + 0.1f, color.w});
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, color);
+            if (ImGui::Button(axis.c_str(), buttonSize)) {
+                value = defaultValue;
+            }
+            ImGui::PopStyleColor(3);
+            ImGui::SameLine(0.f, 5.f);
+            ImGui::DragFloat(("##" + axis).c_str(), &value, 0.1f, 0.0f, 0.0f, "%.2f");
+            ImGui::PopItemWidth();
+            ImGui::SameLine(0, 5.f);
+        };
+
+        drawVec3Line("X", value.x, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
+        drawVec3Line("Y", value.y, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
+        drawVec3Line("Z", value.z, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
+
+        ImGui::PopStyleVar();
+        ImGui::Columns(1);
+        ImGui::PopID();
+
+    }
+
+
     void EntityBrowser::DrawSpriteComponent(Entity entity) {
         auto& sprite = entity.GetComponent<SpriteComponent>();
         if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -74,12 +117,15 @@ namespace Engine
         auto& transform = entity.GetComponent<TransformComponent>();
 
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::DragFloat3("Position", glm::value_ptr(transform.Position));
+            DrawDragVec3("Position", transform.Position);
+
             glm::vec3 euler = TransformSystem::QuatToEuler(transform.Rotation);
-            if (ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 1.f, -360.f, 360.f, "%.1f")) 
-                transform.Rotation = TransformSystem::EulerToQuat(euler);
-            
-            ImGui::DragFloat3("Scale", glm::value_ptr(transform.Scale), 0.1f, 0.1f, 10.f, "%.1f");
+            DrawDragVec3("Rotation", euler);
+            transform.Rotation = TransformSystem::EulerToQuat(euler);
+
+            DrawDragVec3("Scale", transform.Scale);
+
+            ImGui::Spacing();
         }
     }
 
@@ -88,9 +134,11 @@ namespace Engine
             auto& cameraComponent = entity.GetComponent<CameraComponent>();
             const char* projectionType[] = {"Perspective", "Orthographic"};
             const char* currentProjectionType = projectionType[static_cast<int>(cameraComponent.Camera.GetProjectionType())];
+
             if (ImGui::BeginCombo("Camera Projection", currentProjectionType)) {
                 for (uint32_t i{0}; i < 2; ++i) {
                     bool isSelected = currentProjectionType == projectionType[i];
+
                     if (ImGui::Selectable(projectionType[i], isSelected)) {
                         currentProjectionType = projectionType[i];
                         cameraComponent.Camera.SetProjectionType(static_cast<SceneCamera::ProjectionType>(i));
@@ -121,6 +169,7 @@ namespace Engine
                 float far = cameraComponent.Camera.GetPerspectiveFar();
                 if (ImGui::DragFloat("Far", &far)) cameraComponent.Camera.SetPerspectiveFar(far);
             }
+            
             ImGui::Checkbox("Primary", &entity.GetComponent<CameraComponent>().IsPrimary);
             ImGui::Checkbox("Fixed Aspect Ratio", &entity.GetComponent<CameraComponent>().FixedAspectRatio);
         }

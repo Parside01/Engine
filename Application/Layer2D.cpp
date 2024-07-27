@@ -114,12 +114,9 @@ void Layer2D::OnImGuiRender() {
         ImGui::EndMenuBar();
     }
 
-    ImGui::Begin("Settings");
+    ImGui::Begin("Application Info");
 
-    auto& color = m_ESquere.GetComponent<Engine::SpriteComponent>().Color;
-    ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
-
-    ImGui::Text("FPS: %.1f", 1.0f / Tick);
+    ImGui::Text("FPS: %.2f", 1.0f / Tick);
     
     ImGui::End(); 
 
