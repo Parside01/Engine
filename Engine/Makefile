@@ -1,7 +1,7 @@
 .PHONY: build
 build:
 	mkdir -p build
-	cd build && cmake .. && make -j$(nproc)
+	cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug && make -j 6
 
 clean:
 	rm -rf build

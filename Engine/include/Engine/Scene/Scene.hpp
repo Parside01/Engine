@@ -3,9 +3,10 @@
 
 #include "entt.hpp"
 
-
 namespace Engine {
+
     class Entity;
+    class Camera;
 
     class Scene {
         friend class Entity;
@@ -13,10 +14,13 @@ namespace Engine {
         Scene();
         virtual ~Scene();
 
+        // Default components: TagComponent, TransformComponent.
         Entity CreateEntity(const std::string &name = "No name entity");
 
         void OnUpdate(float tick);
         void OnViewportResize(uint32_t width, uint32_t height);
+
+        entt::registry& GetRegistry() { return m_Registry; }
     private:
 
         uint32_t m_ViewportWidth{0};

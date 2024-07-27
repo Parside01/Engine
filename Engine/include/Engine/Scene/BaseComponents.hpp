@@ -14,6 +14,7 @@ namespace Engine {
 
         explicit TagComponent(const std::string& tag) : Tag(tag) {}
     };
+
 }
 
 #endif //ENGINE_BASECOMPONENTS_HPP

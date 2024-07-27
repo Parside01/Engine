@@ -7,9 +7,7 @@
 #include "Engine/Render/RenderCommand.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-
-#include "Engine/events/AppEvent.hpp"
-#include "Engine/events/AppEvent.hpp"
+#include <glm/gtx/quaternion.hpp>
 
 namespace Engine {
 
@@ -21,17 +19,17 @@ namespace Engine {
     };
 
     struct Renderer2Data {
-        static constexpr uint32_t MaxQuads = 100000;
+        static constexpr uint32_t MaxQuads{100000};
         static constexpr uint32_t MaxVertices = MaxQuads * 4;
         static constexpr uint32_t MaxIndices = MaxQuads * 6;
-        static constexpr uint32_t MaxTextureSlots = 32;
+        static constexpr uint32_t MaxTextureSlots{32};
 
         Ref<VertexArray> QuadVertexArray;
         Ref<VertexBuffer> QuadVertexBuffer;
         Ref<Shader> QuadShader;
         Ref<Texture2D> WhiteTexture;
 
-        uint32_t QuadIndexCount = 0;
+        uint32_t QuadIndexCount{0};
         QuadVertex* QuadVertexBufferBase = nullptr;
         QuadVertex* QuadVertexBufferPtr = nullptr;
 
@@ -55,7 +53,7 @@ namespace Engine {
             { "a_Position", ShaderDataType::Float3 },
             { "a_Color",    ShaderDataType::Float4 },
             { "a_TexCoord", ShaderDataType::Float2 },
-            {"a_TextureIndex", ShaderDataType::Float },
+            { "a_TextureIndex", ShaderDataType::Float },
         });
         s_Data->QuadVertexArray->AddVertexBuffer(s_Data->QuadVertexBuffer);
 
@@ -150,14 +148,18 @@ namespace Engine {
     }
 
     void Renderer2D::DrawQuad(const glm::vec3 &position, const glm::vec2 &size, const glm::vec4 &color) {
+        DrawQuad(position, size, glm::quat(1.0f, 0.0f, 0.0f, 0.0f), color);
+    }
+
+    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::quat& rotation, const glm::vec4& color) {
         EG_PROFILE_FUNC();
 
         if (s_Data->QuadIndexCount >= s_Data->MaxIndices)
             FlushAndReset();
 
-        const float textureIndex{0.0f};
+        constexpr float textureIndex{0.0f};
 
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f));
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::mat4_cast(rotation) * glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f));
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[0];
         s_Data->QuadVertexBufferPtr->Color = color;
@@ -183,7 +185,7 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
         s_Data->QuadVertexBufferPtr++;
 
-        s_Data->QuadIndexCount += 6;
+        s_Data->QuadIndexCount += 6;   
     }
 
     void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale) {

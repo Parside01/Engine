@@ -5,7 +5,7 @@
 
 class Layer2D : public Engine::Layer {
 public:
-    Layer2D(): m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720) {}
+    Layer2D(): m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720), m_MainScene(std::make_shared<Engine::Scene>()), m_EntityBrowser(m_MainScene) {}
     virtual ~Layer2D() = default;
     virtual void OnAttach() override;
     virtual void OnDetach() override;
@@ -16,18 +16,20 @@ public:
 
 private:
     glm::vec2 m_ViewportSize;
-
     bool m_ViewportFocused{false}, m_ViewportHovered{false};
+
+    float Tick{1.0f};
 
     Engine::Entity m_ESquere;
     Engine::Entity m_ECamera;
 
-    Engine::Scene m_MainScene;
+    Engine::Ref<Engine::Scene> m_MainScene;
+
+    Engine::EntityBrowser m_EntityBrowser;
 
     Engine::OrthCameraController m_CameraController;
     Engine::Ref<Engine::FrameBuffer> m_Framebuffer;
     Engine::Ref<Engine::Texture2D> m_Texture2D; 
-    glm::vec4 m_Color{0.2f, 0.3f, 0.8f, 1};
 };
 
 

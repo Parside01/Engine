@@ -13,8 +13,8 @@ namespace Engine {
 
         FPosition(const FPosition&) = default;
 
-        explicit FPosition(const float x, const float y, const float z) : x(x), y(y), z(z) {}
-        explicit FPosition(const float val = 1.0f) : x(val), y(val), z(val) {}
+        FPosition(const float x, const float y, const float z) : x(x), y(y), z(z) {}
+        FPosition(const float val = 1.0f) : x(val), y(val), z(val) {}
     };
 
     // Everything is in radians.
@@ -29,9 +29,9 @@ namespace Engine {
 
         FRotation(const FRotation&) = default;
 
-        explicit FRotation(const float v)
+        FRotation(const float v)
         : Roll(v), Pitch(v), Yaw(v), rx(v), ry(v), rz(v) {}
-        explicit FRotation(const float roll, const float pitch, const float yaw)
+        FRotation(const float roll, const float pitch, const float yaw)
             : Roll(roll), Pitch(pitch), Yaw(yaw), rx(roll), ry(pitch), rz(yaw) {}
     };
 
@@ -42,20 +42,23 @@ namespace Engine {
 
         FScale(const FScale&) = default;
 
-        explicit FScale(const float v)
+        FScale(const float v)
             : sx(v), sy(v), sz(v) {}
-        explicit  FScale(const float x, const float y, const float z)
+        FScale(const float x, const float y, const float z)
             : sx(x), sy(y), sz(z) {}
     };
 
     struct TransformComponent {
-        FPosition Position;
-        FRotation Rotation;
-        FScale Scale;
-
-        explicit TransformComponent(const FPosition& position, const FRotation& rotation, const FScale& scale)
+        glm::vec3 Position = glm::vec3(0.0f);
+        glm::quat Rotation = glm::quat(glm::vec3(0.0f)); // TODO: Поработать над тем как работают кватернионы, возможно просто переключиться на обыный 3х мерыный вектор для ротации.
+        glm::vec3 Scale = glm::vec3(1.0f);
+        
+        TransformComponent() = default;
+        TransformComponent(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale)
             : Position(position), Rotation(rotation), Scale(scale) {}
     };
+
+
 }
 
 #endif //ENGINE_TRANSFROM_HPP

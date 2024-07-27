@@ -40,3 +40,6 @@
 #include "Engine/Scene/TransfromComponent.hpp"
 #include "Engine/Scene/BaseComponents.hpp"
 #include "Engine/Scene/CameraComponent.hpp"
+#include "Engine/Scene/RenderableComponents.hpp"
+
+#include "Engine/GUI/EntityBrowser.hpp"

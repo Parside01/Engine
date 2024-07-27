@@ -14,9 +14,11 @@ void Layer2D::OnAttach() {
     data.Width = 1280;
     m_Framebuffer = Engine::FrameBuffer::Create(data);
 
-    m_ESquere = m_MainScene.CreateEntity("Square Entity");
-    m_ESquere.AddComponent<Engine::CameraComponent>();
-    m_ESquere.AddComponent<Engine::TransformComponent>();
+    m_ESquere = m_MainScene->CreateEntity("Square Entity");
+    m_ESquere.AddComponent<Engine::SpriteComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+    m_ECamera = m_MainScene->CreateEntity("Main Camera");
+    m_ECamera.AddComponent<Engine::CameraComponent>();
 }
 
 void Layer2D::OnDetach() {
@@ -31,23 +33,21 @@ void Layer2D::OnEvent(Engine::Event &event) {
 void Layer2D::OnUpdate(Engine::Timestep tick) {
     EG_PROFILE_FUNC();
 
-    m_Framebuffer->Bind();
+    Tick = tick; 
+
+    m_Framebuffer->SetSize(static_cast<uint32_t>(m_ViewportSize.x), static_cast<uint32_t>(m_ViewportSize.y));
+    m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+    m_MainScene->OnViewportResize(static_cast<uint32_t>(m_ViewportSize.x), static_cast<uint32_t>(m_ViewportSize.y));
 
     if (m_ViewportFocused)
         m_CameraController.OnUpdate(tick);
 
+    m_Framebuffer->Bind();
+
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     Engine::RenderCommand::Clear();
+    m_MainScene->OnUpdate(tick);
 
-    Engine::Renderer2D::BeginScene(m_CameraController.GetCamera());
-    {
-        glm::vec2 pos{0.f, 0.f};
-        glm::vec2 size{1.f, 1.f};
-        glm::vec4 color{0.8f, 0.2f, 0.3f, 1.0f};
-        Engine::Renderer2D::DrawQuad(pos, size, color);
-        Engine::Renderer2D::DrawQuad(pos, {10.0f, 10.0f}, m_Texture2D);
-    }
-    Engine::Renderer2D::EndScene();
     m_Framebuffer->Unbind();
 }
 
@@ -115,8 +115,15 @@ void Layer2D::OnImGuiRender() {
     }
 
     ImGui::Begin("Settings");
-    ImGui::ColorEdit4("Shader Color", glm::value_ptr(m_Color));
-    ImGui::End();
+
+    auto& color = m_ESquere.GetComponent<Engine::SpriteComponent>().Color;
+    ImGui::ColorEdit4("SquareColor", glm::value_ptr(color));
+
+    ImGui::Text("FPS: %.1f", 1.0f / Tick);
+    
+    ImGui::End(); 
+
+    m_EntityBrowser.OnImGuiRender();
 
     ImGui::Begin("Viewport");
     {
@@ -129,8 +136,6 @@ void Layer2D::OnImGuiRender() {
         glm::vec2 viewportSize(imVec.x, imVec.y);
         if (m_ViewportSize != viewportSize) {
             m_ViewportSize = {viewportSize.x, viewportSize.y};
-            m_Framebuffer->SetSize(static_cast<uint32_t>(m_ViewportSize.x), static_cast<uint32_t>(m_ViewportSize.y));
-
             m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
         }
 

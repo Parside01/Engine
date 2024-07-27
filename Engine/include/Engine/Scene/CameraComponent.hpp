@@ -7,7 +7,8 @@ namespace Engine {
 
     struct CameraComponent {
         SceneCamera Camera;
-        bool FixedAspectRation = false;
+        bool FixedAspectRatio = false;
+        bool IsPrimary = true;
 
         CameraComponent() = default;
         CameraComponent(const CameraComponent& cameraComponent) = default;
