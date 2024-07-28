@@ -48,6 +48,8 @@ namespace Engine {
             return !(*this == other);
         }
 
+        operator entt::entity() { return m_EntityHandle; }
+
     private:
         entt::entity m_EntityHandle{entt::null};
         Scene* m_Scene{nullptr};

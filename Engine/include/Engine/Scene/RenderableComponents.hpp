@@ -5,12 +5,12 @@
 
 namespace Engine {
     struct SpriteComponent {
-        glm::vec4 Color;
+        glm::vec4 Color = glm::vec4(1.0f);
 
         SpriteComponent() = default;
         SpriteComponent(const SpriteComponent&) = default;
 
-        explicit SpriteComponent(const glm::vec4& color = glm::vec4(1.0f)) : Color(color) {};
+        explicit SpriteComponent(const glm::vec4& color) : Color(color) {};
     };
 }
 

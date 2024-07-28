@@ -11,6 +11,8 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
+#include "yaml-cpp/yaml.h"
+
 namespace Engine
 {
     
@@ -24,12 +26,34 @@ namespace Engine
         } 
         if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered()) 
             m_SelectedEntity = {};
+
+        if (ImGui::BeginPopupContextWindow("Create Entity")) {
+            if (ImGui::MenuItem("Create Entity")) 
+                m_Scene->CreateEntity();
+            ImGui::EndPopup();
+        }
+
         ImGui::End();
 
+    
         ImGui::Begin("Details");
         if (m_SelectedEntity) {
             DrawComponents(m_SelectedEntity); 
+            if (ImGui::Button("Add Component", ImGui::CalcItemSize(ImVec2(0, 0), 0, 0))) ImGui::OpenPopup("Add Component");
+            if (ImGui::BeginPopup("Add Component")) {
+                if (ImGui::MenuItem("Camera")) {
+                    m_SelectedEntity.AddComponent<CameraComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+                if (ImGui::MenuItem("Sprite")) {
+                    m_SelectedEntity.AddComponent<SpriteComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
         }
+
 
 
         ImGui::End();
@@ -44,9 +68,20 @@ namespace Engine
             m_SelectedEntity = entity;
         }
 
+        bool entityDeleted = false;
+        if (ImGui::BeginPopupContextItem()) {
+            if (ImGui::MenuItem("Delete Entity")) entityDeleted = true;
+            ImGui::EndPopup();
+        }
+
         if (isOpen) {
             ImGui::TreePop();
         } 
+
+        // Всегда делать в конце отрисовки, иначе могут быть проблемы.
+        if (!entityDeleted) return; 
+        if (m_SelectedEntity == entity) m_SelectedEntity = {};
+        m_Scene->RemoveEntity(entity);
     }
 
     void EntityBrowser::DrawComponents(Entity entity) {
@@ -116,7 +151,16 @@ namespace Engine
     void EntityBrowser::DrawTransformComponent(Entity entity) {
         auto& transform = entity.GetComponent<TransformComponent>();
 
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
+            bool deleteComponent{false};
+
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) ImGui::OpenPopup("Transform Menu");
+            if (ImGui::BeginPopup("Transform Menu")) {
+                if (ImGui::MenuItem("Delete Component")) deleteComponent = true;
+
+                ImGui::EndPopup();
+            }
+
             DrawDragVec3("Position", transform.Position);
 
             glm::vec3 euler = TransformSystem::QuatToEuler(transform.Rotation);
@@ -126,8 +170,13 @@ namespace Engine
             DrawDragVec3("Scale", transform.Scale);
 
             ImGui::Spacing();
+
+            if (!deleteComponent) return;
+            entity.RemoveCompoent<TransformComponent>();
         }
     }
+
+
 
     void EntityBrowser::DrawCameraComponent(Entity entity) {
         if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {

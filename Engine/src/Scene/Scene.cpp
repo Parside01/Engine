@@ -11,9 +11,7 @@
 #include "Engine/Scene/Systems/TransformSystem.hpp"
 
 namespace Engine {
-    Scene::Scene() {
-
-    }
+    Scene::Scene() {}
 
     Scene::~Scene() {}
 
@@ -21,7 +19,11 @@ namespace Engine {
         Entity entity(m_Registry.create(), this);
         entity.AddComponent<TagComponent>(name);
         entity.AddComponent<TransformComponent>();
-        return entity;
+        return entity;  
+    }
+
+    void Scene::RemoveEntity(Entity entity) {
+        m_Registry.destroy(entity);
     }
 
     void Scene::OnUpdate(float tick) {

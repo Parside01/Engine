@@ -16,6 +16,7 @@ namespace Engine {
 
         // Default components: TagComponent, TransformComponent.
         Entity CreateEntity(const std::string &name = "No name entity");
+        void RemoveEntity(Entity entity);
 
         void OnUpdate(float tick);
         void OnViewportResize(uint32_t width, uint32_t height);

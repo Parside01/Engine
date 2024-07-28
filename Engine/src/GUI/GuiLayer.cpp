@@ -53,7 +53,9 @@ namespace Engine
         style.WindowRounding = 9.f; 
         style.FrameRounding = 4.f;
         style.IndentSpacing = 5.f;
-        // style.ItemSpacing = {10.f, 10.f};
+        style.ItemSpacing = {16.f, 4.f};
+        style.TabRounding = 5.f; 
+        style.PopupRounding = 6.f;
     }
     void GuiLayer::OnDetach() {
         ImGui_ImplOpenGL3_Shutdown();

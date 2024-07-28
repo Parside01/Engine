@@ -50,7 +50,7 @@ namespace Engine {
 
     struct TransformComponent {
         glm::vec3 Position = glm::vec3(0.0f);
-        glm::quat Rotation = glm::quat(glm::vec3(0.0f)); // TODO: Поработать над тем как работают кватернионы, возможно просто переключиться на обыный 3х мерыный вектор для ротации.
+        glm::quat Rotation = glm::quat(glm::vec3(0.0f));
         glm::vec3 Scale = glm::vec3(1.0f);
         
         TransformComponent() = default;

@@ -64,7 +64,12 @@ set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 
+# --- Добавляем библиотеку сериализации YAML файлов 
 
+add_subdirectory(${THIRD_PARTY_DIR}/yaml-cpp)
+include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
+
+# --- Добавляем библиотеку сериализации YAML файлов
 
 # --- Добавляем дириктории инклюдов для Engine.
 
@@ -80,7 +85,7 @@ target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/entt)
 
 
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
-target_link_libraries(engine ${OPENGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm)
+target_link_libraries(engine ${OPENGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm yaml-cpp)
 link_directories(${OPENGL_gl_LIBRARY})
 
 target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/Engine/engine_precompile_headers.hpp)
