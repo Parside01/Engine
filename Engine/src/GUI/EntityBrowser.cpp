@@ -11,7 +11,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-#include "yaml-cpp/yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace Engine
 {
@@ -53,8 +53,6 @@ namespace Engine
                 ImGui::EndPopup();
             }
         }
-
-
 
         ImGui::End();
     }
@@ -150,7 +148,9 @@ namespace Engine
 
     void EntityBrowser::DrawTransformComponent(Entity entity) {
         auto& transform = entity.GetComponent<TransformComponent>();
-
+        YAML::Node node;   
+        node = transform;
+        std::cout << node << std::endl;
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
             bool deleteComponent{false};
 
@@ -222,6 +222,5 @@ namespace Engine
             ImGui::Checkbox("Primary", &entity.GetComponent<CameraComponent>().IsPrimary);
             ImGui::Checkbox("Fixed Aspect Ratio", &entity.GetComponent<CameraComponent>().FixedAspectRatio);
         }
-
     }
 } // namespace Engine
