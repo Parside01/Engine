@@ -49,6 +49,12 @@ find_package(GLEW REQUIRED)
 
 # --- Ищем нужные пакетики.
 
+# --- Добавляем библиотеку сериализации YAML файлов 
+
+add_subdirectory(${THIRD_PARTY_DIR}/yaml-cpp)
+include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
+
+# --- Добавляем библиотеку сериализации YAML файлов
 
 # --- Все еще пытаюсь добавить imgui сюда.
 
@@ -62,14 +68,8 @@ set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
         include/Engine/Render/Renderer2D.hpp
         src/Render/Renderer2D.cpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
-target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp)
 
-# --- Добавляем библиотеку сериализации YAML файлов 
-
-add_subdirectory(${THIRD_PARTY_DIR}/yaml-cpp)
-include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
-
-# --- Добавляем библиотеку сериализации YAML файлов
 
 # --- Добавляем дириктории инклюдов для Engine.
 
@@ -85,7 +85,7 @@ target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/entt)
 
 
 add_executable(engine ${ENGINE_SOURCE_DIR}/EntryPoint.cpp)
-target_link_libraries(engine ${OPENGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm yaml-cpp)
+target_link_libraries(engine ${OPENGL_LIBRARIES} imgui Engine spdlog::spdlog fmt::fmt glfw glm::glm)
 link_directories(${OPENGL_gl_LIBRARY})
 
 target_precompile_headers(engine PRIVATE ${ENGINE_INCLUDE_DIR}/Engine/engine_precompile_headers.hpp)

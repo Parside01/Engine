@@ -11,7 +11,7 @@
 #include "Engine/Scene/Systems/TransformSystem.hpp"
 
 namespace Engine {
-    Scene::Scene() {}
+    Scene::Scene(){}
 
     Scene::~Scene() {}
 
@@ -26,9 +26,7 @@ namespace Engine {
         m_Registry.destroy(entity);
     }
 
-    void Scene::OnUpdate(float tick) {
-        EG_PROFILE_FUNC();
-
+    void Scene::OnUpdateRuntime(float tick) {
         const auto group = m_Registry.view<TagComponent, TransformComponent, CameraComponent>();
         SceneCamera* mainCamera = nullptr;
         glm::mat4 transform;
@@ -42,8 +40,12 @@ namespace Engine {
             }
         }
         if (!mainCamera) return;
+    }
 
-        Renderer2D::BeginScene(*mainCamera, transform);
+    void Scene::OnUpdateEditor(float tick, EditorCamera& camera) {
+        EG_PROFILE_FUNC();
+        Renderer2D::BeginScene(camera);
+
         {   
             const auto group = m_Registry.group<TagComponent, TransformComponent>(entt::get<SpriteComponent>);
             for (auto entity : group) {

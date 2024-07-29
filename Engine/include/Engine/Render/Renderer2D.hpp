@@ -1,5 +1,7 @@
 #ifndef RENDERER2D_HPP
 #define RENDERER2D_HPP
+#include <Engine/Scene/EditorCamera.hpp>
+
 #include "Engine/Render/OrthCamera.hpp"
 #include "Engine/Render/Texture.hpp"
 #include "Engine/Render/Camera.hpp"
@@ -12,6 +14,7 @@ namespace Engine {
         static void Shutdown();
 
         static void BeginScene(const Camera& camera, const glm::mat4 &transform);
+        static void BeginScene(const EditorCamera& camera);
         static void BeginScene(const OrthCamera& camera);
         static void Flush();
         static void EndScene();

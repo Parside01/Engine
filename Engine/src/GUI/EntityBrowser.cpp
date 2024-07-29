@@ -8,6 +8,8 @@
 #include "Engine/Scene/TransfromComponent.hpp"
 #include "Engine/Scene/RenderableComponents.hpp"
 
+#include "Engine/Utils.hpp"
+
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -15,7 +17,7 @@
 
 namespace Engine
 {
-    
+
     void EntityBrowser::OnImGuiRender() {
         ImGui::Begin("Entity Browser");
         
@@ -32,10 +34,8 @@ namespace Engine
                 m_Scene->CreateEntity();
             ImGui::EndPopup();
         }
-
         ImGui::End();
 
-    
         ImGui::Begin("Details");
         if (m_SelectedEntity) {
             DrawComponents(m_SelectedEntity); 
@@ -148,9 +148,6 @@ namespace Engine
 
     void EntityBrowser::DrawTransformComponent(Entity entity) {
         auto& transform = entity.GetComponent<TransformComponent>();
-        YAML::Node node;   
-        node = transform;
-        std::cout << node << std::endl;
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed)) {
             bool deleteComponent{false};
 

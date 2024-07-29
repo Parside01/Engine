@@ -114,6 +114,15 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr = s_Data->QuadVertexBufferBase;
     }
 
+    void Renderer2D::BeginScene(const EditorCamera& camera) {
+        EG_PROFILE_FUNC()
+        s_Data->QuadShader->Bind();
+        s_Data->QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+
+        s_Data->QuadIndexCount = 0;
+        s_Data->QuadVertexBufferPtr = s_Data->QuadVertexBufferBase;
+    }
+
     void Renderer2D::BeginScene(const OrthCamera &camera) {
         EG_PROFILE_FUNC();
         s_Data->QuadShader->Bind();

@@ -43,3 +43,4 @@
 #include "Engine/Scene/RenderableComponents.hpp"
 
 #include "Engine/GUI/EntityBrowser.hpp"
+#include "Engine/Scene/EditorCamera.hpp"

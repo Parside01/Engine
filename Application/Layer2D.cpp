@@ -28,6 +28,7 @@ void Layer2D::OnDetach() {
 void Layer2D::OnEvent(Engine::Event &event) {
     EG_PROFILE_FUNC();
     m_CameraController.OnEvent(event);
+    m_EditorCamera.OnEvent(event);
 }
 
 void Layer2D::OnUpdate(Engine::Timestep tick) {
@@ -40,13 +41,16 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
     m_MainScene->OnViewportResize(static_cast<uint32_t>(m_ViewportSize.x), static_cast<uint32_t>(m_ViewportSize.y));
 
     if (m_ViewportFocused)
-        m_CameraController.OnUpdate(tick);
+        m_EditorCamera.OnUpdate(tick);
 
     m_Framebuffer->Bind();
 
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     Engine::RenderCommand::Clear();
-    m_MainScene->OnUpdate(tick);
+
+    m_MainScene->OnUpdateRuntime(tick);
+    m_MainScene->OnUpdateEditor(tick, m_EditorCamera);
+
 
     m_Framebuffer->Unbind();
 }
@@ -133,11 +137,11 @@ void Layer2D::OnImGuiRender() {
         glm::vec2 viewportSize(imVec.x, imVec.y);
         if (m_ViewportSize != viewportSize) {
             m_ViewportSize = {viewportSize.x, viewportSize.y};
-            m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+            m_EditorCamera.SetViewportSize(static_cast<float>(viewportSize.x), static_cast<float>(viewportSize.y));
         }
 
         uint32_t textureID = m_Framebuffer->GetColorAttachment();
-        ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y});
+        ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y}, {0.0f, 1.0f}, {1.0f, 0.0f});
         ImGui::PopStyleVar();
     }
     ImGui::End();

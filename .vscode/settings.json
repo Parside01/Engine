@@ -72,7 +72,12 @@
         "valarray": "cpp",
         "fstream": "cpp",
         "cfenv": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "forward_list": "cpp",
+        "format": "cpp",
+        "span": "cpp"
     },
     "cmake.configureOnOpen": false
 }

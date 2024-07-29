@@ -37,7 +37,7 @@ namespace Engine
     }
 
     bool SceneSerializer::DeserializeFromYAML(const std::string& filepath) {
-        
+        return false; 
     }
     
 } // namespace Engine

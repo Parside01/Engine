@@ -39,6 +39,12 @@
         const char* GetAbsolutePath(const char* relPath);
         std::string GetAbsolutePath(const std::string& path);
         uint32_t GetColor(const glm::vec4& color);
+        
+        class FileDialogs {
+        public:
+            static std::string OpenFile(const std::string& path); 
+            static std::string SaveFile(const std::string& path); 
+        };
     } // namespace Utils
     
 #endif

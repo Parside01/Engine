@@ -9,6 +9,7 @@
 namespace Engine
 {
     // TODO: Решение временное, надо подумать как автоматизировать эту фигню.
+    // Ладно, даже временного не будет, лучше сразу норм сделать, а пока что забили.
     class SceneSerializer {
     public: 
         SceneSerializer(const Ref<Scene>& scene);
