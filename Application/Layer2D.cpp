@@ -59,11 +59,12 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
     auto [x, y] = ImGui::GetMousePos();
     x -= m_ViewportBounds[0].x;
     y -= m_ViewportBounds[0].y;
-
+    
     glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+    y = viewportSize.y - y;
     int mx = round(x);
     int my = round(y);
-
+    
     if (mx >= 0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y) {
         int pixelData = m_Framebuffer->ReadFromPixel(1, mx, my);
         EG_CORE_TRACE("Mouse pos {0}:{1}, data: {2}", mx, my, pixelData);
@@ -145,7 +146,12 @@ void Layer2D::OnImGuiRender() {
 
     ImGui::Begin("Viewport");
     {
-        ImVec2 viewportOffset = ImGui::GetCursorPos();
+        ImVec2 viewportMinRegion = ImGui::GetWindowContentRegionMin();
+        ImVec2 viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+        
+        ImVec2 viewportOffset = ImGui::GetWindowPos();
+        m_ViewportBounds[0] = {viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y};
+        m_ViewportBounds[1] = {viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y};
 
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
@@ -160,14 +166,6 @@ void Layer2D::OnImGuiRender() {
         }
 
 
-        ImVec2 windowSize = ImGui::GetWindowSize();
-        ImVec2 minBound = ImGui::GetWindowPos();
-        minBound.x += viewportOffset.x;
-        minBound.y += viewportOffset.y; 
-
-        ImVec2 maxBound = {minBound.x + windowSize.x, minBound.y + windowSize.y};
-        m_ViewportBounds[0] = {minBound.x, minBound.y};
-        m_ViewportBounds[1] = {maxBound.x, maxBound.y}; 
 
         uint32_t textureID = m_Framebuffer->GetColorAttachment();
         ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y}, {0.0f, 1.0f}, {1.0f, 0.0f});
