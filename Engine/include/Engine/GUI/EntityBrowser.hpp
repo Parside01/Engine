@@ -16,8 +16,12 @@ namespace Engine
 
         EntityBrowser(const Ref<Scene>& scene) : m_Scene(scene) {}
 
+        Entity GetSelectedEntity() const { return m_SelectedEntity; }
+        void SetSelectedEntity(Entity entity) { m_SelectedEntity = entity; }
+
         void OnImGuiRender();
     private:
+
         void DrawEntityNode(Entity entity);
         void DrawComponents(Entity entity);
 

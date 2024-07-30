@@ -117,7 +117,7 @@ namespace Engine {
                     case FramebufferTextureFormat::RED_INTEGER:
                         AttachColorTexture(m_ColorAttachments[i], m_Data.Samples, GL_R32I, GL_RED_INTEGER, m_Data.Width, m_Data.Height, i);
                         break;
-                    default: break;;
+                    default: break;
                 }
             }
         }
@@ -158,6 +158,7 @@ namespace Engine {
     void OpenGLFrameBuffer::Bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
         glViewport(0, 0, m_Data.Width, m_Data.Height);
+        
     }
 
     void OpenGLFrameBuffer::Unbind() {

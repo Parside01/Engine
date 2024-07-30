@@ -5,7 +5,7 @@
 
 class Layer2D : public Engine::Layer {
 public:
-    Layer2D(): m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720), m_MainScene(std::make_shared<Engine::Scene>()), m_EntityBrowser(m_MainScene), m_EditorCamera(45.f, 1280.f / 720.f, 0.1f, 1000.f) {}
+    Layer2D(): Layer("Layer2D"), m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720), m_MainScene(std::make_shared<Engine::Scene>()), m_EntityBrowser(m_MainScene), m_EditorCamera(45.f, 1280.f / 720.f, 0.1f, 1000.f) {}
     virtual ~Layer2D() = default;
     virtual void OnAttach() override;
     virtual void OnDetach() override;
@@ -13,6 +13,8 @@ public:
     virtual void OnEvent(Engine::Event &event) override;
     virtual void OnUpdate(Engine::Timestep tick) override;
     virtual void OnImGuiRender() override;
+
+    bool OnMouseButtonPressed(Engine::MouseButtonPressedEvent& event);
 
 private:
     glm::vec2 m_ViewportBounds[2] = { {0.0f, 0.0f}, {1280.0f, 720.0f} };
@@ -23,6 +25,7 @@ private:
 
     Engine::Entity m_ESquere;
     Engine::Entity m_ECamera;
+    Engine::Entity m_EQuad; 
 
     Engine::Ref<Engine::Scene> m_MainScene;
 

@@ -1,5 +1,7 @@
 #include "Layer2D.hpp"
 
+#include "Engine/engine.hpp"
+
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <imgui/imgui.h>
@@ -20,6 +22,11 @@ void Layer2D::OnAttach() {
 
     m_ECamera = m_MainScene->CreateEntity("Main Camera");
     m_ECamera.AddComponent<Engine::CameraComponent>();
+
+    m_EQuad = m_MainScene->CreateEntity("Quad Entity");
+    m_EQuad.AddComponent<Engine::SpriteComponent>(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+    auto& transform = m_EQuad.GetComponent<Engine::TransformComponent>();
+    transform.Position.x -= 3.f;
 }
 
 void Layer2D::OnDetach() {
@@ -28,8 +35,17 @@ void Layer2D::OnDetach() {
 
 void Layer2D::OnEvent(Engine::Event &event) {
     EG_PROFILE_FUNC();
-    m_CameraController.OnEvent(event);
     m_EditorCamera.OnEvent(event);
+
+    Engine::EventDispatcher dispatcher(event); 
+    dispatcher.Dispatch<Engine::MouseButtonPressedEvent>(EG_BINDEVENT(Layer2D::OnMouseButtonPressed));
+}
+
+bool Layer2D::OnMouseButtonPressed(Engine::MouseButtonPressedEvent& event) {
+    // if (event.GetMouseButton() == EG_MOUSE_BUTTON_LEFT) {
+    //     m_EntityBrowser.SetSelectedEntity(m_Ho)
+    // }
+
 }
 
 void Layer2D::OnUpdate(Engine::Timestep tick) {
@@ -136,12 +152,6 @@ void Layer2D::OnImGuiRender() {
         ImGui::EndMenuBar();
     }
 
-    ImGui::Begin("Application Info");
-
-    ImGui::Text("FPS: %.2f", 1.0f / Tick);
-    
-    ImGui::End(); 
-
     m_EntityBrowser.OnImGuiRender();
 
     ImGui::Begin("Viewport");
@@ -164,8 +174,6 @@ void Layer2D::OnImGuiRender() {
             m_ViewportSize = {viewportSize.x, viewportSize.y};
             m_EditorCamera.SetViewportSize(static_cast<float>(viewportSize.x), static_cast<float>(viewportSize.y));
         }
-
-
 
         uint32_t textureID = m_Framebuffer->GetColorAttachment();
         ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y}, {0.0f, 1.0f}, {1.0f, 0.0f});

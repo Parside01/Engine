@@ -17,7 +17,7 @@ namespace Engine {
         glm::vec2 TexCoord;
         float TextureIndex;
 
-        int EntityID = -1;
+        int EntityID = 1;
     };
 
     struct Renderer2Data {
@@ -56,7 +56,7 @@ namespace Engine {
             { "a_Color",    ShaderDataType::Float4 },
             { "a_TexCoord", ShaderDataType::Float2 },
             { "a_TextureIndex", ShaderDataType::Float },
-            { "a_EntityID", ShaderDataType::Int }
+            { "a_EntityID", ShaderDataType::Int },
         });
         s_Data->QuadVertexArray->AddVertexBuffer(s_Data->QuadVertexBuffer);
 
@@ -178,28 +178,28 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
-        s_Data->QuadVertexBufferPtr->EntityID = entityID;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[1];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
-        s_Data->QuadVertexBufferPtr->EntityID = entityID;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[2];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
-        s_Data->QuadVertexBufferPtr->EntityID = entityID;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[3];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
-        s_Data->QuadVertexBufferPtr->EntityID = entityID;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadIndexCount += 6;   

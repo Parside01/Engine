@@ -7,7 +7,7 @@
 
 namespace Engine
 {
-    enum class ShaderDataType : uint8_t
+    enum class ShaderDataType  
     {
         None = 0, Float2, Float3, Float4, Float, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
     };

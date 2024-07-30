@@ -23,6 +23,7 @@ namespace Engine
         EG_CORE_ASSERT(false, "Unknow ShaderDataType");
         return 0;
     }
+    #define TOSTRING(type) #type
 
     OpenGLVertexArray::OpenGLVertexArray()
     {
@@ -50,6 +51,7 @@ namespace Engine
         const BufferLayout& layout = vertexBuffer->GetLayout();
         for (const auto& i : layout)
         {
+            if (i.Name == "a_EntityID" && i.Type == ShaderDataType::Int) EG_CORE_WARN("KMBKREMBKMBK"); 
             glEnableVertexAttribArray(index);
             glVertexAttribPointer(
                 index,
