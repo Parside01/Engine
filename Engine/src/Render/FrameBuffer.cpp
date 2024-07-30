@@ -5,7 +5,7 @@
 
 namespace Engine {
 
-    Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferData &initData) {
+    Ref<FrameBuffer> FrameBuffer::Create(const FramebufferSpec &initData) {
         switch (Renderer::GetAPI()) {
             case RendererAPI::API::None: EG_CORE_ASSERT(false, "Не поддерживает такой апи");
             case RendererAPI::API::OpenGL: return std::make_shared<OpenGLFrameBuffer>(initData);

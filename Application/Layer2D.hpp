@@ -15,6 +15,7 @@ public:
     virtual void OnImGuiRender() override;
 
 private:
+    glm::vec2 m_ViewportBounds[2] = { {0.0f, 0.0f}, {1280.0f, 720.0f} };
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused{false}, m_ViewportHovered{false};
 

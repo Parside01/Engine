@@ -9,7 +9,8 @@ void Layer2D::OnAttach() {
     EG_PROFILE_FUNC();
     m_Texture2D = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
 
-    Engine::FrameBufferData data{};
+    Engine::FramebufferSpec data{};
+    data.Attachments = { Engine::FramebufferTextureFormat::RGBA8, Engine::FramebufferTextureFormat::RED_INTEGER, Engine::FramebufferTextureFormat::Depth };
     data.Height = 720;
     data.Width = 1280;
     m_Framebuffer = Engine::FrameBuffer::Create(data);
@@ -44,13 +45,29 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         m_EditorCamera.OnUpdate(tick);
 
     m_Framebuffer->Bind();
-
+    
     Engine::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     Engine::RenderCommand::Clear();
+
+    m_Framebuffer->ClearAttachment(1, -1);
 
     m_MainScene->OnUpdateRuntime(tick);
     m_MainScene->OnUpdateEditor(tick, m_EditorCamera);
 
+    // Test
+
+    auto [x, y] = ImGui::GetMousePos();
+    x -= m_ViewportBounds[0].x;
+    y -= m_ViewportBounds[0].y;
+
+    glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+    int mx = round(x);
+    int my = round(y);
+
+    if (mx >= 0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y) {
+        int pixelData = m_Framebuffer->ReadFromPixel(1, mx, my);
+        EG_CORE_TRACE("Mouse pos {0}:{1}, data: {2}", mx, my, pixelData);
+    }   
 
     m_Framebuffer->Unbind();
 }
@@ -128,6 +145,8 @@ void Layer2D::OnImGuiRender() {
 
     ImGui::Begin("Viewport");
     {
+        ImVec2 viewportOffset = ImGui::GetCursorPos();
+
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
         Engine::Application::GetApplication().GetGuiLayer().BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
@@ -140,8 +159,19 @@ void Layer2D::OnImGuiRender() {
             m_EditorCamera.SetViewportSize(static_cast<float>(viewportSize.x), static_cast<float>(viewportSize.y));
         }
 
+
+        ImVec2 windowSize = ImGui::GetWindowSize();
+        ImVec2 minBound = ImGui::GetWindowPos();
+        minBound.x += viewportOffset.x;
+        minBound.y += viewportOffset.y; 
+
+        ImVec2 maxBound = {minBound.x + windowSize.x, minBound.y + windowSize.y};
+        m_ViewportBounds[0] = {minBound.x, minBound.y};
+        m_ViewportBounds[1] = {maxBound.x, maxBound.y}; 
+
         uint32_t textureID = m_Framebuffer->GetColorAttachment();
         ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y}, {0.0f, 1.0f}, {1.0f, 0.0f});
+
         ImGui::PopStyleVar();
     }
     ImGui::End();

@@ -16,6 +16,8 @@ namespace Engine {
         glm::vec4 Color;
         glm::vec2 TexCoord;
         float TextureIndex;
+
+        int EntityID = -1;
     };
 
     struct Renderer2Data {
@@ -54,6 +56,7 @@ namespace Engine {
             { "a_Color",    ShaderDataType::Float4 },
             { "a_TexCoord", ShaderDataType::Float2 },
             { "a_TextureIndex", ShaderDataType::Float },
+            { "a_EntityID", ShaderDataType::Int }
         });
         s_Data->QuadVertexArray->AddVertexBuffer(s_Data->QuadVertexBuffer);
 
@@ -82,7 +85,7 @@ namespace Engine {
         int32_t samplers[s_Data->MaxTextureSlots];
         for (uint32_t i{0}; i < s_Data->MaxTextureSlots; ++i) samplers[i] = i;
 
-        s_Data->QuadShader = Shader::Create("assets/shaders/Layer2D.glsl");
+        s_Data->QuadShader = Shader::Create("../assets/shaders/Layer2D.glsl");
 
         s_Data->QuadShader->Bind();
         s_Data->WhiteTexture = Texture2D::Create(1, 1);
@@ -151,16 +154,17 @@ namespace Engine {
         }
         RenderCommand::DrawIndexed(s_Data->QuadVertexArray, s_Data->QuadIndexCount);
     }
+
  
     void Renderer2D::DrawQuad(const glm::vec2 &position, const glm::vec2 &size, const glm::vec4 &color) {
         DrawQuad({position.x, position.y, 0}, size, color);
     }
 
     void Renderer2D::DrawQuad(const glm::vec3 &position, const glm::vec2 &size, const glm::vec4 &color) {
-        DrawQuad(position, size, glm::quat(1.0f, 0.0f, 0.0f, 0.0f), color);
+        DrawQuad(position, size, glm::quat(1.0f, 0.0f, 0.0f, 0.0f), color, -1);
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::quat& rotation, const glm::vec4& color) {
+    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::quat& rotation, const glm::vec4& color, int entityID) {
         EG_PROFILE_FUNC();
 
         if (s_Data->QuadIndexCount >= s_Data->MaxIndices)
@@ -174,24 +178,28 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[1];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[2];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[3];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadIndexCount += 6;   

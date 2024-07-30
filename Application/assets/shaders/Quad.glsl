@@ -18,6 +18,7 @@ void main() {
 #version 330 core
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int data;
 
 in vec2 v_TexCoord;
 
@@ -25,5 +26,6 @@ uniform vec4 u_Color;
 uniform sampler2D u_Texture; 
 
 void main() {
-    color = texture(u_Texture, v_TexCoord) * u_Color;
+    color = {1.f, 1.f, 0.f, 1.f};
+    data = 10; 
 }

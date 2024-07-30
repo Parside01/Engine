@@ -21,7 +21,7 @@ namespace Engine {
 
         static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
         static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-        static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::quat& rotation, const glm::vec4& color);
+        static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::quat& rotation, const glm::vec4& color, int entityID);
 
         static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale = 1.0f);
         static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale = 1.0f);
