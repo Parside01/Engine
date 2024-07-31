@@ -21,6 +21,7 @@ add_library(lib
 include_directories(${ENGINE_INCLUDE_DIR})
 include_directories(${ENGINE_DIR}/third_party)
 include_directories(${ENGINE_DIR}/third_party/entt)
+include_directories(${ENGINE_DIR}/third_party/ImGuizmo)
 
 # Добавляем исходные файлы приложения
 add_executable(Sandbox main.cpp)

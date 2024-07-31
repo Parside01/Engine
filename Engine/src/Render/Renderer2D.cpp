@@ -118,7 +118,7 @@ namespace Engine {
     }
 
     void Renderer2D::BeginScene(const EditorCamera& camera) {
-        EG_PROFILE_FUNC()
+        EG_PROFILE_FUNC();
         s_Data->QuadShader->Bind();
         s_Data->QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
 

@@ -3,8 +3,8 @@
 #include "Engine/engine.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/ext/matrix_transform.hpp>
-#include <imgui/imgui.h>
 
 
 void Layer2D::OnAttach() {
@@ -42,10 +42,11 @@ void Layer2D::OnEvent(Engine::Event &event) {
 }
 
 bool Layer2D::OnMouseButtonPressed(Engine::MouseButtonPressedEvent& event) {
-    // if (event.GetMouseButton() == EG_MOUSE_BUTTON_LEFT) {
-    //     m_EntityBrowser.SetSelectedEntity(m_Ho)
-    // }
-
+    if (event.GetMouseButton() == EG_MOUSE_BUTTON_LEFT) {
+        if (m_ViewportHovered && !ImGuizmo::IsOver())
+            m_EntityBrowser.SetSelectedEntity(m_HoveredEntity);
+    }
+    return false;
 }
 
 void Layer2D::OnUpdate(Engine::Timestep tick) {
@@ -70,21 +71,23 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
     m_MainScene->OnUpdateRuntime(tick);
     m_MainScene->OnUpdateEditor(tick, m_EditorCamera);
 
-    // Test
-
-    auto [x, y] = ImGui::GetMousePos();
-    x -= m_ViewportBounds[0].x;
-    y -= m_ViewportBounds[0].y;
-    
-    glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-    y = viewportSize.y - y;
-    int mx = round(x);
-    int my = round(y);
-    
-    if (mx >= 0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y) {
-        int pixelData = m_Framebuffer->ReadFromPixel(1, mx, my);
-        EG_CORE_TRACE("Mouse pos {0}:{1}, data: {2}", mx, my, pixelData);
-    }   
+   { 
+        // TODO: Вот эту фигню надо вынести в отдельную систему, и определять кликнутый объект не каждый кадр а только когда это нужно.
+        EG_PROFILE_SCOPE("Definition of HoveredEntity");
+        auto [x, y] = ImGui::GetMousePos();
+        x -= m_ViewportBounds[0].x;
+        y -= m_ViewportBounds[0].y;
+        
+        glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+        y = viewportSize.y - y;
+        int mx = round(x);
+        int my = round(y);
+        
+        if ((mx >= 0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y)) {
+            int pixelData = m_Framebuffer->ReadFromPixel(1, mx, my);
+            m_HoveredEntity = (pixelData == -1 ? Engine::Entity() : Engine::Entity(static_cast<entt::entity>(pixelData), m_MainScene.get()));
+        }  
+    }
 
     m_Framebuffer->Unbind();
 }
@@ -177,6 +180,43 @@ void Layer2D::OnImGuiRender() {
 
         uint32_t textureID = m_Framebuffer->GetColorAttachment();
         ImGui::Image(reinterpret_cast<void *>(textureID), {m_ViewportSize.x, m_ViewportSize.y}, {0.0f, 1.0f}, {1.0f, 0.0f});
+
+        Engine::Entity selectedEntity = m_EntityBrowser.GetSelectedEntity();
+        if (selectedEntity) {
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+
+            ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+
+            const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+            glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+            
+            auto& tc = selectedEntity.GetComponent<Engine::TransformComponent>();
+            glm::mat4 transform = glm::translate(glm::mat4(1.0f), tc.Position) * glm::mat4_cast(tc.Rotation) * glm::scale(glm::mat4(1.f), tc.Scale);
+
+            float snapValue = 0.5f; 
+            if (m_GuizmoOperation == ImGuizmo::OPERATION::ROTATE) snapValue = 45.f;
+            float snapValues[3] = {snapValue, snapValue, snapValue};
+
+            ImGuizmo::Manipulate(
+                glm::value_ptr(cameraView), 
+                glm::value_ptr(cameraProjection), /*static_cast<ImGuizmo::OPERATION>(m_GuizmoOperation) */ImGuizmo::OPERATION::TRANSLATE, 
+                ImGuizmo::LOCAL, 
+                glm::value_ptr(transform)
+            );
+            if (ImGuizmo::IsUsing()) {
+                EG_PROFILE_SCOPE("Decompose matrix ImGuizmo");
+                glm::vec3 scale, position, skew; 
+                glm::quat rotation;
+                glm::vec4 perspective;
+
+                glm::decompose(transform, scale, rotation, position, skew, perspective);
+
+                tc.Position = position;
+                tc.Rotation = rotation; 
+                tc.Scale = scale;
+            }
+        } 
 
         ImGui::PopStyleVar();
     }

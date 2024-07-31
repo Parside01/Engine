@@ -1,6 +1,8 @@
 #ifndef LAYER2D_HPP
 #define LAYER2D_HPP
 #include <Engine/engine.hpp>
+#include <imgui/imgui.h>
+#include "ImGuizmo.h"
 
 
 class Layer2D : public Engine::Layer {
@@ -21,11 +23,15 @@ private:
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused{false}, m_ViewportHovered{false};
 
+    int m_GuizmoOperation;
+
     float Tick{1.0f};
 
     Engine::Entity m_ESquere;
     Engine::Entity m_ECamera;
     Engine::Entity m_EQuad; 
+
+    Engine::Entity m_HoveredEntity;
 
     Engine::Ref<Engine::Scene> m_MainScene;
 

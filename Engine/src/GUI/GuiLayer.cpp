@@ -8,6 +8,8 @@
 
 #include "GLFW/glfw3.h"
 
+#include "ImGuizmo.h"
+
 namespace Engine
 {
     GuiLayer::GuiLayer() 
@@ -76,9 +78,11 @@ namespace Engine
     }
 
    void GuiLayer::Begin() {
+        EG_PROFILE_FUNC();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
    }
 
    void GuiLayer::End() {

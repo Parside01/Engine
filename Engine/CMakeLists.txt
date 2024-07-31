@@ -56,6 +56,20 @@ include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
 
 # --- Добавляем библиотеку сериализации YAML файлов
 
+# --- ImGuizmo
+
+add_library(imguizmo 
+        ${THIRD_PARTY_DIR}/ImGuizmo/ImGuizmo.cpp
+        ${THIRD_PARTY_DIR}/ImGuizmo/ImGuizmo.h
+)
+target_compile_definitions(imguizmo PRIVATE -DIMGUI_DEFINE_MATH_OPERATORS)
+
+target_include_directories(imguizmo PUBLIC ${THIRD_PARTY_DIR}/imgui)
+target_include_directories(imguizmo PUBLIC ${GLFW3_INCLUDE_DIR})
+target_include_directories(imguizmo PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
+
+# --- ImGuizmo
+
 # --- Все еще пытаюсь добавить imgui сюда.
 
 set(CORE_HEADERS)
@@ -68,13 +82,14 @@ set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
         include/Engine/Render/Renderer2D.hpp
         src/Render/Renderer2D.cpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
-target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp)
+target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo)
 
 
 # --- Добавляем дириктории инклюдов для Engine.
 
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui)
 target_include_directories(Engine PUBLIC ${GLFW3_INCLUDE_DIR})
+target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/ImGuizmo)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_DIR}/imgui/backends/)
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/stb_image)
