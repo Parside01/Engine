@@ -14,6 +14,7 @@
 #include "imgui_internal.h"
 
 #include <yaml-cpp/yaml.h>
+#include "Engine/GUI/UIRenderer.hpp"
 
 namespace Engine
 {
@@ -41,6 +42,10 @@ namespace Engine
             DrawComponents(m_SelectedEntity); 
             if (ImGui::Button("Add Component", ImGui::CalcItemSize(ImVec2(0, 0), 0, 0))) ImGui::OpenPopup("Add Component");
             if (ImGui::BeginPopup("Add Component")) {
+                if (ImGui::MenuItem("Transform")) {
+                    m_SelectedEntity.AddComponent<TransformComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
                 if (ImGui::MenuItem("Camera")) {
                     m_SelectedEntity.AddComponent<CameraComponent>();
                     ImGui::CloseCurrentPopup();
@@ -125,7 +130,6 @@ namespace Engine
         ImGui::PopStyleVar();
         ImGui::Columns(1);
         ImGui::PopID();
-
     }
 
 
@@ -138,12 +142,7 @@ namespace Engine
 
     void EntityBrowser::DrawTagComponent(Entity entity) {
         auto& tag = entity.GetComponent<TagComponent>();
-        char buffer[256];
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, tag.Tag.c_str());
-        if (ImGui::InputText("Tag", buffer, sizeof(buffer))) {
-            tag.Tag = std::string(buffer);
-        }
+        UIRenderer::DrawInputText("Tag", tag.Tag);
     }
 
     void EntityBrowser::DrawTransformComponent(Entity entity) {

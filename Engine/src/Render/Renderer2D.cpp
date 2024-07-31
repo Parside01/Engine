@@ -39,6 +39,12 @@ namespace Engine {
         std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 
         glm::vec4 QuadVertexPosition[4];
+
+        struct CameraData {
+            glm::mat4 ViewProjection;
+        };
+        CameraData CameraBuffer;
+        // Ref<UniformBuffer> CameraUniformBuffer;
     };
 
     static Renderer2Data* s_Data;

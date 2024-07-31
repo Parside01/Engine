@@ -56,6 +56,12 @@ include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
 
 # --- Добавляем библиотеку сериализации YAML файлов
 
+# --- shaderc
+
+# ПОКА НАДО ЭКСПЕРЕМЕНТИРОВАТЬ КАК ЕГО ПРАВИЛЬНО ДОБАВИТЬ
+
+# --- shaderc
+
 # --- ImGuizmo
 
 add_library(imguizmo 
@@ -80,7 +86,8 @@ file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
         include/Engine/Render/Renderer2D.hpp
-        src/Render/Renderer2D.cpp)
+        src/Render/Renderer2D.cpp
+        include/Engine/GUI/UIRenderer.hpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo)
 
