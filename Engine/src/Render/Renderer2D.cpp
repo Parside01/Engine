@@ -148,6 +148,7 @@ namespace Engine {
         Flush();
     }
 
+
     void Renderer2D::FlushAndReset() {
         EndScene();
         s_Data->QuadIndexCount = 0;
@@ -161,7 +162,7 @@ namespace Engine {
         RenderCommand::DrawIndexed(s_Data->QuadVertexArray, s_Data->QuadIndexCount);
     }
 
- 
+
     void Renderer2D::DrawQuad(const glm::vec2 &position, const glm::vec2 &size, const glm::vec4 &color) {
         DrawQuad({position.x, position.y, 0}, size, color);
     }
@@ -208,7 +209,7 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
-        s_Data->QuadIndexCount += 6;   
+        s_Data->QuadIndexCount += 6;
     }
 
     void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale) {
@@ -260,6 +261,60 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr++;
+
+        s_Data->QuadIndexCount += 6;
+    }
+
+    void Renderer2D::DrawQuadEntity(int entityID, const TransformComponent &transformComponent, const SpriteComponent &spriteComponent) {
+        EG_PROFILE_FUNC();
+
+        if (s_Data->QuadIndexCount >= s_Data->MaxIndices)
+            FlushAndReset();
+
+        glm::vec4 color = spriteComponent.Color;
+
+        float textureIndex{0.0f};
+        for (uint32_t i{1}; i < s_Data->TextureSlotIndex; ++i) {
+            if (*s_Data->TextureSlots[i].get() == *spriteComponent.Texture.get()) {
+                textureIndex = i;
+                break;
+            }
+        }
+
+        if (textureIndex == 0.0f) {
+            textureIndex = static_cast<uint32_t>(s_Data->TextureSlotIndex);
+            s_Data->TextureSlots[s_Data->TextureSlotIndex] = spriteComponent.Texture;
+            ++s_Data->TextureSlotIndex;
+        }
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), transformComponent.Position) * glm::toMat4(transformComponent.Rotation) * glm::scale(glm::mat4(1.0f), transformComponent.Scale);
+
+        s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[0];
+        s_Data->QuadVertexBufferPtr->Color = color;
+        s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
+        s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
+        s_Data->QuadVertexBufferPtr++;
+
+        s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[1];
+        s_Data->QuadVertexBufferPtr->Color = color;
+        s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
+        s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
+        s_Data->QuadVertexBufferPtr++;
+
+        s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[2];
+        s_Data->QuadVertexBufferPtr->Color = color;
+        s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
+        s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
+        s_Data->QuadVertexBufferPtr++;
+
+        s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[3];
+        s_Data->QuadVertexBufferPtr->Color = color;
+        s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
+        s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = static_cast<int>(entityID);
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadIndexCount += 6;

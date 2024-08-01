@@ -31,7 +31,7 @@ namespace Engine
         void DrawSpriteComponent(Entity entity);
 
     private: // TODO: Скорее всего надо будет вынести все функции этой секции в отдельный файл\либу.
-        void DrawDragVec3(const std::string& label, glm::vec3& value, float defaultValue = 0.f, float columnWidth = 100.f);
+        void DrawDragVec3(const std::string& label, glm::vec3& value, float defaultValue = 0.f, float columnWidth = 85.f);
     private:
         Ref<Scene> m_Scene;
         Entity m_SelectedEntity;

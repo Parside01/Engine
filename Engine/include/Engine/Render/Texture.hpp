@@ -21,6 +21,8 @@ namespace Engine {
     public:
         static Ref<Texture2D> Create(uint32_t width, uint32_t height, glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f});
         static Ref<Texture2D> Create(const std::string& path);
+
+        virtual uint32_t GetTextureID() const = 0;
     };
 }
 

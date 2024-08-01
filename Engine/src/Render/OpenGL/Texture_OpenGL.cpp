@@ -7,6 +7,7 @@
 #include <filesystem>
 
 namespace Engine {
+
     OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, glm::vec4 color)
     : m_Height(height), m_Width(width)
     {

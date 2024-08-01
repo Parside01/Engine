@@ -37,6 +37,7 @@ private:
 
     Engine::EditorCamera m_EditorCamera; 
     Engine::EntityBrowser m_EntityBrowser;
+    Engine::ContentBrowser m_ContentBrowser;
 
     Engine::OrthCameraController m_CameraController;
     Engine::Ref<Engine::FrameBuffer> m_Framebuffer;

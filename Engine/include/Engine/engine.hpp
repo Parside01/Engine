@@ -42,5 +42,6 @@
 #include "Engine/Scene/CameraComponent.hpp"
 #include "Engine/Scene/RenderableComponents.hpp"
 
-#include "Engine/GUI/EntityBrowser.hpp"
+#include "Engine/GUI/Panels/EntityBrowser.hpp"
 #include "Engine/Scene/EditorCamera.hpp"
+#include "Engine/GUI/Panels/ContentBrowser.hpp"

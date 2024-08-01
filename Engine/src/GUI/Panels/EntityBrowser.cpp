@@ -1,4 +1,7 @@
-#include "Engine/GUI/EntityBrowser.hpp"
+#include "Engine/GUI/Panels/EntityBrowser.hpp"
+
+#include <Engine/log/Log.hpp>
+
 #include "Engine/Scene/Systems/TransformSystem.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include "Engine/Scene/SceneCamera.hpp"
@@ -98,7 +101,7 @@ namespace Engine
         ImGui::PushID(label.c_str());
         ImGui::Spacing();
 
-        ImGui::Columns(2);
+        ImGui::Columns(2, 0, false);
         ImGui::SetColumnWidth(0, columnWidth);
         ImGui::Text("%s", label.c_str());
         ImGui::NextColumn();
@@ -135,8 +138,21 @@ namespace Engine
 
     void EntityBrowser::DrawSpriteComponent(Entity entity) {
         auto& sprite = entity.GetComponent<SpriteComponent>();
+
         if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit4("Color", glm::value_ptr(sprite.Color));
+            ImGui::Button("Texture", {100.f, 0.f});
+
+            if (ImGui::BeginDragDropTarget()) {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+                    const char* path = static_cast<char*>(payload->Data);
+                    std::filesystem::path texturePath(path);
+                    EG_CORE_WARN("{0} and {1}", texturePath.c_str(), std::filesystem::current_path().c_str());
+                    Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+                    sprite.Texture = texture;
+                }
+                ImGui::EndDragDropTarget();
+            }
         }
     }
 

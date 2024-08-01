@@ -156,6 +156,7 @@ void Layer2D::OnImGuiRender() {
     }
 
     m_EntityBrowser.OnImGuiRender();
+    m_ContentBrowser.OnImGuiRender();
 
     ImGui::Begin("Viewport");
     {

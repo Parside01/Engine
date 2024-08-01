@@ -47,6 +47,7 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
 
+
 # --- Ищем нужные пакетики.
 
 # --- Добавляем библиотеку сериализации YAML файлов 
@@ -55,12 +56,6 @@ add_subdirectory(${THIRD_PARTY_DIR}/yaml-cpp)
 include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
 
 # --- Добавляем библиотеку сериализации YAML файлов
-
-# --- shaderc
-
-# ПОКА НАДО ЭКСПЕРЕМЕНТИРОВАТЬ КАК ЕГО ПРАВИЛЬНО ДОБАВИТЬ
-
-# --- shaderc
 
 # --- ImGuizmo
 
