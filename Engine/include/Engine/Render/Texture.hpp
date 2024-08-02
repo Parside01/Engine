@@ -23,6 +23,7 @@ namespace Engine {
         static Ref<Texture2D> Create(const std::string& path);
 
         virtual uint32_t GetTextureID() const = 0;
+        virtual const  std::string& GetTexturePath() const = 0;
     };
 }
 

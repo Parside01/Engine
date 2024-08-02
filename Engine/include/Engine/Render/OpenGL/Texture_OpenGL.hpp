@@ -18,6 +18,7 @@ namespace Engine {
         virtual void Bind(uint32_t slot = 0) const override;
 
         uint32_t GetTextureID() const override { return m_RendererID; }
+        const std::string& GetTexturePath() const override { return m_TexturePath; }
 
         virtual bool operator==(const Texture& other) const override;
     private:

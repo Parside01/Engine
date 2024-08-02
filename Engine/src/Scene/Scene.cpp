@@ -45,12 +45,11 @@ namespace Engine {
     void Scene::OnUpdateEditor(float tick, EditorCamera& camera) {
         EG_PROFILE_FUNC();
         Renderer2D::BeginScene(camera);
-
         {   
             const auto group = m_Registry.group<TagComponent, TransformComponent>(entt::get<SpriteComponent>);
             for (auto entity : group) {
                 auto [tag, transformComponent, sprite] = group.get<TagComponent, TransformComponent, SpriteComponent>(entity);
-                Renderer2D::DrawQuadEntity(static_cast<int>(entity), transformComponent, sprite);
+                Renderer2D::DrawQuad(transformComponent.Position, {transformComponent.Scale.x, transformComponent.Scale.y}, transformComponent.Rotation, sprite.Color, static_cast<int>(entity));
             }
         }
         Renderer2D::EndScene();

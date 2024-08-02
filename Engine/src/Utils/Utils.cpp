@@ -2,6 +2,8 @@
 #include "Engine/Core.hpp"
 #include "Engine/log/Log.hpp"
 
+#include "stb_image.hpp"
+
 namespace Utils
 {
     const char* GetAbsolutePath(const char* realPath) {

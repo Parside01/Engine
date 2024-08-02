@@ -7,7 +7,7 @@
 namespace Engine {
     struct SpriteComponent {
         glm::vec4 Color = glm::vec4(1.0f);
-        Ref<Texture2D> Texture = Texture2D::Create(16, 16);
+        Ref<Texture> Texture = Texture2D::Create(1, 1);
         float Scale = 1.f;
 
         SpriteComponent() = default;

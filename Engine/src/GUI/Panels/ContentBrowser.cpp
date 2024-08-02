@@ -4,6 +4,7 @@
 #include "imgui.h"
 
 #include <filesystem>
+#include <imgui_internal.h>
 
 
 namespace Engine {
@@ -21,10 +22,10 @@ namespace Engine {
         ImGui::Begin("Conten Browser");
         if (m_CurrentDir != std::filesystem::path(s_AssetsDirectory)) {
             if (ImGui::Button("Back...")) m_CurrentDir = m_CurrentDir.parent_path();
-        }    
+        }
 
-        static float padding = 16.f;
-        static float iconSize = 110.f;
+        static float padding = 25.f;
+        static float iconSize = 75.f;
         float cellSize = padding + iconSize;
 
         float pannelWidth = ImGui::GetContentRegionAvail().x;
@@ -56,7 +57,13 @@ namespace Engine {
                     m_CurrentDir /= path.filename();
             }
 
-            ImGui::TextWrapped(filename.c_str());
+            ImVec2 textSize = ImGui::CalcTextSize(filename.c_str());
+            float textOffsetX = (iconSize - textSize.x) * 0.5f;  // Расчет смещения для центрирования
+            ImVec2 cursorPos = ImGui::GetCursorPos();
+            ImGui::SetCursorPosX(cursorPos.x + textOffsetX);
+            ImGui::TextWrapped("%s", filename.c_str());
+
+            ImGui::SetCursorPosX(cursorPos.x);
             ImGui::NextColumn();
             ImGui::PopID();
         }

@@ -5,7 +5,6 @@
 #include "Engine/Render/Texture.hpp"
 
 namespace Engine {
-
     class ContentBrowser {
     public:
         ContentBrowser(); 
@@ -18,6 +17,7 @@ namespace Engine {
         Ref<Texture2D> m_DirIcon;
         Ref<Texture2D> m_FileIcon;
     };
+
 
 } // Engine
 

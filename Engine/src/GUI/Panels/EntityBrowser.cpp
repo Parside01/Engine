@@ -147,7 +147,6 @@ namespace Engine
                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
                     const char* path = static_cast<char*>(payload->Data);
                     std::filesystem::path texturePath(path);
-                    EG_CORE_WARN("{0} and {1}", texturePath.c_str(), std::filesystem::current_path().c_str());
                     Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
                     sprite.Texture = texture;
                 }

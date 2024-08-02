@@ -213,10 +213,10 @@ namespace Engine {
     }
 
     void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale) {
-        DrawQuad({position.x, position.y, 0}, size, texture);
+        DrawQuad(-1, {position.x, position.y, 0}, size, texture);
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale) {
+    void Renderer2D::DrawQuad(int entityID, const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale) {
         EG_PROFILE_FUNC();
 
         if (s_Data->QuadIndexCount >= s_Data->MaxIndices)
@@ -243,24 +243,28 @@ namespace Engine {
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[1];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[2];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadVertexBufferPtr->Position = transform * s_Data->QuadVertexPosition[3];
         s_Data->QuadVertexBufferPtr->Color = color;
         s_Data->QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
         s_Data->QuadVertexBufferPtr->TextureIndex = textureIndex;
+        s_Data->QuadVertexBufferPtr->EntityID = entityID;
         s_Data->QuadVertexBufferPtr++;
 
         s_Data->QuadIndexCount += 6;

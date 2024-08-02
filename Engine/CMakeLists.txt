@@ -9,12 +9,13 @@ set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 set(INCLUDE_DIR usr/include)
 
+
 message(STATUS ${THIRD_PARTY_DIR})
 
-add_library(imgui 
-            ${THIRD_PARTY_DIR}/imgui/imgui.cpp 
-            ${THIRD_PARTY_DIR}/imgui/imgui_draw.cpp 
-            ${THIRD_PARTY_DIR}/imgui/imgui_tables.cpp 
+add_library(imgui
+            ${THIRD_PARTY_DIR}/imgui/imgui.cpp
+            ${THIRD_PARTY_DIR}/imgui/imgui_draw.cpp
+            ${THIRD_PARTY_DIR}/imgui/imgui_tables.cpp
             ${THIRD_PARTY_DIR}/imgui/imgui_widgets.cpp
             ${THIRD_PARTY_DIR}/imgui/imgui_demo.cpp
 
@@ -50,7 +51,7 @@ find_package(GLEW REQUIRED)
 
 # --- Ищем нужные пакетики.
 
-# --- Добавляем библиотеку сериализации YAML файлов 
+# --- Добавляем библиотеку сериализации YAML файлов
 
 add_subdirectory(${THIRD_PARTY_DIR}/yaml-cpp)
 include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
@@ -59,7 +60,7 @@ include_directories(${THIRD_PARTY_DIR}/yaml-cpp/include)
 
 # --- ImGuizmo
 
-add_library(imguizmo 
+add_library(imguizmo
         ${THIRD_PARTY_DIR}/ImGuizmo/ImGuizmo.cpp
         ${THIRD_PARTY_DIR}/ImGuizmo/ImGuizmo.h
 )
@@ -79,11 +80,9 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
-set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
-        include/Engine/Render/Renderer2D.hpp
-        src/Render/Renderer2D.cpp
-        include/Engine/GUI/UIRenderer.hpp)
+set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
+target_compile_definitions(Engine PRIVATE -DENGINE_API_OPENGL)
 target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo)
 
 

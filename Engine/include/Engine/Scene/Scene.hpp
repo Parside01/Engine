@@ -4,6 +4,8 @@
 #include "entt.hpp"
 #include "Engine/Scene/EditorCamera.hpp"
 
+#include "Engine/Render/Texture.hpp"
+
 namespace Engine {
 
     class Entity;
