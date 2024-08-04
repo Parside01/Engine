@@ -9,7 +9,7 @@
 
 void Layer2D::OnAttach() {
     EG_PROFILE_FUNC();
-    m_Texture2D = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
+    // m_Texture2D = Engine::Texture2D::Create("assets/textures/ChessBoard.jpeg");
 
     Engine::FramebufferSpec data{};
     data.Attachments = { Engine::FramebufferTextureFormat::RGBA8, Engine::FramebufferTextureFormat::RED_INTEGER, Engine::FramebufferTextureFormat::Depth };
@@ -85,6 +85,7 @@ void Layer2D::OnUpdate(Engine::Timestep tick) {
         
         if ((mx >= 0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y)) {
             int pixelData = m_Framebuffer->ReadFromPixel(1, mx, my);
+			// EG_CORE_WARN("{0} : {1}", mx, my);
             m_HoveredEntity = (pixelData == -1 ? Engine::Entity() : Engine::Entity(static_cast<entt::entity>(pixelData), m_MainScene.get()));
         }  
     }

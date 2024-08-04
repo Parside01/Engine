@@ -91,6 +91,7 @@ namespace Engine
     }
 
     void EntityBrowser::DrawComponents(Entity entity) {
+        if (ImGui::Button("Load")) TextureLoader::GetTextureManager().GetTextureAtlas()->WriteAtlasInFile("../out.png");
         if (entity.HasComponent<TagComponent>())       DrawTagComponent(entity);
         if (entity.HasComponent<TransformComponent>()) DrawTransformComponent(entity);
         if (entity.HasComponent<CameraComponent>())    DrawCameraComponent(entity);
@@ -147,7 +148,7 @@ namespace Engine
                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
                     const char* path = static_cast<char*>(payload->Data);
                     std::filesystem::path texturePath(path);
-                    Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+                    Ref<Texture2D> texture = TextureLoader::LoadTexture2DFromFile(texturePath.string());
                     sprite.Texture = texture;
                 }
                 ImGui::EndDragDropTarget();

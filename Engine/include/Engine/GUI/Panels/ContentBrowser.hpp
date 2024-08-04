@@ -2,7 +2,7 @@
 #define ENGINE_CONTENTBROWSER_HPP
 
 #include "Engine/engine_precompile_headers.hpp"
-#include "Engine/Render/Texture.hpp"
+#include "Engine/Render/Texture/Textures.hpp"
 
 namespace Engine {
     class ContentBrowser {

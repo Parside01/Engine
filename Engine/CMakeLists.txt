@@ -32,6 +32,10 @@ target_include_directories(imgui PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY_
 add_library(stb_image
             ${THIRD_PARTY_DIR}/stb_image/stb_image.hpp
             ${THIRD_PARTY_DIR}/stb_image/stb_image.cpp
+            ${THIRD_PARTY_DIR}/stb_image/stb_image_resize2.cpp
+            ${THIRD_PARTY_DIR}/stb_image/stb_image_resize2.hpp
+            ${THIRD_PARTY_DIR}/stb_image/stb_image_write.cpp
+            ${THIRD_PARTY_DIR}/stb_image/stb_image_write.hpp
 )
 
 target_include_directories(stb_image PUBLIC ${ENGINE_INCLUDE_DIR})

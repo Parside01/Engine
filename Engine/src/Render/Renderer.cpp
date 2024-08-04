@@ -5,6 +5,7 @@
 #include "Engine/engine_precompile_headers.hpp"
 #include "Engine/Render/Renderer2D.hpp"
 
+
 namespace Engine
 {
     Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
@@ -12,6 +13,7 @@ namespace Engine
     void Renderer::Init() {
         RenderCommand::Init();
         Renderer2D::Init();
+        TextureManager::Init();
     }
 
     void Renderer::BeginScene(OrthCamera& camera)

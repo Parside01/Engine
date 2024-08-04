@@ -4,7 +4,7 @@
 #include "entt.hpp"
 #include "Engine/Scene/EditorCamera.hpp"
 
-#include "Engine/Render/Texture.hpp"
+#include "Engine/Render/Texture/Textures.hpp"
 
 namespace Engine {
 

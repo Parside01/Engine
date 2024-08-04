@@ -3,7 +3,7 @@
 #include <Engine/Scene/EditorCamera.hpp>
 
 #include "Engine/Render/OrthCamera.hpp"
-#include "Engine/Render/Texture.hpp"
+#include "Engine/Render/Texture/Textures.hpp"
 #include "Engine/Render/Camera.hpp"
 
 #include "Engine/Scene/TransfromComponent.hpp"

@@ -1,5 +1,6 @@
 #include "Engine/GUI/Panels/ContentBrowser.hpp"
 
+#include "Engine/Render/Texture/TextureLoader.hpp"
 
 #include "imgui.h"
 
@@ -8,14 +9,12 @@
 
 
 namespace Engine {
-
     static const std::filesystem::path s_AssetsDirectory = "../assets";
 
     ContentBrowser::ContentBrowser()
-        : m_CurrentDir(s_AssetsDirectory)
-    {
-        m_DirIcon = Texture2D::Create("assets/textures/FolderIcon.png");
-        m_FileIcon = Texture2D::Create("assets/textures/FileIcon.png");
+        : m_CurrentDir(s_AssetsDirectory) {
+        m_DirIcon = TextureManager::CreateTexture("assets/textures/FolderIcon.png");
+        m_FileIcon = TextureManager::CreateTexture("assets/textures/FileIcon.png");
     }
 
     void ContentBrowser::OnImGuiRender() {
@@ -34,18 +33,21 @@ namespace Engine {
 
         ImGui::Columns(columnCount, 0, false);
 
-        for (auto& dir : std::filesystem::directory_iterator(m_CurrentDir)) {
-            const std::filesystem::path& path = dir.path();
+        for (auto &dir: std::filesystem::directory_iterator(m_CurrentDir)) {
+            const std::filesystem::path &path = dir.path();
             std::string filename = path.filename().string();
 
             ImGui::PushID(filename.c_str());
             Ref<Texture2D> icon = dir.is_directory() ? m_DirIcon : m_FileIcon;
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-            ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->GetTextureID()), {iconSize, iconSize}, {0, 1}, {1, 0});
+            auto textureCoords = TextureManager::GetTextureCoords(icon);
+            ImGui::ImageButton(reinterpret_cast<ImTextureID>(TextureManager::GetRendererID(icon)), {iconSize, iconSize},
+                               {textureCoords[0].x, textureCoords[3].y},
+                               {textureCoords[2].x, textureCoords[1].y});
 
             if (ImGui::BeginDragDropSource()) {
                 std::filesystem::path relativePath(path);
-                const char* itemPath = relativePath.c_str();
+                const char *itemPath = relativePath.c_str();
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (strlen(itemPath) + 1) * sizeof(char));
                 ImGui::EndDragDropSource();
             }
@@ -58,7 +60,7 @@ namespace Engine {
             }
 
             ImVec2 textSize = ImGui::CalcTextSize(filename.c_str());
-            float textOffsetX = (iconSize - textSize.x) * 0.5f;  // Расчет смещения для центрирования
+            float textOffsetX = (iconSize - textSize.x) * 0.5f; // Расчет смещения для центрирования
             ImVec2 cursorPos = ImGui::GetCursorPos();
             ImGui::SetCursorPosX(cursorPos.x + textOffsetX);
             ImGui::TextWrapped("%s", filename.c_str());
