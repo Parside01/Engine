@@ -52,6 +52,11 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
 
+# Подключение Assimp
+find_package(assimp REQUIRED)
+include_directories(${ASSIMP_INCLUDE_DIRS})
+link_directories(${ASSIMP_LIBRARY_DIRS})
+
 
 # --- Ищем нужные пакетики.
 
@@ -87,7 +92,7 @@ file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_compile_definitions(Engine PRIVATE -DENGINE_API_OPENGL)
-target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo)
+target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo ${ASSIMP_LIBRARIES})
 
 
 # --- Добавляем дириктории инклюдов для Engine.
@@ -99,6 +104,7 @@ target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PARTY
 target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/stb_image)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/entt)
+target_include_directories(Engine PUBLIC ${ASSIMP_INCLUDE_DIRS})
 
 # --- Добавляем дириктории инклюдов для Engine.
 

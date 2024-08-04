@@ -1,5 +1,7 @@
 #include "Engine/Scene/Scene.hpp"
 
+#include <Engine/Render/MeshManager.hpp>
+
 #include "Engine/benchmark/Benchmark.hpp"
 #include "Engine/log/Log.hpp"
 #include "Engine/Scene/BaseComponents.hpp"
@@ -10,8 +12,12 @@
 #include "Engine/Scene/RenderableComponents.hpp"
 #include "Engine/Scene/Systems/TransformSystem.hpp"
 
+#include <Engine/Render/Renderer3D.hpp>
+
 namespace Engine {
-    Scene::Scene(){}
+    Scene::Scene()
+        :mMesh(MeshManager::CreateMesh("assets/models/police.fbx"))
+    {}
 
     Scene::~Scene() {}
 
@@ -44,15 +50,12 @@ namespace Engine {
 
     void Scene::OnUpdateEditor(float tick, EditorCamera& camera) {
         EG_PROFILE_FUNC();
-        Renderer2D::BeginScene(camera);
-        {   
-            const auto group = m_Registry.group<TagComponent, TransformComponent>(entt::get<SpriteComponent>);
-            for (auto entity : group) {
-                auto [tag, transformComponent, sprite] = group.get<TagComponent, TransformComponent, SpriteComponent>(entity);
-                Renderer2D::DrawQuadEntity(static_cast<int>(entity), transformComponent, sprite);
-            }
+        Renderer3D::BeginScene(std::make_shared<EditorCamera>(camera));
+        {
+            TransformComponent t;
+            Renderer3D::DrawMesh(mMesh, t);
         }
-        Renderer2D::EndScene();
+        Renderer3D::EndScene();
     }
 
     void Scene::OnViewportResize(uint32_t width, uint32_t height) {

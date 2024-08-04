@@ -1,6 +1,9 @@
 
 #include "Engine/Render/OpenGL/Shader_OpenGL.hpp"
 #include "Engine/Render/Renderer.hpp"
+
+#include <Engine/Render/Renderer3D.hpp>
+
 #include "Engine/Render/RenderCommand.hpp"
 #include "Engine/engine_precompile_headers.hpp"
 #include "Engine/Render/Renderer2D.hpp"
@@ -12,8 +15,16 @@ namespace Engine
 
     void Renderer::Init() {
         RenderCommand::Init();
+        EG_CORE_INFO("Init RenderCommand");
+
         Renderer2D::Init();
+        EG_CORE_INFO("Init Renderer2D");
+
         TextureManager::Init();
+        EG_CORE_INFO("Init TextureManager");
+
+        Renderer3D::Init();
+        EG_CORE_INFO("Init Renderer3D");
     }
 
     void Renderer::BeginScene(OrthCamera& camera)

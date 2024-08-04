@@ -1,6 +1,8 @@
 #ifndef ENGINE_SCENE_HPP
 #define ENGINE_SCENE_HPP
 
+#include <Engine/Render/Mesh.hpp>
+
 #include "entt.hpp"
 #include "Engine/Scene/EditorCamera.hpp"
 
@@ -27,6 +29,7 @@ namespace Engine {
 
         entt::registry& GetRegistry() { return m_Registry; }
     private:
+        Ref<Mesh> mMesh;
 
         uint32_t m_ViewportWidth{0};
         uint32_t m_ViewportHeight{0};
