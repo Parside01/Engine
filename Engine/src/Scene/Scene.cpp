@@ -16,7 +16,7 @@
 
 namespace Engine {
     Scene::Scene()
-        :mMesh(MeshManager::CreateMesh("assets/models/police.fbx"))
+        :mPoliceMesh(MeshManager::CreateMesh("assets/models/police.fbx")), mCubeMesh(MeshManager::CreateMesh("assets/models/Cube.fbx"))
     {}
 
     Scene::~Scene() {}
@@ -53,7 +53,12 @@ namespace Engine {
         Renderer3D::BeginScene(std::make_shared<EditorCamera>(camera));
         {
             TransformComponent t;
-            Renderer3D::DrawMesh(mMesh, t);
+            Renderer3D::DrawMesh(mPoliceMesh, t);
+
+            // TransformComponent tCube;
+            // tCube.Position.x += 150.f;
+            // tCube.Scale.y *= 10.f;
+            // Renderer3D::DrawMesh(mCubeMesh, tCube);
         }
         Renderer3D::EndScene();
     }

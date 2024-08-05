@@ -29,7 +29,8 @@ namespace Engine {
 
         entt::registry& GetRegistry() { return m_Registry; }
     private:
-        Ref<Mesh> mMesh;
+        Ref<Mesh> mCubeMesh;
+        Ref<Mesh> mPoliceMesh;
 
         uint32_t m_ViewportWidth{0};
         uint32_t m_ViewportHeight{0};

@@ -8,7 +8,7 @@ namespace Engine {
 
     Ref<Mesh> MeshManager::CreateMesh(const std::string &path) {
         Assimp::Importer importer;
-        const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+        const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             EG_CORE_ERROR("Не удалось загузить модель из файла {0}", path);
@@ -18,6 +18,7 @@ namespace Engine {
 
         std::vector<Vertex3D> vertices;
         std::vector<uint32_t> indeces;
+        uint32_t vertexOffset = 0;
         // std::vector<Ref<Texture3D>> textures;
 
         for (uint32_t i{0}; i < scene->mNumMeshes; ++i) {
@@ -41,9 +42,10 @@ namespace Engine {
             for (uint32_t j{0}; j < mesh->mNumFaces; ++j) {
                 aiFace face = mesh->mFaces[j];
                 for (uint32_t k{0}; k < face.mNumIndices; ++k) {
-                    indeces.push_back(face.mIndices[k]);
+                    indeces.push_back(face.mIndices[k] + vertexOffset);
                 }
             }
+            vertexOffset += mesh->mNumVertices;
         }
 
         return std::make_shared<Mesh>(vertices, indeces);

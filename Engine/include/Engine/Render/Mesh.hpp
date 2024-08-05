@@ -28,6 +28,11 @@ namespace Engine {
         std::vector<Vertex3D> mVertices;
         std::vector<uint32_t> mIndices;
         // std::vector<Ref<Texture3D>> mTextures;
+
+        uint32_t NumIndices;
+        uint32_t BaseVertex;
+        uint32_t BaseIndex;
+        uint32_t MaterialIndex;
     };
 
 }

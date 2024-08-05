@@ -14,6 +14,7 @@ namespace Engine {
         static constexpr uint32_t MaxTextureSlots = 32;
 
         uint32_t IndicesCount = 0;
+        uint32_t VerticesCount = 0;
         uint32_t IndicesOffset = 0;
 
         static Scope<uint32_t[]> RendererIndexBuffer;
@@ -57,6 +58,7 @@ namespace Engine {
     }
 
     void Renderer3D::BeginScene(const Ref<EditorCamera>& camera) {
+        EG_PROFILE_FUNC();
         sData->RendererCamera = camera;
 
         sData->RendererShader->Bind();
@@ -66,17 +68,14 @@ namespace Engine {
     }
 
     void Renderer3D::StartBatch() {
-        EG_CORE_INFO("StartBatch");
+        EG_PROFILE_FUNC();
+        EG_CORE_INFO("Indeces {0}, Vertices {1}", sData->IndicesCount, sData->VerticesCount);
         sData->IndicesCount = 0;
         sData->IndicesOffset = 0;
+        sData->VerticesCount = 0;
 
         sData->RendererIndexBuffer.reset(new uint32_t[sData->MaxIndices]);
         sData->VertexBufferPtr = sData->VertexBufferBase;
-    }
-
-    void Renderer3D::NextBatch() {
-        Flush();
-        StartBatch();
     }
 
     void Renderer3D::EndScene() {
@@ -85,18 +84,27 @@ namespace Engine {
         Flush();
     }
 
+    void Renderer3D::NextBatch() {
+        EG_PROFILE_FUNC();
+        Flush();
+        StartBatch();
+    }
+
     void Renderer3D::Flush() {
+        EG_PROFILE_FUNC();
         sData->RendererVertexArray->SetIndexBuffer(IndexBuffer::Create(sData->RendererIndexBuffer.get(), sData->MaxIndices));
         sData->RendererVertexBuffer->SetData(sData->VertexBufferBase, reinterpret_cast<uint8_t*>(sData->VertexBufferPtr) - reinterpret_cast<uint8_t*>(sData->VertexBufferBase));
         RenderCommand::DrawIndexed(sData->RendererVertexArray, sData->IndicesCount);
     }
 
     void Renderer3D::DrawMesh(const Ref<Mesh> &mesh, const TransformComponent &transform) {
+        EG_PROFILE_FUNC();
         glm::mat4 t = TransformSystem::CalculateTransform(transform);
         for (const Vertex3D& vertex : mesh->GetVertices()) {
             sData->VertexBufferPtr->Position = t * glm::vec4(vertex.Position, 1.f);
             sData->VertexBufferPtr->Color = vertex.Color;
             sData->VertexBufferPtr++;
+            sData->VerticesCount++;
         }
         for (const uint32_t& indices : mesh->GetIndeces()) {
             sData->RendererIndexBuffer.get()[sData->IndicesCount] = indices;
