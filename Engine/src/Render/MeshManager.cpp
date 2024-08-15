@@ -1,7 +1,4 @@
-#include "Engine/Render/MeshManager.hpp"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <Engine/Render/MeshManager.hpp>
 #include <Engine/log/Log.hpp>
 
 namespace Engine {
@@ -16,40 +13,66 @@ namespace Engine {
             return nullptr;
         }
 
-        std::vector<Vertex3D> vertices;
-        std::vector<uint32_t> indeces;
-        uint32_t vertexOffset = 0;
-        // std::vector<Ref<Texture3D>> textures;
-
-        for (uint32_t i{0}; i < scene->mNumMeshes; ++i) {
-            aiMesh* mesh = scene->mMeshes[i];
-            for (uint32_t j{0}; j < mesh->mNumVertices; ++j) {
-                aiVector3D pos = mesh->mVertices[j];
-
-                // TODO: переделать способ получения цвета.
-                // aiColor4D* color = mesh->mColors[j];
-
-                Vertex3D vertex;
-                vertex.Position = glm::vec3(pos.x, pos.y, pos.z);
-                // if (color == nullptr) {
-                //     EG_CORE_ERROR("null");
-                //     EG_CORE_ASSERT(false);
-                // }
-                vertex.Color = glm::vec4(1.f/*color->r, color->g, color->b, color->a*/);
-
-                vertices.push_back(vertex);
-            }
-            for (uint32_t j{0}; j < mesh->mNumFaces; ++j) {
-                aiFace face = mesh->mFaces[j];
-                for (uint32_t k{0}; k < face.mNumIndices; ++k) {
-                    indeces.push_back(face.mIndices[k] + vertexOffset);
-                }
-            }
-            vertexOffset += mesh->mNumVertices;
-        }
-
-        return std::make_shared<Mesh>(vertices, indeces);
+        Ref<Mesh> mesh = std::make_shared<Mesh>();
+        InitMesh(scene, mesh);
+        return mesh;
     }
 
+    void MeshManager::InitMesh(const aiScene *scene, Ref<Mesh> &mesh) {
+        mesh->mNestedMeshes.reserve(scene->mNumMeshes);
 
+        CountVerticesAndMeshes(scene, mesh);
+        ReserveMeshSpace(scene, mesh);
+        InitAllNestedMeshes(scene, mesh);
+    }
+
+    void MeshManager::CountVerticesAndMeshes(const aiScene *scene, Ref<Mesh> &mesh) {
+        for (uint32_t i{0}; i < scene->mNumMeshes; ++i) {
+            Mesh::NestedMesh n;
+            n.mMaterialIndex = scene->mMeshes[i]->mMaterialIndex;
+            n.mNumIndices = scene->mMeshes[i]->mNumFaces * 3;
+            n.mNumVertices = scene->mMeshes[i]->mNumVertices;
+            n.mBaseVertex = mesh->mNumVertices;
+            n.mBaseIndex = mesh->mNumIndices;
+            mesh->mNestedMeshes.push_back(n);
+
+            mesh->mNumVertices += mesh->mNestedMeshes[i].mNumVertices;
+            mesh->mNumIndices += mesh->mNestedMeshes[i].mNumIndices;
+        }
+    }
+
+    void MeshManager::ReserveMeshSpace(const aiScene *scene, Ref<Mesh> &mesh) {
+        mesh->mIndices.reserve(mesh->mNumIndices);
+        mesh->mVertices.reserve(mesh->mNumVertices);
+    }
+
+    void MeshManager::InitAllNestedMeshes(const aiScene *scene, Ref<Mesh> &mesh) {
+        for (uint32_t i{0}; i < mesh->mNestedMeshes.size(); ++i) {
+            InitNestedMesh(scene->mMeshes[i], mesh);
+        }
+    }
+
+    void MeshManager::InitNestedMesh(const aiMesh *nested, Ref<Mesh> &mesh) {
+        const aiVector3D zeroVector(0.f);
+        for (uint32_t i{0}; i < nested->mNumVertices; ++i) {
+            auto& pos = nested->mVertices[i];
+            auto& texCoord = nested->HasTextureCoords(0) ? nested->mTextureCoords[0][i] : zeroVector;
+            auto& normal = nested->mNormals[i];
+            Vertex3D vertex;
+            vertex.Position = glm::vec3(pos.x, pos.y, pos.z);
+            vertex.TextureCoord = glm::vec2(texCoord.x, texCoord.y);
+            vertex.Normal = glm::vec3(normal.x, normal.y, normal.z);
+
+            mesh->mVertices.push_back(vertex);
+        }
+
+        for (uint32_t i{0}; i < nested->mNumFaces; ++i) {
+            const auto& face = nested->mFaces[i];
+            EG_CORE_ASSERT(face.mNumIndices == 3);
+
+            mesh->mIndices.push_back(face.mIndices[0]);
+            mesh->mIndices.push_back(face.mIndices[1]);
+            mesh->mIndices.push_back(face.mIndices[2]);
+        }
+    }
 }

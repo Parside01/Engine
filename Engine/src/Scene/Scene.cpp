@@ -16,7 +16,7 @@
 
 namespace Engine {
     Scene::Scene()
-        :mPoliceMesh(MeshManager::CreateMesh("assets/models/police.fbx")), mCubeMesh(MeshManager::CreateMesh("assets/models/Cube.fbx"))
+        :mPoliceMesh(MeshManager::CreateMesh("assets/models/police.fbx")), mMaleMesh(MeshManager::CreateMesh("assets/models/Male.fbx"))
     {}
 
     Scene::~Scene() {}
@@ -52,13 +52,20 @@ namespace Engine {
         EG_PROFILE_FUNC();
         Renderer3D::BeginScene(std::make_shared<EditorCamera>(camera));
         {
-            TransformComponent t;
-            Renderer3D::DrawMesh(mPoliceMesh, t);
+            TransformComponent tMale;
+            tMale.Scale = glm::vec3(0.2f);
+            for (uint32_t x{0}; x < 10; ++x) {
+                for (uint32_t y{0}; y < 10; ++y) {
+                    tMale.Position.x += 20.f;
+                    Renderer3D::DrawMesh(mMaleMesh, tMale);
+                }
+                tMale.Position.x = 0.f;
+                tMale.Position.y += 20.f;
+            }
 
-            // TransformComponent tCube;
-            // tCube.Position.x += 150.f;
-            // tCube.Scale.y *= 10.f;
-            // Renderer3D::DrawMesh(mCubeMesh, tCube);
+            TransformComponent tPolice;
+            tPolice.Position.x -= 150.f;
+            Renderer3D::DrawMesh(mPoliceMesh, tPolice);
         }
         Renderer3D::EndScene();
     }

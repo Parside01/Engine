@@ -152,6 +152,7 @@ void Layer2D::OnImGuiRender() {
             if (ImGui::MenuItem("Close", nullptr, false))
                 p_open = false;
             ImGui::EndMenu();
+
         }
         ImGui::EndMenuBar();
     }
@@ -161,6 +162,7 @@ void Layer2D::OnImGuiRender() {
 
     ImGui::Begin("Viewport");
     {
+        ImGui::Text("%.2f", 1 / Tick);
         ImVec2 viewportMinRegion = ImGui::GetWindowContentRegionMin();
         ImVec2 viewportMaxRegion = ImGui::GetWindowContentRegionMax();
         

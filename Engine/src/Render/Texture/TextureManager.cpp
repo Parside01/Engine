@@ -1,6 +1,6 @@
 #include "Engine/Render/Texture/TextureManager.hpp"
 #include "Engine/Render/OpenGL/TextureAtlas_OpenGL.hpp"
-
+#include <Engine/Render/Texture/TextureTypes.hpp>
 #include <stb_image.hpp>
 #include <stb_image_resize2.hpp>
 
@@ -9,7 +9,7 @@
 
 namespace Engine {
 #ifdef ENGINE_API_OPENGL
-    Scope<TextureAtlas> TextureManager::mTextureAtlas = std::make_unique<OpenGLTextureAtlas>(2048, 2048, 4);
+    Scope<TextureAtlas> TextureManager::mTextureAtlas = std::make_unique<OpenGLTextureAtlas>(TextureTarget::TEXTURE2D, 2048, 2048, 4);
 #endif
     uint32_t TextureManager::mTextureSlotIndex = 0;
 
@@ -19,26 +19,10 @@ namespace Engine {
 
     Ref<Texture2D> TextureManager::CreateTexture(const std::string &path) {
         EG_PROFILE_FUNC();
-        int width, height, channels;
-        u_char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-        if (!data) {
-            EG_CORE_ERROR("Не удалось загрузить текстуру из {0}", path);
-            EG_CORE_ASSERT(false);
-            return nullptr;
-        }
 
-        Ref<Texture2D> texture = std::make_shared<Texture2D>();
-        texture->Channels = channels;
-        texture->Height = height;
-        texture->Width = width;
-        texture->TextureData.reset(data);
-
-        texture->TextureHash = std::hash<std::string_view>()(
-            std::string_view(reinterpret_cast<const char *>(data),
-                             texture->Height * texture->Width * texture->Channels));
-        // Если что можно включить.
-        // ResizeTexture(width / 2, height / 2, texture);
-        mTextureAtlas->AddTexture(texture);
+        Ref<Texture2D> texture = LoadTexture(path);
+        ResizeTexture(texture->Width / 2, texture->Height / 2, texture);
+        mTextureAtlas->AddTexture2D(texture);
 
         return texture;
     }
@@ -62,11 +46,15 @@ namespace Engine {
             texture->Height * texture->Width * texture->Channels));
         // Если что можно включить.
         // ResizeTexture(width / 2, height / 2, texture);
-        mTextureAtlas->AddTexture(texture);
+        mTextureAtlas->AddTexture2D(texture);
 
         return texture;
     }
 
+    Ref<CubeMap> TextureManager::CreateCubeMap(const std::string &path) {
+        Ref<Texture2D> texture = LoadTexture(path);
+
+    }
 
     void TextureManager::ResizeTexture(uint32_t newWidth, uint32_t newHeight, Ref<Texture2D> &texture) {
         EG_PROFILE_FUNC();
@@ -104,5 +92,28 @@ namespace Engine {
     // Пока эта штука воозвращает просто 0, но потом, когда будет не один атлас, а несколько, то все будет иначе.
     uint32_t TextureManager::GetTextureSlot(const Ref<Texture2D> &texture) {
         return 0;
+    }
+
+    Ref<Texture2D> TextureManager::LoadTexture(const std::string &path) {
+        EG_PROFILE_FUNC();
+        int width, height, channels;
+        Ref<Texture2D> texture = std::make_shared<Texture2D>();
+        u_char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+        if (!data) {
+            EG_CORE_ERROR("Не удалось загрузить текстуру из {0}", path);
+            EG_CORE_ASSERT(false);
+            return nullptr;
+        }
+
+        texture->Channels = channels;
+        texture->Height = height;
+        texture->Width = width;
+        texture->TextureData.reset(data);
+
+        texture->TextureHash = std::hash<std::string_view>()(
+            std::string_view(reinterpret_cast<const char *>(data),
+                             texture->Height * texture->Width * texture->Channels));
+
+        return texture;
     }
 }

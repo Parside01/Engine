@@ -55,7 +55,7 @@ namespace Engine
     private:
         float m_ViewportWidth = 1280;
         float m_ViewportHeight = 720;
-        float m_Distance = 10.0f;
+        float m_Distance = 200.0f;
 
         float m_FOV = 45.f;
         float m_AspectRatio = 1.f;

@@ -1,0 +1,10 @@
+#ifndef ENGINE_CUBEMAP_OPENGL_HPP
+#define ENGINE_CUBEMAP_OPENGL_HPP
+#ifdef ENGINE_API_OPENGL
+
+namespace Engine {
+    
+}
+
+#endif
+#endif //ENGINE_CUBEMAP_OPENGL_HPP

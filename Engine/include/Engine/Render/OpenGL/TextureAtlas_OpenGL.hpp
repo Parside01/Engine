@@ -1,19 +1,15 @@
 #ifndef ENGINE_TEXTUREATLAS_OPENGL_HPP
 #define ENGINE_TEXTUREATLAS_OPENGL_HPP
-
-
-#include "Engine/Render/Texture/TextureAtlas.hpp"
-#include "Engine/log/Log.hpp"
-
-namespace Engine {
 #ifdef ENGINE_API_OPENGL
 
-#include <GL/glew.h>
+#include <Engine/Render/Texture/TextureAtlas.hpp>
+#include <Engine/log/Log.hpp>
 
-#if 1
+namespace Engine {
+
     class OpenGLTextureAtlas : public TextureAtlas {
     public:
-        OpenGLTextureAtlas(uint32_t width, uint32_t height, uint32_t channels);
+        OpenGLTextureAtlas(TextureTarget target, uint32_t width, uint32_t height, uint32_t channels);
 
         ~OpenGLTextureAtlas() override;
 
@@ -23,14 +19,16 @@ namespace Engine {
 
         virtual void Init() override;
     private:
+        void InitTexture2D();
+
         virtual void UpdateAtals() override;
     private:
         uint32_t mRendererID;
         uint32_t mInternalFormat;
         uint32_t mFormat;
     };
-#endif
-#endif
+
 }
 
+#endif
 #endif // ENGINE_TEXTUREATLAS_OPENGL_HPP

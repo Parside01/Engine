@@ -34,8 +34,7 @@
 	#define EG_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_, __VA_ARGS__) )
 	#define EG_CORE_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
 
-    namespace Utils
-    {
+    namespace Utils {
         const char* GetAbsolutePath(const char* relPath);
         std::string GetAbsolutePath(const std::string& path);
         uint32_t GetColor(const glm::vec4& color);
@@ -43,8 +42,8 @@
         class FileDialogs {
         public:
             static std::string OpenFile(const std::string& path); 
-            static std::string SaveFile(const std::string& path); 
+            static std::string SaveFile(const std::string& path);
         };
-    } // namespace Utils
-    
+
+    }
 #endif
