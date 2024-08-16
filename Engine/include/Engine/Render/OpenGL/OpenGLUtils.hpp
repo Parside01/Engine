@@ -10,6 +10,7 @@
 
 namespace Engine {
     class OpenGLUtils {
+
     public:
         static std::pair<uint32_t, uint32_t> GetOpenGLFormatFromChannels(uint32_t channels);
 

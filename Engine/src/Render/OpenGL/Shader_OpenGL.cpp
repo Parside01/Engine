@@ -40,51 +40,51 @@ namespace Engine
             GLuint shader = glCreateShader(type);
 
             const GLchar *sourceCh = source.c_str();
-            glShaderSource(shader, 1, &sourceCh, 0);
+            GLCall(glShaderSource(shader, 1, &sourceCh, 0));
 
-            glCompileShader(shader);
+            GLCall(glCompileShader(shader));
 
             GLint isCompiled = 0;
-            glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+            GLCall(glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled));
             if(isCompiled == GL_FALSE)
             {
                 GLint maxLength = 0;
-                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+                GLCall(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength));
 
                 std::vector<GLchar> infoLog(maxLength);
-                glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+                GLCall(glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]));
 
-                glDeleteShader(shader);
+                GLCall(glDeleteShader(shader));
 
                 EG_CORE_ERROR("Error compile shader: {0}", infoLog.data());
                 break;
             }
 
-            glAttachShader(program, shader);
+            GLCall(glAttachShader(program, shader));
             shadersID[shadersIndex++] = shader;
         }
-        glLinkProgram(program);
+        GLCall(glLinkProgram(program));
         GLint isLinked = 0;
-        glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
+        GLCall(glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked));
         if (isLinked == GL_FALSE)
         {
             GLint maxLength = 0;
-            glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+            GLCall(glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength));
 
             std::vector<GLchar> infoLog(maxLength);
-            glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+            GLCall(glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]));
 
-            glDeleteProgram(program);
+            GLCall(glDeleteProgram(program));
 
             for (const auto& id : shadersID)
-                glDeleteShader(id);
+                GLCall(glDeleteShader(id));
 
             EG_CORE_ERROR("Error link shader: {0}", infoLog.data());
             EG_CORE_ASSERT(false, "Ошибка компановки шейдера");
             return;
         }
-        for (const auto& id : shadersID)
-            glDetachShader(m_RendererID, id);
+        // for (const auto& id : shadersID)
+        //     GLCall(glDetachShader(m_RendererID, id));
         m_RendererID = program;
     }
 
@@ -136,15 +136,15 @@ namespace Engine
     }
 
     OpenGLShader::~OpenGLShader() {
-        glDeleteProgram(m_RendererID);
+        GLCall(glDeleteProgram(m_RendererID));
     }
 
     void OpenGLShader::Bind() const {
-        glUseProgram(m_RendererID);
+        GLCall(glUseProgram(m_RendererID));
     }
 
     void OpenGLShader::Unbind() const {
-        glUseProgram(0);
+        GLCall(glUseProgram(0));
     }
 
     void OpenGLShader::SetMat4(const std::string& name, const glm::mat4 &mat) {
@@ -169,7 +169,7 @@ namespace Engine
 
     void OpenGLShader::SetUniformIntArray(const std::string &name, int *arr, uint32_t count) {
         int location = glGetUniformLocation(m_RendererID, name.c_str());
-        glUniform1iv(location, count, arr);
+        GLCall(glUniform1iv(location, count, arr));
     }
 
     void OpenGLShader::SetFloat(const std::string& name, float value) {
@@ -178,13 +178,13 @@ namespace Engine
 
     void OpenGLShader::SetUniformFloat(const std::string &name, float value) {
         int location = glGetUniformLocation(m_RendererID, name.c_str());
-        glUniform1f(location, value);
+        GLCall(glUniform1f(location, value));
     }
 
     void OpenGLShader::SetUniformMat4(const std::string &name, const glm::mat4 &matrix)
     {
         int location = glGetUniformLocation(m_RendererID, name.c_str());
-        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+        GLCall(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)));
     }
 
     void OpenGLShader::SetUniformFloat4(const std::string& name, const glm::vec4& vec) {

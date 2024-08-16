@@ -11,8 +11,8 @@
 namespace Engine {
 
     struct Renderer3Data {
-        static constexpr uint32_t MaxVertices = std::pow(2, 22);
-        static constexpr uint32_t MaxIndices = MaxVertices * 2;
+        static constexpr uint32_t MaxVertices = 4194304;
+        static constexpr uint32_t MaxIndices = 8388608;
         static constexpr uint32_t MaxTextureSlots = 32;
 
         uint32_t IndicesCount = 0;

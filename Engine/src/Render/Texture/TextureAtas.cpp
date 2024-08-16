@@ -27,32 +27,32 @@ namespace Engine {
         EG_PROFILE_FUNC();
 
         // Если она уже есть то не добавляем.
-        if (mTextureCoords.find(texture->TextureHash) != mTextureCoords.end())
+        if (mTextureCoords.find(texture->mTextureHash) != mTextureCoords.end())
             return;
 
         glm::vec4 textureCoords(
             mxOffset / static_cast<float>(mSpecefication->mWidth),
             myOffset / static_cast<float>(mSpecefication->mHeight),
-            (mxOffset + texture->Width) / static_cast<float>(mSpecefication->mWidth),
-            (myOffset + texture->Height) / static_cast<float>(mSpecefication->mHeight)
+            (mxOffset + texture->mWidth) / static_cast<float>(mSpecefication->mWidth),
+            (myOffset + texture->mHeight) / static_cast<float>(mSpecefication->mHeight)
         );
-        mTextureCoords[texture->TextureHash] = textureCoords;
+        mTextureCoords[texture->mTextureHash] = textureCoords;
 
-        for (uint32_t y{0}; y < texture->Height; ++y) {
-            for (uint32_t x{0}; x < texture->Width; ++x) {
+        for (uint32_t y{0}; y < texture->mHeight; ++y) {
+            for (uint32_t x{0}; x < texture->mWidth; ++x) {
                 uint32_t atlasIndex = (myOffset + y) * mSpecefication->mWidth * mSpecefication->mChannelsNum + (mxOffset + x) * mSpecefication->mChannelsNum;
-                uint32_t textureIndex = y * texture->Width * texture->Channels + x * texture->Channels;
-                for (int c = 0; c < texture->Channels; ++c) {
-                    mData[atlasIndex + c] = texture->TextureData[textureIndex + c];
+                uint32_t textureIndex = y * texture->mWidth * texture->mChannelsNum + x * texture->mChannelsNum;
+                for (int c = 0; c < texture->mChannelsNum; ++c) {
+                    mData[atlasIndex + c] = texture->mTextureData[textureIndex + c];
                 }
             }
         }
-        mxOffset += texture->Width;
+        mxOffset += texture->mWidth;
         if (mxOffset >= mSpecefication->mWidth) {
             mxOffset = 0;
-            myOffset += texture->Height;
+            myOffset += texture->mHeight;
         }
-        texture->TextureData.reset();
+        texture->mTextureData.reset();
 
         UpdateAtals();
     }

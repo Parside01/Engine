@@ -89,7 +89,8 @@ file(GLOB_RECURSE CORE_HEADERS "${ENGINE_INCLUDE_DIR}/*.hpp")
 set(CORE_SOURCES)
 file(GLOB_RECURSE CORE_SOURCES "${ENGINE_SOURCE_DIR}/*.cpp")
 
-set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS})
+set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
+        include/Engine/Render/OpenGL/CubeMap_OpenGL.hpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_compile_definitions(Engine PRIVATE -DENGINE_API_OPENGL)
 target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo ${ASSIMP_LIBRARIES})

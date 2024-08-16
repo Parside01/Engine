@@ -3,6 +3,7 @@
 #include <Engine/Render/Texture/TextureTypes.hpp>
 #include <stb_image.hpp>
 #include <stb_image_resize2.hpp>
+#include <Engine/Render/OpenGL/CubeMap_OpenGL.hpp>
 
 #include "Engine/log/Log.hpp"
 
@@ -11,7 +12,8 @@ namespace Engine {
 #ifdef ENGINE_API_OPENGL
     Scope<TextureAtlas> TextureManager::mTextureAtlas = std::make_unique<OpenGLTextureAtlas>(TextureTarget::TEXTURE2D, 2048, 2048, 4);
 #endif
-    uint32_t TextureManager::mTextureSlotIndex = 0;
+    // В 0 слоте лежит skybox.
+    uint32_t TextureManager::mTextureSlotIndex = 1;
 
     void TextureManager::Init() {
         mTextureAtlas->Init();
@@ -21,7 +23,7 @@ namespace Engine {
         EG_PROFILE_FUNC();
 
         Ref<Texture2D> texture = LoadTexture(path);
-        ResizeTexture(texture->Width / 2, texture->Height / 2, texture);
+        ResizeTexture(texture->mWidth / 2, texture->mHeight / 2, texture);
         mTextureAtlas->AddTexture2D(texture);
 
         return texture;
@@ -30,20 +32,20 @@ namespace Engine {
     Ref<Texture2D> TextureManager::CreateTexture(uint32_t width, uint32_t height, const glm::vec4 &color) {
         EG_PROFILE_FUNC();
         Ref<Texture2D> texture = std::make_shared<Texture2D>();
-        texture->Height = height;
-        texture->Width = width;
-        texture->Channels = 4;
-        texture->TextureData.reset(new u_char[height * width * texture->Channels]);
+        texture->mHeight = height;
+        texture->mWidth = width;
+        texture->mChannelsNum = 4;
+        texture->mTextureData.reset(new u_char[height * width * texture->mChannelsNum]);
 
         for (uint32_t i{0}; i < height * width; ++i) {
-            texture->TextureData[i * texture->Channels + 0] = color.r * 255;
-            texture->TextureData[i * texture->Channels + 1] = color.g * 255;
-            texture->TextureData[i * texture->Channels + 2] = color.b * 255;
-            texture->TextureData[i * texture->Channels + 3] = color.a * 255;
+            texture->mTextureData[i * texture->mChannelsNum + 0] = color.r * 255;
+            texture->mTextureData[i * texture->mChannelsNum + 1] = color.g * 255;
+            texture->mTextureData[i * texture->mChannelsNum + 2] = color.b * 255;
+            texture->mTextureData[i * texture->mChannelsNum + 3] = color.a * 255;
         }
-        texture->TextureHash = std::hash<std::string_view>()(std::string_view(
-            reinterpret_cast<const char *>(texture->TextureData.get()),
-            texture->Height * texture->Width * texture->Channels));
+        texture->mTextureHash = std::hash<std::string_view>()(std::string_view(
+            reinterpret_cast<const char *>(texture->mTextureData.get()),
+            texture->mHeight * texture->mWidth * texture->mChannelsNum));
         // Если что можно включить.
         // ResizeTexture(width / 2, height / 2, texture);
         mTextureAtlas->AddTexture2D(texture);
@@ -51,25 +53,33 @@ namespace Engine {
         return texture;
     }
 
-    Ref<CubeMap> TextureManager::CreateCubeMap(const std::string &path) {
-        Ref<Texture2D> texture = LoadTexture(path);
+    Ref<CubeMap> TextureManager::CreateCubeMap(const std::array<const std::string, 6>& paths) {
+        std::array<Ref<Texture2D>, 6> textures;
+        for (uint32_t i{0}; i < 6; ++i) {
+            textures[i] = LoadTexture(paths[i]);
+        }
 
+#ifdef ENGINE_API_OPENGL
+#include <Engine/Render/OpenGL/CubeMap_OpenGL.hpp>
+        Ref<CubeMap> res = std::make_shared<OpenGLCubeMap>(textures);
+        return res;
+#endif
     }
 
     void TextureManager::ResizeTexture(uint32_t newWidth, uint32_t newHeight, Ref<Texture2D> &texture) {
         EG_PROFILE_FUNC();
 
-        u_char *newData = new u_char[newHeight * newWidth * texture->Channels];
-        stbir_resize(texture->TextureData.get(), texture->Width, texture->Height, texture->Width * texture->Channels,
+        u_char *newData = new u_char[newHeight * newWidth * texture->mChannelsNum];
+        stbir_resize(texture->mTextureData.get(), texture->mWidth, texture->mHeight, texture->mWidth * texture->mChannelsNum,
                      newData,
-                     newWidth, newHeight, newWidth * texture->Channels, stbir_pixel_layout::STBIR_RGBA,
+                     newWidth, newHeight, newWidth * texture->mChannelsNum, stbir_pixel_layout::STBIR_RGBA,
                      STBIR_TYPE_UINT8, STBIR_EDGE_CLAMP, STBIR_FILTER_BOX);
 
-        texture->TextureData.reset(newData);
-        texture->Height = newHeight;
-        texture->Width = newWidth;
-        texture->TextureHash = std::hash<std::string_view>()(
-            std::string_view(reinterpret_cast<const char *>(newData), newWidth * newHeight * texture->Channels));
+        texture->mTextureData.reset(newData);
+        texture->mHeight = newHeight;
+        texture->mWidth = newWidth;
+        texture->mTextureHash = std::hash<std::string_view>()(
+            std::string_view(reinterpret_cast<const char *>(newData), newWidth * newHeight * texture->mChannelsNum));
     }
 
     void TextureManager::BindTextures() {
@@ -79,7 +89,7 @@ namespace Engine {
 
     // Может я тупой, но тут для кажого api надо поотедльности счиать, сейчас эта штука насктроена на opengl, для imgui надо менять (Как в ContentBrowser)
     std::array<glm::vec2, 4> TextureManager::GetTextureCoords(const Ref<Texture2D> &texture) {
-        const glm::vec4 &coords = mTextureAtlas->GetTextureCoords(texture->TextureHash);
+        const glm::vec4 &coords = mTextureAtlas->GetTextureCoords(texture->mTextureHash);
         std::array<glm::vec2, 4> res = {
             glm::vec2(coords.x, coords.w),
             glm::vec2(coords.z, coords.w),
@@ -105,14 +115,14 @@ namespace Engine {
             return nullptr;
         }
 
-        texture->Channels = channels;
-        texture->Height = height;
-        texture->Width = width;
-        texture->TextureData.reset(data);
+        texture->mChannelsNum = channels;
+        texture->mHeight = height;
+        texture->mWidth = width;
+        texture->mTextureData.reset(data);
 
-        texture->TextureHash = std::hash<std::string_view>()(
+        texture->mTextureHash = std::hash<std::string_view>()(
             std::string_view(reinterpret_cast<const char *>(data),
-                             texture->Height * texture->Width * texture->Channels));
+                             texture->mHeight * texture->mWidth * texture->mChannelsNum));
 
         return texture;
     }

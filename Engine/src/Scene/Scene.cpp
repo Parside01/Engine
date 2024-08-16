@@ -16,7 +16,8 @@
 
 namespace Engine {
     Scene::Scene()
-        :mPoliceMesh(MeshManager::CreateMesh("assets/models/police.fbx")), mMaleMesh(MeshManager::CreateMesh("assets/models/Male.fbx"))
+        :   mPoliceMesh(MeshManager::CreateMesh("assets/models/police.fbx")), mMaleMesh(MeshManager::CreateMesh("assets/models/Male.fbx"))
+            , mSkybox(std::make_shared<Skybox>("assets/textures/Skybox.png"))
     {}
 
     Scene::~Scene() {}
@@ -50,12 +51,14 @@ namespace Engine {
 
     void Scene::OnUpdateEditor(float tick, EditorCamera& camera) {
         EG_PROFILE_FUNC();
+
+        mSkybox->Draw(std::make_shared<EditorCamera>(camera));
         Renderer3D::BeginScene(std::make_shared<EditorCamera>(camera));
         {
             TransformComponent tMale;
-            tMale.Scale = glm::vec3(0.2f);
-            for (uint32_t x{0}; x < 10; ++x) {
-                for (uint32_t y{0}; y < 10; ++y) {
+            tMale.Scale = glm::vec3(0.8f);
+            for (uint32_t x{0}; x < 2; ++x) {
+                for (uint32_t y{0}; y < 2; ++y) {
                     tMale.Position.x += 20.f;
                     Renderer3D::DrawMesh(mMaleMesh, tMale);
                 }

@@ -20,7 +20,7 @@ namespace Engine
         
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallback(EG_BINDEVENT(Application::OnEvent));
-        m_Window->SetVsync(false);
+        m_Window->SetVsync(true);
         Renderer::Init();
 
         m_GuiLayer = new GuiLayer();

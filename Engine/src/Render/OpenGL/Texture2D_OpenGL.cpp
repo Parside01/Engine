@@ -57,18 +57,18 @@ namespace Engine {
     void Texture2D_OpenGL::CreateTextureAndSetData(const u_char *textureData) {
         EG_PROFILE_FUNC();
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &mTextureID);
+        GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &mTextureID));
 
-        glTextureStorage2D(mTextureID, 1, mInternalFormat, mWidth, mHeight);
+        GLCall(glTextureStorage2D(mTextureID, 1, mInternalFormat, mWidth, mHeight));
 
-        glTextureParameteri(mTextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(mTextureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        GLCall(glTextureParameteri(mTextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        GLCall(glTextureParameteri(mTextureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
-        glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_R, GL_REPEAT);
-        glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        GLCall(glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_S, GL_REPEAT));
+        GLCall(glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_R, GL_REPEAT));
+        GLCall(glTextureParameteri(mTextureID, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
-        glTextureSubImage2D(mTextureID, 0, 0, 0, mWidth, mHeight, mFormat, GL_UNSIGNED_BYTE, textureData);
+        GLCall(glTextureSubImage2D(mTextureID, 0, 0, 0, mWidth, mHeight, mFormat, GL_UNSIGNED_BYTE, textureData));
     }
 
     Texture2D_OpenGL::Texture2D_OpenGL(const std::filesystem::path &path) {
@@ -90,14 +90,14 @@ namespace Engine {
     }
 
     Texture2D_OpenGL::~Texture2D_OpenGL() {
-        glDeleteTextures(1, &mTextureID);
+        GLCall(glDeleteTextures(1, &mTextureID));
     }
 
     void Texture2D_OpenGL::Bind(uint32_t slot) const {
-        glBindTexture(GL_TEXTURE_2D, mTextureID);
+        GLCall(glBindTexture(GL_TEXTURE_2D, mTextureID));
     }
     void Texture2D_OpenGL::Unbind() const {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        GLCall(glBindTexture(GL_TEXTURE_2D, 0));
     }
 #endif
 }

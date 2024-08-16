@@ -4,7 +4,7 @@
     #include "Engine/engine_precompile_headers.hpp"
     #include <glm/glm.hpp>
 
-    #if defined(__linux__) 
+    #if defined(__linux__)
         #include "csignal"
         #define EG_DEBUG_BREAK() raise(SIGTRAP)
     #endif
@@ -20,7 +20,7 @@
     #define BIT(x) (1 << x)
 
     #define EG_BINDEVENT(fn) [this](auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
-    
+
     #define EG_EXPAND_MACRO(x) x
     #define EG_STRINGIFY_MACRO(x) #x
 
@@ -34,16 +34,41 @@
 	#define EG_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_, __VA_ARGS__) )
 	#define EG_CORE_ASSERT(...) EG_EXPAND_MACRO( EG_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
 
+#ifdef ENGINE_API_OPENGL
+#include <signal.h>
+#include <GL/glew.h>
+    static void GLClearError() {
+        while (glGetError() != GL_NO_ERROR) {}
+    }
+
+    static bool GLLogCall(const char* function, const char* file, int line) {
+        while (const GLenum error = glGetError()) {
+            std::cout << "[OpenGL Error] (" << error << "): " << function << " " << file << ":" << line << std::endl;
+            return false;
+        }
+        return true;
+    }
+
+#define GLCall(x) ({ \
+GLClearError(); \
+x; \
+assert(GLLogCall(#x, __FILE__, __LINE__)); \
+})
+
+#endif
+
     namespace Utils {
         const char* GetAbsolutePath(const char* relPath);
         std::string GetAbsolutePath(const std::string& path);
         uint32_t GetColor(const glm::vec4& color);
-        
+
         class FileDialogs {
         public:
-            static std::string OpenFile(const std::string& path); 
+            static std::string OpenFile(const std::string& path);
             static std::string SaveFile(const std::string& path);
         };
-
+        inline uint32_t HashUCharData(u_char* data, size_t dataSize) {
+            return std::hash<std::string_view>()(std::string_view(reinterpret_cast<const char*>(data), dataSize));
+        }
     }
 #endif

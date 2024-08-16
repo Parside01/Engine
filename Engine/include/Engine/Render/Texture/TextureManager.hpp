@@ -19,7 +19,7 @@ namespace Engine {
         static Ref<Texture2D> CreateTexture(const std::string &path);
         static Ref<Texture2D> CreateTexture(uint32_t width, uint32_t height, const glm::vec4 &color);
 
-        static Ref<CubeMap> CreateCubeMap(const std::string &path);
+        static Ref<CubeMap> CreateCubeMap(const std::array<const std::string, 6> &paths);
 
         // Просто загружает текстуру, заполняет поля в ней.
         static Ref<Texture2D> LoadTexture(const std::string &path);

@@ -4,6 +4,7 @@
 #include <Engine/Render/Mesh.hpp>
 
 #include "entt.hpp"
+#include <Engine/Render/Skybox.hpp>
 #include "Engine/Scene/EditorCamera.hpp"
 
 #include "Engine/Render/Texture/Textures.hpp"
@@ -31,6 +32,8 @@ namespace Engine {
     private:
         Ref<Mesh> mMaleMesh;
         Ref<Mesh> mPoliceMesh;
+
+        Ref<Skybox> mSkybox;
 
         uint32_t m_ViewportWidth{0};
         uint32_t m_ViewportHeight{0};

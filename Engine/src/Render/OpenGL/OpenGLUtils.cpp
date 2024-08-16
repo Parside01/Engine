@@ -1,8 +1,8 @@
 #include "Engine/Render/OpenGL/OpenGLUtils.hpp"
 
 namespace Engine {
-    std::pair<uint32_t, uint32_t> OpenGLUtils::GetOpenGLFormatFromChannels(uint32_t channels) {
-        std::pair<uint32_t, uint32_t> res(0, 0);
+    std::pair<GLenum, GLenum> OpenGLUtils::GetOpenGLFormatFromChannels(uint32_t channels) {
+        std::pair<GLenum, GLenum> res(0, 0);
         switch (channels) {
             case 1:
                 res.first = GL_R;
