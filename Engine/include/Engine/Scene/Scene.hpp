@@ -5,6 +5,8 @@
 
 #include "entt.hpp"
 #include <Engine/Render/Skybox.hpp>
+
+#include <Engine/Scene/RenderableComponents.hpp>
 #include "Engine/Scene/EditorCamera.hpp"
 
 #include "Engine/Render/Texture/Textures.hpp"
@@ -32,6 +34,7 @@ namespace Engine {
     private:
         Ref<Mesh> mMaleMesh;
         Ref<Mesh> mPoliceMesh;
+        SpriteComponent mTempSpite;
 
         Ref<Skybox> mSkybox;
 

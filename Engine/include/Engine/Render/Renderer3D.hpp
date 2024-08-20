@@ -4,6 +4,8 @@
 #include <Engine/Render/Mesh.hpp>
 #include <Engine/Scene/TransfromComponent.hpp>
 
+#include "Engine/Scene/RenderableComponents.hpp"
+
 namespace Engine {
 
     class Renderer3D {
@@ -21,7 +23,7 @@ namespace Engine {
         static void NextBatch();
 
         // Временно
-        static void DrawMesh(const Ref<Mesh>& mesh, const TransformComponent& transform);
+        static void DrawMesh(const Ref<Mesh> &mesh, const TransformComponent &transform, const SpriteComponent &sprite);
     };
 
 }

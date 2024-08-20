@@ -89,7 +89,6 @@ namespace Engine
                     uint8_t count = i.GetComponentCount();
                     for (uint8_t j{0}; j < count; ++j) {
                         glEnableVertexAttribArray(m_VertexBufferIndex);
-
                         glVertexAttribPointer(
                             m_VertexBufferIndex,
                             count,
@@ -98,6 +97,7 @@ namespace Engine
                             layout.GetStride(),
                             reinterpret_cast<const void*>(i.Offset + sizeof(float) * count * j)
                         );
+                        glVertexAttribDivisor(m_VertexBufferIndex, 1);
                         m_VertexBufferIndex++;
                     }
                     break;

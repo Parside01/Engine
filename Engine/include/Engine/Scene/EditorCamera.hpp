@@ -72,7 +72,6 @@ namespace Engine
         glm::vec3 m_Rotation = glm::vec3(0.f);
 
         glm::vec2 m_MousePosition = glm::vec2(0.f);
-
     };
 
 } // namespace Engine

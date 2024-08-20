@@ -58,6 +58,7 @@ namespace Engine {
             auto& pos = nested->mVertices[i];
             auto& texCoord = nested->HasTextureCoords(0) ? nested->mTextureCoords[0][i] : zeroVector;
             auto& normal = nested->mNormals[i];
+
             Vertex3D vertex;
             vertex.Position = glm::vec3(pos.x, pos.y, pos.z);
             vertex.TextureCoord = glm::vec2(texCoord.x, texCoord.y);

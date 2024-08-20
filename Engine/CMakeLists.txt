@@ -81,6 +81,13 @@ target_include_directories(imguizmo PUBLIC ${THIRD_PARTY_DIR}/imgui/ ${THIRD_PAR
 
 # --- ImGuizmo
 
+# -- lodepng
+add_library(lodepng
+        ${THIRD_PARTY_DIR}/lodepng/lodepng.cpp
+        ${THIRD_PARTY_DIR}/lodepng/lodepng.h
+)
+# -- lodepng
+
 # --- Все еще пытаюсь добавить imgui сюда.
 
 set(CORE_HEADERS)
@@ -93,7 +100,7 @@ set(ENGINE_SOURCES ${CORE_SOURCES} ${CORE_HEADERS}
         include/Engine/Render/OpenGL/CubeMap_OpenGL.hpp)
 add_library(Engine SHARED ${ENGINE_SOURCES})
 target_compile_definitions(Engine PRIVATE -DENGINE_API_OPENGL)
-target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo ${ASSIMP_LIBRARIES})
+target_link_libraries(Engine PUBLIC imgui stb_image entt ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} yaml-cpp imguizmo ${ASSIMP_LIBRARIES} lodepng)
 
 
 # --- Добавляем дириктории инклюдов для Engine.
@@ -106,6 +113,7 @@ target_include_directories(Engine PUBLIC ${ENGINE_INCLUDE_DIR}/)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/stb_image)
 target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/entt)
 target_include_directories(Engine PUBLIC ${ASSIMP_INCLUDE_DIRS})
+target_include_directories(Engine PUBLIC ${THIRD_PARTY_DIR}/lodepng)
 
 # --- Добавляем дириктории инклюдов для Engine.
 

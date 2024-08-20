@@ -7,12 +7,12 @@ out vec3 v_TexCoord;
 
 uniform mat4 u_View;
 uniform mat4 u_Projection;
+uniform mat4 u_Model;
 
 void main() {
 	v_TexCoord = a_Position;
-	gl_Position = u_Projection * u_View * vec4(a_Position, 1.0f);
+	gl_Position = u_Projection * u_View * u_Model * vec4(a_Position, 1.f);
 }
-
 #type fragment
 #version 410 core
 

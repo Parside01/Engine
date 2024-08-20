@@ -7,7 +7,7 @@
 
 class Layer2D : public Engine::Layer {
 public:
-    Layer2D(): Layer("Layer2D"), m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720), m_MainScene(std::make_shared<Engine::Scene>()), m_EntityBrowser(m_MainScene), m_EditorCamera(45.f, 1280.f / 720.f, 0.1f, 1000.f) {}
+    Layer2D(): Layer("Layer2D"), m_CameraController(1280.f / 720.f), m_ViewportSize(1280, 720), m_MainScene(std::make_shared<Engine::Scene>()), m_EntityBrowser(m_MainScene), m_EditorCamera(45.f, 1280.f / 720.f, 0.1f, 10000.f) {}
     virtual ~Layer2D() = default;
     virtual void OnAttach() override;
     virtual void OnDetach() override;

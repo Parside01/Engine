@@ -15,6 +15,7 @@ namespace Engine {
         glm::vec2 TextureCoord;
         glm::vec3 Normal;
         // float TextureIndex;
+
         int EntityID = -1;
     };
 

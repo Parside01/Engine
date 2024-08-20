@@ -23,7 +23,7 @@ namespace Engine {
         EG_PROFILE_FUNC();
 
         Ref<Texture2D> texture = LoadTexture(path);
-        ResizeTexture(texture->mWidth / 2, texture->mHeight / 2, texture);
+        // ResizeTexture(texture->mWidth / 2, texture->mHeight / 2, texture);
         mTextureAtlas->AddTexture2D(texture);
 
         return texture;
@@ -101,13 +101,14 @@ namespace Engine {
 
     // Пока эта штука воозвращает просто 0, но потом, когда будет не один атлас, а несколько, то все будет иначе.
     uint32_t TextureManager::GetTextureSlot(const Ref<Texture2D> &texture) {
-        return 0;
+        return 1;
     }
 
     Ref<Texture2D> TextureManager::LoadTexture(const std::string &path) {
         EG_PROFILE_FUNC();
         int width, height, channels;
         Ref<Texture2D> texture = std::make_shared<Texture2D>();
+
         u_char *data = stbi_load(path.c_str(), &width, &height, &channels, 0);
         if (!data) {
             EG_CORE_ERROR("Не удалось загрузить текстуру из {0}", path);
