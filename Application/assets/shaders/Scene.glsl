@@ -32,7 +32,7 @@ void main() {
     vec3 lightDir = normalize(u_LightPosition - a_Position);
     float lightDot = dot(lightDir, a_Normal);
     float lightValue = max(lightDot, 0.25f); 
-    v_Color *= a_Color * lightValue * vec4(u_LightColor, 1.0f);
+    v_Color = lightValue * vec4(u_LightColor, 1.0f);
     v_Color.w = 1.0f;
     
     // v_TextureIndex = a_TextureIndex;
@@ -57,6 +57,6 @@ uniform sampler2D u_Texture;
 // uniform sampler2D u_Textures[32];
 
 void main() {
-    color = texture(u_Texture, v_TexCoord);
+    color = texture(u_Texture, v_TexCoord) * v_Color;
     entityID = v_EntityID;
 }

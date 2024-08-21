@@ -32,9 +32,11 @@ namespace Engine {
 
         entt::registry& GetRegistry() { return m_Registry; }
     private:
-        Ref<Mesh> mMaleMesh;
-        Ref<Mesh> mPoliceMesh;
-        SpriteComponent mTempSpite;
+        Ref<Mesh> mZombieMesh;
+        SpriteComponent mZombieTexture;
+
+        Ref<Mesh> mTrainMesh;
+        SpriteComponent mTrainTexture;
 
         Ref<Skybox> mSkybox;
 

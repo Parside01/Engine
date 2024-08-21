@@ -135,12 +135,10 @@ namespace Engine {
             sData->VertexBufferPtr->Position = t * glm::vec4(vertex.Position, 1.f);
 
             glm::vec2 textureCoord = vertex.TextureCoord;
-            textureCoord.x = coords[1].x + (coords[0].x - coords[1].x) * (1.f - textureCoord.x);
-            textureCoord.y = coords[2].y + (coords[1].y - coords[2].y) * (1.f - textureCoord.y);
+            textureCoord.x = coords[0].x + (coords[1].x - coords[0].x) * textureCoord.x;
+            textureCoord.y = coords[0].y + (coords[2].y - coords[0].y) * (1 - textureCoord.y);
 
-            textureCoord.x = 1;
-            textureCoord.y = 1;
-
+            sData->VertexBufferPtr->TextureCoord = textureCoord;
             sData->VertexBufferPtr->Normal = vertex.Normal;
             // sData->VertexBufferPtr->TextureIndex = 1;
             sData->VertexBufferPtr->Color = glm::vec4(1.f);

@@ -16,10 +16,11 @@
 
 namespace Engine {
     Scene::Scene()
-        :   mPoliceMesh(MeshManager::CreateMesh("assets/models/Axe.fbx")), mMaleMesh(MeshManager::CreateMesh("assets/models/Medium.fbx"))
+        :   mTrainMesh(MeshManager::CreateMesh("assets/models/Train.fbx")), mZombieMesh(MeshManager::CreateMesh("assets/models/Medium.fbx"))
             , mSkybox(std::make_shared<Skybox>("assets/textures/Skybox.png"))
     {
-        mTempSpite.Texture = TextureManager::CreateTexture("assets/textures/ZombieMale.png");
+        mZombieTexture.Texture = TextureManager::CreateTexture("assets/textures/ZombieMale.png");
+        mTrainTexture.Texture = TextureManager::CreateTexture("assets/textures/Temp.png");
     }
 
     Scene::~Scene() {}
@@ -62,15 +63,14 @@ namespace Engine {
             for (uint32_t x{0}; x < 2; ++x) {
                 for (uint32_t y{0}; y < 2; ++y) {
                     tMale.Position.x += 80.f;
-                    Renderer3D::DrawMesh(mMaleMesh, tMale, mTempSpite);
+                    tMale.Rotation = glm::rotate(tMale.Rotation, glm::radians(-90.f), glm::vec3(1, 0, 0));
+                    Renderer3D::DrawMesh(mZombieMesh, tMale, mZombieTexture);
                 }
                 tMale.Position.x = 0.f;
                 tMale.Position.y += 80.f;
             }
 
-            TransformComponent tPolice;
-            tPolice.Position.x -= 150.f;
-            Renderer3D::DrawMesh(mPoliceMesh, tPolice, mTempSpite);
+            Renderer3D::DrawMesh(mTrainMesh, TransformComponent(), mTrainTexture);
         }
         Renderer3D::EndScene();
     }
