@@ -9,7 +9,6 @@ set(ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 set(INCLUDE_DIR usr/include)
 
-
 message(STATUS ${THIRD_PARTY_DIR})
 
 add_library(imgui

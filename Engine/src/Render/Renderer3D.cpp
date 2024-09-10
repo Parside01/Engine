@@ -6,6 +6,7 @@
 #include <Engine/Render/Texture/TextureManager.hpp>
 #include <Engine/Scene/Systems/TransformSystem.hpp>
 
+#include "Engine/Render/UniformBuffer.hpp"
 #include "Engine/Scene/RenderableComponents.hpp"
 
 
@@ -33,6 +34,23 @@ namespace Engine {
         Ref<EditorCamera> RendererCamera;
 
         std::vector<Mesh::NestedMesh> NestedMeshes;
+
+        struct CameraData {
+            glm::mat4 View;
+            glm::mat4 Projection;
+        };
+        Ref<UniformBuffer> CameraDataBuffer;
+
+        struct LightData {
+            glm::vec3 LightPosition;
+            glm::vec3 LightColor;
+        };
+        Ref<UniformBuffer> LightDataBuffer;
+
+        struct TextureData {
+            int Texture;
+        };
+        Ref<UniformBuffer> TextureDataBuffer;
     };
 
     static Scope<Renderer3Data> sData = std::make_unique<Renderer3Data>();
@@ -58,6 +76,10 @@ namespace Engine {
 
         sData->RendererShader = Shader::Create("assets/shaders/Scene.glsl");
         // sData->WhiteTexture = TextureManager::CreateTexture(128, 128, {1.f, 1.f, 1.f, 1.f});
+
+        sData->CameraDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::CameraDataBuffer), 0);
+        sData->LightDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::LightData), 1);
+        sData->TextureDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::TextureData), 2);
     }
 
     void Renderer3D::Shutdown() {
