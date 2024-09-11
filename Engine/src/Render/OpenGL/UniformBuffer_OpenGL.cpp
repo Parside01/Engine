@@ -1,7 +1,7 @@
 #include <Engine/Render/OpenGL/UniformBuffer_OpenGL.hpp>
 #include <GL/glew.h>
 
-
+#ifdef ENGINE_API_OPENGL
 namespace Engine {
     OpenGLUniformBuffer::OpenGLUniformBuffer(uint32_t size, uint32_t binding) {
         glCreateBuffers(1, &mBufferID);
@@ -17,3 +17,5 @@ namespace Engine {
         glNamedBufferSubData(mBufferID, offset, size, data);
     }
 }
+
+#endif

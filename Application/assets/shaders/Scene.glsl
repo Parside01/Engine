@@ -1,5 +1,5 @@
 #type vertex
-#version 410 core
+#version 420 core
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
@@ -8,11 +8,21 @@ layout(location = 3) in vec3 a_Normal;
 // layout(location = 3) in float a_TextureIndex;
 layout(location = 5) in int a_EntityID;
 
-uniform mat4 u_View;
-uniform mat4 u_Projection;
+// uniform mat4 u_View;
+// uniform mat4 u_Projection;
 
-uniform vec3 u_LightPosition;
-uniform vec3 u_LightColor;	
+layout(std140, binding = 0) uniform CameraData {
+	mat4 u_View;
+        mat4 u_Projection;
+};
+
+layout(std140, binding = 1) uniform LightData {
+        vec3 u_LightColor;
+	vec3 u_LightPosition;
+};
+
+// uniform vec3 u_LightPosition;
+// uniform vec3 u_LightColor;	
 
 // uniform mat4 u_Transform;
 
@@ -42,7 +52,7 @@ void main() {
 }
 
 #type fragment
-#version 410 core
+#version 420 core
 
 layout(location = 0) out vec4 color;
 layout(location = 1) out int entityID;

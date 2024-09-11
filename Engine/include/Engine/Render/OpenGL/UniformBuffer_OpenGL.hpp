@@ -2,6 +2,8 @@
 #define ENGINE_UNIFORMBUFFER_OPENGL_HPP
 #include <Engine/Render/UniformBuffer.hpp>
 
+#ifdef ENGINE_API_OPENGL
+
 namespace Engine {
     class OpenGLUniformBuffer : public UniformBuffer {
     public:
@@ -14,4 +16,5 @@ namespace Engine {
     };
 }
 
+#endif
 #endif //ENGINE_UNIFORMBUFFER_OPENGL_HPP

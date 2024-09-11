@@ -38,18 +38,18 @@ namespace Engine {
         struct CameraData {
             glm::mat4 View;
             glm::mat4 Projection;
-        };
+        } CameraData; // binding = 0.
         Ref<UniformBuffer> CameraDataBuffer;
 
         struct LightData {
-            glm::vec3 LightPosition;
             glm::vec3 LightColor;
-        };
+            glm::vec3 LightPosition;
+        } LightData; // binding = 1.
         Ref<UniformBuffer> LightDataBuffer;
 
         struct TextureData {
             int Texture;
-        };
+        } TextureData; // binding = 2.
         Ref<UniformBuffer> TextureDataBuffer;
     };
 
@@ -77,7 +77,7 @@ namespace Engine {
         sData->RendererShader = Shader::Create("assets/shaders/Scene.glsl");
         // sData->WhiteTexture = TextureManager::CreateTexture(128, 128, {1.f, 1.f, 1.f, 1.f});
 
-        sData->CameraDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::CameraDataBuffer), 0);
+        sData->CameraDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::CameraData), 0);
         sData->LightDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::LightData), 1);
         sData->TextureDataBuffer = UniformBuffer::Create(sizeof(Renderer3Data::TextureData), 2);
     }
@@ -91,15 +91,28 @@ namespace Engine {
         EG_PROFILE_FUNC();
         sData->RendererCamera = camera;
 
-        sData->RendererShader->Bind();
-        sData->RendererShader->SetMat4("u_View", camera->GetViewMatrix());
-        sData->RendererShader->SetMat4("u_Projection", camera->GetProjectionMatrix());
+        sData->CameraData.Projection = camera->GetProjectionMatrix();
+        sData->CameraData.View = camera->GetViewMatrix();
+        sData->CameraDataBuffer->SetData(&sData->CameraData, sizeof(Renderer3Data::CameraData));
 
+        sData->LightData.LightColor = glm::vec3(0.95f);
+        sData->LightData.LightPosition = glm::vec3(100.f, 150.f, 50.f);
+        sData->LightDataBuffer->SetData(&sData->LightData, sizeof(Renderer3Data::LightData));
+
+        sData->TextureData.Texture = 1;
+        sData->TextureDataBuffer->SetData(&sData->TextureData, sizeof(Renderer3Data::TextureData));
+
+
+        sData->RendererShader->Bind();
         sData->RendererShader->SetInt("u_Texture", 1);
 
-        // TODO: нужно как-то по другому это делать.
-        sData->RendererShader->SetFloat3("u_LightColor", glm::vec3(1.f, 1.f, 1.0f));
-        sData->RendererShader->SetFloat3("u_LightPosition", glm::vec3(100.f, 150.f, 50.f));
+        // sData->RendererShader->SetMat4("u_View", camera->GetViewMatrix());
+        // sData->RendererShader->SetMat4("u_Projection", camera->GetProjectionMatrix());
+        //
+        //
+        // // TODO: нужно как-то по другому это делать.
+        // sData->RendererShader->SetFloat3("u_LightColor", glm::vec3(0.95f, 0.95f, 0.95f));
+        // sData->RendererShader->SetFloat3("u_LightPosition", glm::vec3(100.f, 150.f, 50.f));
 
         StartBatch();
     }
